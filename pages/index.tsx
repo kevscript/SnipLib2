@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1
-          className={styles.title + "text-3xl font-bold underline text-red-600"}
+          className={styles.title + "text-3xl font-bold underline text-marine"}
         >
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
