@@ -13,7 +13,7 @@ const CollectionsList = ({
   handleActiveCollection,
 }: CollectionsListProps) => {
   return (
-    <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap min-h-[180px] scroll-hide overscroll-contain">
+    <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {collections.map((collection, i) => (
         <ListItem
           key={collection.id}

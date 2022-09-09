@@ -1,6 +1,6 @@
 import { collections } from "@/mocks/collections";
 import { tags } from "@/mocks/tags";
-import { useState } from "react";
+import React, { Fragment, useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
 import PlusIcon from "../icons/Plus";
@@ -12,8 +12,13 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 const Sidebar = () => {
+  const [searchValue, setSearchValue] = useState("");
   const [activeCollectionId, setActiveCollectionId] = useState("");
   const [activeTagLabel, setActiveTagLabel] = useState("");
+
+  const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
 
   const handleActiveCollection = (id: string) => {
     if (id !== activeCollectionId) {
@@ -30,13 +35,16 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen p-8 overflow-y-auto w-96 bg-carbon-600">
+    <div className="flex flex-col h-screen p-8 overflow-hidden w-96 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
         <h1 className="text-2xl font-bold uppercase">Sniplib</h1>
         <Switcher />
       </div>
 
-      <Searchbox />
+      <Searchbox
+        value={searchValue}
+        handleValueChange={handleSearchValueChange}
+      />
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
@@ -54,7 +62,9 @@ const Sidebar = () => {
           <span className="ml-4 text-xs font-bold uppercase">Collections</span>
         </div>
         <div className="flex items-center flex-nowrap">
-          <span className="text-sm text-carbon-300">5/32</span>
+          <span className="text-sm text-carbon-300">
+            {collections.length}/32
+          </span>
           <div className="flex items-center justify-center w-6 h-6 ml-4 rounded cursor-pointer bg-carbon-400 hover:bg-carbon-300">
             <PlusIcon className="w-4 h-4" />
           </div>
