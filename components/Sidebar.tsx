@@ -19,7 +19,7 @@ const Sidebar = () => {
         <input
           type="text"
           id="searchbox"
-          className="w-full h-12 px-4 border rounded-sm outline-none bg-carbon-700 border-carbon-400 focus:border-carbon-300 peer"
+          className="w-full h-12 px-4 text-sm border rounded-sm outline-none bg-carbon-700 border-carbon-400 focus:border-carbon-300 peer"
           placeholder="Search"
         />
 
@@ -28,19 +28,29 @@ const Sidebar = () => {
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
+          <FavoriteIcon className="w-4 h-4 stroke-marine" />
+          <span className="ml-4 text-xs font-bold uppercase">Favorites</span>
+        </div>
+        <div className="flex justify-center w-6">
+          <span className="text-sm">18</span>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between mt-8 flex-nowrap">
+        <div className="flex items-center flex-nowrap">
           <FolderIcon className="w-4 h-4 stroke-marine" />
-          <span className="ml-4">Collections</span>
+          <span className="ml-4 text-xs font-bold uppercase">Collections</span>
         </div>
         <div className="flex items-center flex-nowrap">
-          <span className="text-carbon-300">5/32</span>
+          <span className="text-sm text-carbon-300">5/32</span>
           <div className="flex items-center justify-center w-6 h-6 ml-4 rounded cursor-pointer bg-carbon-400 hover:bg-carbon-300">
             <PlusIcon className="w-4 h-4" />
           </div>
         </div>
       </div>
 
-      <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap min-h-[180px] scroll-hide">
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+      <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap min-h-[180px] scroll-hide overscroll-contain">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch short />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -49,7 +59,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch active />
             <span className="ml-4 text-white">Testing</span>
@@ -58,7 +68,7 @@ const Sidebar = () => {
             <span className="text-white">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -67,7 +77,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -76,7 +86,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -87,25 +97,15 @@ const Sidebar = () => {
         </li>
       </ul>
 
-      <div className="flex items-center justify-between mt-4 flex-nowrap">
-        <div className="flex items-center flex-nowrap">
-          <FavoriteIcon className="w-4 h-4 stroke-marine" />
-          <span className="ml-4">Favorites</span>
-        </div>
-        <div className="flex justify-center w-6">
-          <span>18</span>
-        </div>
-      </div>
-
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
           <TagIcon className="w-4 h-4 stroke-marine" />
-          <span className="ml-4">Tags</span>
+          <span className="ml-4 text-xs font-bold uppercase">Tags</span>
         </div>
       </div>
 
-      <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap min-h-[180px] scroll-hide">
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+      <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap min-h-[180px] scroll-hide overscroll-contain">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch short />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -114,7 +114,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch active />
             <span className="ml-4 text-white">Testing</span>
@@ -123,7 +123,7 @@ const Sidebar = () => {
             <span className="text-white">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -132,7 +132,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
@@ -141,7 +141,7 @@ const Sidebar = () => {
             <span className="text-carbon-300">18</span>
           </div>
         </li>
-        <li className="relative flex justify-between flex-shrink-0 h-10 flex-nowrap">
+        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm flex-nowrap">
           <div className="flex flex-nowrap">
             <Branch />
             <span className="ml-4 text-carbon-300">Testing</span>
