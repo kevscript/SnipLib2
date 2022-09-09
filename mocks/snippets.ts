@@ -11,7 +11,7 @@ export type Snippet = {
   public: boolean;
 };
 
-export const snippets = [
+export const snippets: Snippet[] = [
   {
     id: "1",
     title: "title",
@@ -21,8 +21,8 @@ export const snippets = [
     language: "HTML",
     public: false,
     tags: ["html", "hello"],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: "2",
@@ -33,8 +33,8 @@ export const snippets = [
     language: "HTML",
     public: false,
     tags: ["html", "hello"],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: "3",
@@ -45,8 +45,8 @@ export const snippets = [
     language: "HTML",
     public: false,
     tags: ["html", "hello"],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: "4",
@@ -57,8 +57,8 @@ export const snippets = [
     language: "HTML",
     public: false,
     tags: ["html", "hello"],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
   {
     id: "5",
@@ -69,7 +69,7 @@ export const snippets = [
     language: "HTML",
     public: false,
     tags: ["html", "hello"],
-    created_at: Date.now(),
-    updated_at: Date.now(),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   },
 ];
