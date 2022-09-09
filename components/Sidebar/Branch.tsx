@@ -6,7 +6,7 @@ export type BranchProps = {
 const Branch = ({ short = false, active = false }: BranchProps) => {
   return (
     <div
-      className={`flex place-items-end translate-x-2 -translate-y-[26px]
+      className={`flex place-items-end translate-x-2 -translate-y-[29px]
       `}
     >
       <div className={`w-[2px] bg-carbon-400 ${short ? "h-6" : "h-10"}`}></div>
