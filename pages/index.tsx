@@ -1,7 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import Snipbar from "@/components/Snipbar";
 import type { NextPage } from "next";
-import { useState } from "react";
 
 const Home: NextPage = () => {
   return (

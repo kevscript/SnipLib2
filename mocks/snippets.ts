@@ -5,8 +5,8 @@ export type Snippet = {
   content: string;
   language: string;
   tags: string[];
-  created_at: any;
-  updated_at: any;
+  createdAt: any;
+  updatedAt: any;
   favorite: boolean;
   public: boolean;
 };
