@@ -1,3 +1,4 @@
+import { useData } from "@/hooks/useData";
 import { collections } from "@/mocks/collections";
 import { tags } from "@/mocks/tags";
 import React, { Fragment, useState } from "react";
@@ -12,26 +13,17 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 const Sidebar = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [activeCollectionId, setActiveCollectionId] = useState("");
-  const [activeTagLabel, setActiveTagLabel] = useState("");
+  const {
+    data,
+    handleActiveCollection,
+    handleActiveTag,
+    activeCollectionId,
+    activeTagLabel,
+  } = useData();
 
+  const [searchValue, setSearchValue] = useState("");
   const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
-  };
-
-  const handleActiveCollection = (id: string) => {
-    if (id !== activeCollectionId) {
-      activeTagLabel && setActiveTagLabel("");
-      setActiveCollectionId(id);
-    }
-  };
-
-  const handleActiveTag = (label: string) => {
-    if (label !== activeTagLabel) {
-      activeCollectionId && setActiveCollectionId("");
-      setActiveTagLabel(label);
-    }
   };
 
   return (
@@ -71,11 +63,13 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <CollectionsList
-        collections={collections}
-        activeId={activeCollectionId}
-        handleActiveCollection={handleActiveCollection}
-      />
+      {data && (
+        <CollectionsList
+          collections={data.collections || []}
+          activeId={activeCollectionId}
+          handleActiveCollection={handleActiveCollection}
+        />
+      )}
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">

@@ -2,13 +2,18 @@ import { Snippet } from "@/mocks/snippets";
 
 export type SnipItemProps = {
   snippet: Snippet;
+  isActive: boolean;
+  handleActive: () => void;
 };
 
-const SnipItem = ({ snippet }: SnipItemProps) => {
+const SnipItem = ({ snippet, isActive, handleActive }: SnipItemProps) => {
   return (
     <li
-      className="flex flex-col w-full px-8 pt-6 pb-8 border-b-2 cursor-pointer border-carbon-600 group bg-carbon-500 hover:bg-carbon-400"
+      className={`flex flex-col w-full px-8 pt-6 pb-8 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
+        isActive ? "bg-carbon-400" : "bg-carbon-500"
+      }`}
       key={snippet.id}
+      onClick={handleActive}
     >
       <span className="font-semibold">{snippet.title}</span>
       <div className="flex mt-3 flex-nowrap">
