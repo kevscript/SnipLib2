@@ -1,5 +1,6 @@
 import { UserData } from "@/mocks/userData";
-import React, { createContext, useContext, useState } from "react";
+import { useRouter } from "next/router";
+import { createContext, useContext, useState } from "react";
 
 type Data = {
   data: UserData | undefined;
@@ -16,7 +17,8 @@ type Data = {
   initData: (d: UserData) => void;
 };
 
-const useDataProvider = () => {
+export const useDataProvider = () => {
+  const router = useRouter();
   const [data, setData] = useState<UserData | undefined>(undefined);
   const [activeCollectionId, setActiveCollectionId] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
@@ -41,6 +43,7 @@ const useDataProvider = () => {
     if (id !== activeSnippetId) {
       setActiveSnippetId(id);
       setCollectionIdOfActiveSnippet(collectionIdOfSnippet);
+      router.push(`/collection/${id}`);
     }
   };
 
@@ -66,12 +69,12 @@ const useDataProvider = () => {
   };
 };
 
-const dataContext = createContext({} as Data);
+export const dataContext = createContext({} as Data);
 
-export const DataProvider = ({ children }: { children: React.ReactNode }) => {
-  const data = useDataProvider();
-  return <dataContext.Provider value={data}>{children}</dataContext.Provider>;
-};
+// export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+//   const data = useDataProvider();
+//   return <dataContext.Provider value={data}>{children}</dataContext.Provider>;
+// };
 
 export const useData = () => {
   return useContext(dataContext);
