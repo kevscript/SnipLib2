@@ -5,8 +5,9 @@ import Sidebar from "@/components/Sidebar";
 import { useEffect } from "react";
 import { userData } from "@/mocks/userData";
 import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const router = useRouter();
   const {
     data,
@@ -47,20 +48,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <dataContext.Provider
-      value={{
-        data,
-        initData,
-        handleActiveCollection,
-        handleActiveSnippet,
-        ...restData,
-      }}
-    >
-      <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
-        <Sidebar />
-        <Component {...pageProps} />
-      </div>
-    </dataContext.Provider>
+    <SessionProvider session={session}>
+      <dataContext.Provider
+        value={{
+          data,
+          initData,
+          handleActiveCollection,
+          handleActiveSnippet,
+          ...restData,
+        }}
+      >
+        <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
+          <Sidebar />
+          <Component {...pageProps} />
+        </div>
+      </dataContext.Provider>
+    </SessionProvider>
   );
 }
 
