@@ -25,7 +25,7 @@ const Snipbar = () => {
   }, [activeCollectionId, data]);
 
   return (
-    <div className="flex flex-col h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
+    <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
       <SnipbarHeader label={activeCollection.label} />
       <div className="w-full h-[2px] bg-carbon-600"></div>
       <ul className="flex flex-col flex-1 overflow-y-auto">

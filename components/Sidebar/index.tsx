@@ -27,7 +27,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen p-8 overflow-hidden w-96 bg-carbon-600">
+    <div className="flex flex-col flex-shrink-0 h-screen p-8 overflow-hidden w-96 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
         <h1 className="text-2xl font-bold uppercase">Sniplib</h1>
         <Switcher />
