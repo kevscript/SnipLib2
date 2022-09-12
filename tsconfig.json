@@ -25,6 +25,12 @@
       "@/mocks/*": ["mocks/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "jest.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "jest.config.js",
+    "lib/mongodb.ts"
+  ],
   "exclude": ["node_modules"]
 }
