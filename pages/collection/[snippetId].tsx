@@ -35,9 +35,15 @@ const CollectionSnippetPage = () => {
             <span>{activeSnippet.title}</span>
           </div>
           <div className="flex flex-nowrap gap-x-4">
-            <button className="px-4 py-1 rounded-sm bg-marine">snap</button>
-            <button className="px-4 py-1 rounded-sm bg-marine">edit</button>
-            <button className="px-4 py-1 rounded-sm bg-marine">delete</button>
+            <button className="px-4 py-1 text-sm rounded-sm bg-marine">
+              snap
+            </button>
+            <button className="px-4 py-1 text-sm rounded-sm bg-marine">
+              edit
+            </button>
+            <button className="px-4 py-1 text-sm rounded-sm bg-marine">
+              delete
+            </button>
           </div>
         </div>
         <div className="flex flex-col w-full mt-12">
@@ -64,11 +70,13 @@ const CollectionSnippetPage = () => {
           <div className="flex justify-between mt-2 text-sm text-carbon-300">
             <span>
               edited the{" "}
-              {new Date(activeSnippet.updatedAt).toLocaleDateString()}
+              {new Date(activeSnippet.updatedAt).toLocaleDateString()} at{" "}
+              {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
             </span>
             <span>
               created the{" "}
-              {new Date(activeSnippet.createdAt).toLocaleDateString()}
+              {new Date(activeSnippet.updatedAt).toLocaleDateString()} at{" "}
+              {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
             </span>
           </div>
         </div>
