@@ -1,7 +1,5 @@
-import { useData } from "@/hooks/useData";
-import { collections } from "@/mocks/collections";
-import { tags } from "@/mocks/tags";
-import React, { Fragment, useState } from "react";
+import { useUserData } from "@/hooks/useUserData";
+import React, { useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
 import PlusIcon from "../icons/Plus";
@@ -13,13 +11,7 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 const Sidebar = () => {
-  const {
-    data,
-    handleActiveCollection,
-    handleActiveTag,
-    activeCollectionId,
-    activeTagLabel,
-  } = useData();
+  const { collections, activeCollectionId } = useUserData();
 
   const [searchValue, setSearchValue] = useState("");
   const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,20 +46,22 @@ const Sidebar = () => {
           <span className="ml-4 text-xs font-bold uppercase">Collections</span>
         </div>
         <div className="flex items-center flex-nowrap">
-          <span className="text-sm text-carbon-300">
-            {collections.length}/32
-          </span>
+          {collections && (
+            <span className="text-sm text-carbon-300">
+              {collections.length}/32
+            </span>
+          )}
+
           <div className="flex items-center justify-center w-6 h-6 ml-4 rounded cursor-pointer bg-carbon-400 hover:bg-carbon-300">
             <PlusIcon className="w-4 h-4" />
           </div>
         </div>
       </div>
 
-      {data && (
+      {collections && (
         <CollectionsList
-          collections={data.collections || []}
+          collections={collections}
           activeId={activeCollectionId}
-          handleActiveCollection={handleActiveCollection}
         />
       )}
 
@@ -78,11 +72,11 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <TagsList
+      {/* <TagsList
         tags={tags}
         activeTag={activeTagLabel}
         handleActiveTag={handleActiveTag}
-      />
+      /> */}
 
       <Authbox />
     </div>
