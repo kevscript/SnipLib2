@@ -4,24 +4,19 @@ import ListItem from "./ListItem";
 export type CollectionsListProps = {
   collections: Collection[];
   activeId: string;
-  handleActiveCollection: (id: string) => void;
 };
 
-const CollectionsList = ({
-  collections,
-  activeId,
-  handleActiveCollection,
-}: CollectionsListProps) => {
+const CollectionsList = ({ collections, activeId }: CollectionsListProps) => {
   return (
     <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {collections.map((collection, i) => (
         <ListItem
-          key={collection.id}
+          key={collection._id}
           first={i === 0}
           label={collection.label}
           amount={collection.snippets.length}
-          active={collection.id === activeId}
-          handleActive={() => handleActiveCollection(collection.id)}
+          active={collection._id === activeId}
+          collectionId={collection._id}
         />
       ))}
     </ul>
