@@ -1,5 +1,5 @@
 export type Snippet = {
-  id: string;
+  _id: any;
   title: string;
   description: string;
   content: string;
@@ -13,7 +13,7 @@ export type Snippet = {
 
 export const snippets: Snippet[] = [
   {
-    id: "1",
+    _id: "1",
     title: "title",
     description: "description",
     content: "<h1>Hello World 1</h1>",
@@ -25,7 +25,7 @@ export const snippets: Snippet[] = [
     updatedAt: Date.now(),
   },
   {
-    id: "2",
+    _id: "2",
     title: "title",
     description: "description",
     content: "<h1>Hello World 2</h1>",
@@ -37,7 +37,7 @@ export const snippets: Snippet[] = [
     updatedAt: Date.now(),
   },
   {
-    id: "3",
+    _id: "3",
     title: "title",
     description: "description",
     content: "<h1>Hello World 3</h1>",
@@ -49,7 +49,7 @@ export const snippets: Snippet[] = [
     updatedAt: Date.now(),
   },
   {
-    id: "4",
+    _id: "4",
     title: "title",
     description: "description",
     content: "<h1>Hello World 4</h1>",
@@ -61,7 +61,7 @@ export const snippets: Snippet[] = [
     updatedAt: Date.now(),
   },
   {
-    id: "5",
+    _id: "5",
     title: "title",
     description: "description",
     content: "<h1>Hello World 5</h1>",
