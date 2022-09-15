@@ -1,68 +1,35 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { dataContext, useDataProvider } from "@/hooks/useData";
-import Sidebar from "@/components/Sidebar";
-import { useEffect } from "react";
-import { userData } from "@/mocks/userData";
-import { useRouter } from "next/router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
+import { NextPage } from "next";
+import AuthGuard from "@/components/AuthGuard";
+import { UserDataProvider } from "@/hooks/useUserData";
+import { ReactElement, ReactNode } from "react";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const router = useRouter();
-  const {
-    data,
-    initData,
-    handleActiveCollection,
-    handleActiveSnippet,
-    ...restData
-  } = useDataProvider();
+export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
+  authRequired?: boolean;
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
-  useEffect(() => {
-    if (!data) {
-      initData(userData);
-      // set initial active collection and snippet
-      const firstCollection =
-        userData.collections.length > 0 ? userData.collections[0] : null;
+const queryClient = new QueryClient();
 
-      if (firstCollection) {
-        handleActiveCollection(firstCollection.id);
+function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
+  const { Component }: { Component: NextCustomPage } = props;
 
-        if (firstCollection.snippets?.length > 0) {
-          handleActiveSnippet({
-            id: firstCollection.snippets[0].id,
-            collectionIdOfSnippet: firstCollection.id,
-          });
-        }
-
-        router.push(`/collection/${firstCollection.id}`);
-      }
-    }
-  });
-
-  if (!data) {
-    return (
-      <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
-        <h1>Loading skeleton.....</h1>
-      </div>
-    );
-  }
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <SessionProvider session={session}>
-      <dataContext.Provider
-        value={{
-          data,
-          initData,
-          handleActiveCollection,
-          handleActiveSnippet,
-          ...restData,
-        }}
-      >
-        <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
-          <Sidebar />
-          <Component {...pageProps} />
-        </div>
-      </dataContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <UserDataProvider>
+          {Component.authRequired ? (
+            <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </UserDataProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }
