@@ -2,38 +2,46 @@ import SidebarWrapper from "@/components/layouts/SidebarWrapper";
 import SnipbarWrapper from "@/components/layouts/SnipbarWrapper";
 import { useUserData } from "@/hooks/useUserData";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { NextCustomPage } from "../../_app";
 
 const CollectionPage: NextCustomPage = () => {
   const router = useRouter();
-  const { collections, initSnippet, activeCollectionId, activeSnippetId } =
-    useUserData();
+  const { collections, checkCollectionPath } = useUserData();
+
+  const [pushWasCalled, setPushWasCalled] = useState(false);
+
+  const [collectionIsEmpty, setCollectionIsEmpty] = useState(false);
 
   useEffect(() => {
-    if (collections && router) {
-      initSnippet({
-        snippetId: null,
+    if (collections && router.isReady && !pushWasCalled) {
+      const pathData = checkCollectionPath({
         collectionId: router.query.collectionId as string,
       });
-    }
-  }, [collections, initSnippet, router]);
 
-  useEffect(() => {
-    if (collections && router) {
-      if (activeCollectionId) {
-        if (activeSnippetId) {
-          router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
+      if (pathData.isCorrect) {
+        if (pathData.snippetId) {
+          router.push(
+            `/collections/${pathData.collectionId}/${pathData.snippetId}`
+          );
+          setPushWasCalled(true);
         } else {
-          router.push(`/collections/${activeCollectionId}`);
+          setCollectionIsEmpty(true);
         }
+      } else {
+        router.push(
+          `/collections/${pathData.collectionId}/${pathData.snippetId}`
+        );
+        setPushWasCalled(true);
       }
     }
-  }, [activeCollectionId, activeSnippetId, collections, router]);
+  }, [checkCollectionPath, collections, router, pushWasCalled]);
+
+  if (collectionIsEmpty) return <h1>Collection Is Empty</h1>;
 
   return (
     <div>
-      <h1>Collection id: {router.query.collectionId}</h1>
+      <h1>Loading...</h1>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { TagItem } from "@/mocks/tags";
-import ListItem from "./ListItem";
+import ListItem from "./CollectionItem";
 
 export type TagsListProps = {
   tags: TagItem[];

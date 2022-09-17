@@ -7,19 +7,37 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { collections, initializeApp } = useUserData();
+  const { collections, initializeApp, activeCollectionId, activeSnippetId } =
+    useUserData();
 
   useEffect(() => {
     if (collections && status === "authenticated") {
       initializeApp();
-      router.push("collections/");
     }
-  }, [collections, initializeApp, router, status]);
+  }, [collections, initializeApp, status]);
+
+  useEffect(() => {
+    if (activeCollectionId) {
+      if (activeSnippetId) {
+        router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
+      } else {
+        router.push(`/collections/${activeCollectionId}`);
+      }
+    }
+  }, [activeCollectionId, activeSnippetId, router]);
+
+  if (status === "unauthenticated") {
+    return (
+      <div>
+        <h1>Concieve, Believe, Achieve</h1>
+        <button onClick={() => signIn("github")}>Login with Github</button>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>Concieve, Believe, Achieve</h1>
-      <button onClick={() => signIn("github")}>Login with Github</button>
+    <div className="flex items-center justify-center w-full h-full">
+      <h1>Loading collection...</h1>
     </div>
   );
 };

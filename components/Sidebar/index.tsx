@@ -1,4 +1,5 @@
 import { useUserData } from "@/hooks/useUserData";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
@@ -58,7 +59,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {collections && (
+      {collections && activeCollectionId && (
         <CollectionsList
           collections={collections}
           activeId={activeCollectionId}

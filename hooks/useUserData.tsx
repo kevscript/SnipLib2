@@ -10,14 +10,23 @@ export type UserData = {
   error: any;
   activeCollectionId: string;
   activeSnippetId: string;
-  initSnippet: ({
-    snippetId,
-    collectionId,
-  }: {
-    snippetId: string | null;
-    collectionId: string;
-  }) => void;
   initializeApp: () => void;
+  checkSnippetPath: ({
+    collectionId,
+    snippetId,
+  }: {
+    collectionId: string;
+    snippetId: string;
+  }) => {
+    isCorrect: boolean;
+    collectionId: string | null;
+    snippetId: string | null;
+  };
+  checkCollectionPath: ({ collectionId }: { collectionId: string }) => {
+    isCorrect: boolean;
+    collectionId: string | null;
+    snippetId: string | null;
+  };
 };
 
 export const fetchUserData = async () => {
@@ -40,44 +49,6 @@ const useUserDataProvider = () => {
   const [activeCollectionId, setActiveCollectionId] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
 
-  const initSnippet = ({
-    snippetId,
-    collectionId,
-  }: {
-    snippetId: string | null;
-    collectionId: string;
-  }) => {
-    const collection = collections.find((c: any) => c._id === collectionId);
-    if (!collection) {
-      return console.log("no collection found with id " + collectionId);
-    } else {
-      if (activeCollectionId !== collectionId) {
-        setActiveCollectionId(collectionId);
-      }
-
-      if (!snippetId) {
-        if (collection.snippets.length > 0) {
-          setActiveSnippetId(collection.snippets[0]._id);
-        } else {
-          return console.log(
-            `collection ${collection.label} has no snippets yet`
-          );
-        }
-      } else {
-        const snippet = collection.snippets.find(
-          (s: any) => s._id === snippetId
-        );
-        if (!snippet) {
-          return console.log("no snippet found with id " + snippetId);
-        } else {
-          if (activeSnippetId !== snippet._id) {
-            setActiveSnippetId(snippet._id);
-          }
-        }
-      }
-    }
-  };
-
   const initializeApp = () => {
     if (collections) {
       if (collections.length > 0) {
@@ -85,11 +56,100 @@ const useUserDataProvider = () => {
         setActiveCollectionId(firstCollection._id);
         if (firstCollection.snippets.length > 0) {
           setActiveSnippetId(firstCollection.snippets[0]._id);
+        } else {
+          setActiveSnippetId("");
         }
-      } else {
-        console.log("no collection yet");
       }
     }
+  };
+
+  const getDefaultSnippet = () => {
+    const ids: { collectionId: string | null; snippetId: string | null } = {
+      collectionId: null,
+      snippetId: null,
+    };
+    const defaultCollection = collections[0];
+    ids.collectionId = defaultCollection._id;
+    const defaultSnippet =
+      defaultCollection.snippets.length > 0 && defaultCollection.snippets[0];
+    ids.snippetId = defaultSnippet._id;
+    return ids;
+  };
+
+  const checkCollectionPath = ({ collectionId }: { collectionId: string }) => {
+    const col = collections.find((c: any) => c._id === collectionId);
+    if (!col) {
+      // get default snippet
+      const { collectionId, snippetId } = getDefaultSnippet();
+      collectionId && setActiveCollectionId(collectionId);
+      snippetId && setActiveSnippetId(snippetId);
+      return {
+        isCorrect: false,
+        collectionId,
+        snippetId,
+      };
+    } else {
+      setActiveCollectionId(col._id);
+      const snip = col.snippets.length > 0 && col.snippets[0];
+      if (!snip) {
+        setActiveSnippetId("");
+        return {
+          isCorrect: true,
+          collectionId,
+          snippetId: null,
+        };
+      } else {
+        setActiveSnippetId(snip._id);
+        return {
+          isCorrect: true,
+          collectionId,
+          snippetId: snip._id,
+        };
+      }
+    }
+  };
+
+  const checkSnippetPath = ({
+    collectionId,
+    snippetId,
+  }: {
+    collectionId: string;
+    snippetId: string;
+  }) => {
+    const col = collections.find((c: any) => c._id === collectionId);
+    if (!col) {
+      // get default snippet
+      const { collectionId, snippetId } = getDefaultSnippet();
+      collectionId && setActiveCollectionId(collectionId);
+      snippetId && setActiveSnippetId(snippetId);
+      return {
+        isCorrect: false,
+        collectionId,
+        snippetId,
+      };
+    } else {
+      setActiveCollectionId(col._id);
+      const snip = col.snippets.find((s: any) => s._id === snippetId);
+      if (!snip) {
+        // get default snippet
+        const { collectionId, snippetId } = getDefaultSnippet();
+        collectionId && setActiveCollectionId(collectionId);
+        snippetId && setActiveSnippetId(snippetId);
+        return {
+          isCorrect: false,
+          collectionId,
+          snippetId,
+        };
+      } else {
+        setActiveSnippetId(snip._id);
+      }
+    }
+
+    return {
+      isCorrect: true,
+      collectionId: collectionId,
+      snippetId: snippetId,
+    };
   };
 
   return {
@@ -99,8 +159,9 @@ const useUserDataProvider = () => {
     error,
     activeCollectionId,
     activeSnippetId,
-    initSnippet,
     initializeApp,
+    checkSnippetPath,
+    checkCollectionPath,
   };
 };
 
