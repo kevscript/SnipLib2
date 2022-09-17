@@ -31,24 +31,27 @@ const Snipbar = () => {
 
   return (
     <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
-      {activeCollection && (
-        <>
-          <SnipbarHeader label={activeCollection.label} />
-          <div className="w-full h-[2px] bg-carbon-600"></div>
+      <>
+        <SnipbarHeader label={activeCollection.label} />
+        <div className="w-full h-[2px] bg-carbon-600"></div>
+
+        {activeCollection.snippets.length > 0 ? (
           <ul className="flex flex-col flex-1 overflow-y-auto">
-            {activeCollection &&
-              activeCollection.snippets &&
-              activeCollection.snippets.map((snippet, i) => (
-                <SnipItem
-                  key={snippet._id}
-                  snippet={snippet}
-                  collectionId={activeCollectionId}
-                  isActive={activeSnippetId === snippet._id}
-                />
-              ))}
+            {activeCollection.snippets.map((snippet, i) => (
+              <SnipItem
+                key={snippet._id}
+                snippet={snippet}
+                collectionId={activeCollectionId}
+                isActive={activeSnippetId === snippet._id}
+              />
+            ))}
           </ul>
-        </>
-      )}
+        ) : (
+          <div className="bg-red">
+            <span>No snippet yet in this collection</span>
+          </div>
+        )}
+      </>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import SnipbarWrapper from "@/components/layouts/SnipbarWrapper";
 import { useUserData } from "@/hooks/useUserData";
-import { Snippet } from "@/mocks/snippets";
+import { Snippet, snippets } from "@/mocks/snippets";
 import { ReactElement, useEffect, useState } from "react";
 
 import { NextCustomPage } from "../../_app";
@@ -9,35 +9,30 @@ import { useRouter } from "next/router";
 
 const CollectionSnippetPage: NextCustomPage = () => {
   const router = useRouter();
-  const { collections, initSnippet, activeCollectionId, activeSnippetId } =
-    useUserData();
+
+  const { collections, checkSnippetPath } = useUserData();
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   useEffect(() => {
-    if (collections && router) {
-      initSnippet({
+    if (collections && router.isReady) {
+      const pathData = checkSnippetPath({
         collectionId: router.query.collectionId as string,
         snippetId: router.query.snippetId as string,
       });
-    }
-  }, [collections, initSnippet, router]);
 
-  useEffect(() => {
-    if (collections && router) {
-      const currActiveCollection = collections.find(
-        (c) => c._id === activeCollectionId
-      );
-      if (currActiveCollection) {
-        const currActiveSnippet = currActiveCollection.snippets.find(
-          (s) => s._id == activeSnippetId
+      if (pathData.isCorrect) {
+        const col = collections.find((c) => c._id === pathData.collectionId);
+        const snip = col?.snippets.find((s) => s._id === pathData.snippetId);
+        snip && setActiveSnippet(snip);
+      } else {
+        router.push(
+          `/collections/${pathData.collectionId}/${pathData.snippetId}`
         );
-
-        currActiveSnippet && setActiveSnippet(currActiveSnippet);
       }
     }
-  }, [collections, router, activeSnippetId, activeCollectionId]);
+  }, [checkSnippetPath, collections, router]);
 
-  if (!activeSnippet) return <h1>Loading...</h1>;
+  if (!activeSnippet) return <h1>Loading snippet...</h1>;
 
   return (
     <div className="flex-1 p-16">

@@ -26,7 +26,7 @@ function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
           {Component.authRequired ? (
             <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
           ) : (
-            <Component {...pageProps} />
+            <>{getLayout(<Component {...pageProps} />)}</>
           )}
         </UserDataProvider>
       </QueryClientProvider>

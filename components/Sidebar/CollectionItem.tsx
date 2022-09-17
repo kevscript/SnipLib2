@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Branch from "./Branch";
 
-export type ListItemProps = {
+export type CollectionItemProps = {
   first?: boolean;
   label: string;
   amount: number;
@@ -15,15 +15,9 @@ const ListItem = ({
   amount,
   active,
   collectionId,
-}: ListItemProps) => {
+}: CollectionItemProps) => {
   return (
-    <Link
-      href={{
-        pathname: "/collections/[collectionId]",
-        query: { collectionId: collectionId },
-      }}
-      passHref
-    >
+    <Link href={`/collections/${collectionId}`} passHref>
       <li className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
         <div className="flex flex-nowrap">
           <Branch short={first} active={active} />
