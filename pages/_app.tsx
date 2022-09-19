@@ -4,8 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { NextPage } from "next";
 import AuthGuard from "@/components/AuthGuard";
-import { UserDataProvider } from "@/hooks/useUserData";
 import { ReactElement, ReactNode } from "react";
+import { DataProvider } from "@/hooks/useData";
 
 export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
   authRequired?: boolean;
@@ -22,13 +22,13 @@ function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <UserDataProvider>
+        <DataProvider>
           {Component.authRequired ? (
             <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
           ) : (
             <>{getLayout(<Component {...pageProps} />)}</>
           )}
-        </UserDataProvider>
+        </DataProvider>
       </QueryClientProvider>
     </SessionProvider>
   );

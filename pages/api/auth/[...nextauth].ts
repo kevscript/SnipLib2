@@ -2,7 +2,6 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
-import { ObjectID } from "bson";
 import connectMongoose from "@/utils/connectMongoose";
 import UserData, { UserDataType } from "models/UserData";
 
@@ -40,6 +39,7 @@ export const authOptions: NextAuthOptions = {
                 {
                   label: "sandbox",
                   snippetIds: [],
+                  default: true,
                 },
               ],
               snippets: [],
