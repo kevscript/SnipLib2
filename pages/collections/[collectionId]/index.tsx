@@ -50,7 +50,7 @@ CollectionPage.authRequired = true;
 CollectionPage.getLayout = (page: ReactElement) => {
   return (
     <SidebarWrapper>
-      <SnipbarWrapper>{page}</SnipbarWrapper>
+      <SnipbarWrapper filter="collection">{page}</SnipbarWrapper>
     </SidebarWrapper>
   );
 };

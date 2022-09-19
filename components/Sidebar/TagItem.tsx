@@ -1,23 +1,16 @@
 import Link from "next/link";
 import Branch from "./Branch";
 
-export type CollectionItemProps = {
+export type TagItemProps = {
   first?: boolean;
   label: string;
   amount: number;
   active: boolean;
-  collectionId: string;
 };
 
-const CollectionItem = ({
-  first = false,
-  label,
-  amount,
-  active,
-  collectionId,
-}: CollectionItemProps) => {
+const TagItem = ({ first, active, label, amount }: TagItemProps) => {
   return (
-    <Link href={`/collections/${collectionId}`} passHref>
+    <Link href={`/tags/${label}`} passHref>
       <li className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
         <div className="flex flex-nowrap">
           <Branch short={first} active={active} />
@@ -26,7 +19,7 @@ const CollectionItem = ({
               active ? "text-white" : "text-carbon-300"
             } group-hover:text-white`}
           >
-            {label}
+            {"#" + label}
           </span>
         </div>
         <div className="flex justify-center w-6">
@@ -43,4 +36,4 @@ const CollectionItem = ({
   );
 };
 
-export default CollectionItem;
+export default TagItem;

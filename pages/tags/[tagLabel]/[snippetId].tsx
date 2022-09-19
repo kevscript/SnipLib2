@@ -1,28 +1,26 @@
+import SidebarWrapper from "@/components/layouts/SidebarWrapper";
 import SnipbarWrapper from "@/components/layouts/SnipbarWrapper";
 import { useUserData } from "@/hooks/useUserData";
-import { Snippet, snippets } from "@/mocks/snippets";
+import { Snippet } from "@/mocks/snippets";
+import { NextCustomPage } from "@/pages/_app";
+import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 
-import { NextCustomPage } from "../../_app";
-import SidebarWrapper from "@/components/layouts/SidebarWrapper";
-import { useRouter } from "next/router";
-
-const CollectionSnippetPage: NextCustomPage = () => {
+const TagSnippetPage: NextCustomPage = () => {
   const router = useRouter();
 
-  const { collections, checkSnippetPath } = useUserData();
+  const { snippets, checkSnippetPathFromTags } = useUserData();
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   useEffect(() => {
-    if (collections && router.isReady) {
-      const pathData = checkSnippetPath({
-        collectionId: router.query.collectionId as string,
+    if (snippets && router.isReady) {
+      const pathData = checkSnippetPathFromTags({
+        tagLabel: router.query.tagLabel as string,
         snippetId: router.query.snippetId as string,
       });
 
       if (pathData.isCorrect) {
-        const col = collections.find((c) => c._id === pathData.collectionId);
-        const snip = col?.snippets.find((s) => s._id === pathData.snippetId);
+        const snip = snippets.find((s) => s._id === pathData.snippetId);
         snip && setActiveSnippet(snip);
       } else {
         router.push(
@@ -30,7 +28,7 @@ const CollectionSnippetPage: NextCustomPage = () => {
         );
       }
     }
-  }, [checkSnippetPath, collections, router]);
+  }, [checkSnippetPathFromTags, snippets, router]);
 
   if (!activeSnippet) return <h1>Loading snippet...</h1>;
 
@@ -94,13 +92,12 @@ const CollectionSnippetPage: NextCustomPage = () => {
   );
 };
 
-CollectionSnippetPage.authRequired = true;
-CollectionSnippetPage.getLayout = (page: ReactElement) => {
+TagSnippetPage.authRequired = true;
+TagSnippetPage.getLayout = (page: ReactElement) => {
   return (
     <SidebarWrapper>
-      <SnipbarWrapper filter="collection">{page}</SnipbarWrapper>
+      <SnipbarWrapper filter="tag">{page}</SnipbarWrapper>
     </SidebarWrapper>
   );
 };
-
-export default CollectionSnippetPage;
+export default TagSnippetPage;

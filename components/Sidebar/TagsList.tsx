@@ -1,24 +1,28 @@
-import { TagItem } from "@/mocks/tags";
-import ListItem from "./CollectionItem";
+import { TagItem as TagItemType } from "@/mocks/tags";
+import TagItem from "./TagItem";
 
 export type TagsListProps = {
-  tags: TagItem[];
-  activeTag: string;
+  tags: TagItemType[] | null;
+  activeTagLabel: string;
 };
 
-const TagsList = ({ tags, activeTag }: TagsListProps) => {
+const TagsList = ({ tags, activeTagLabel }: TagsListProps) => {
   return (
     <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
-      {tags.map((tag, i) => (
-        <li key={tag.label}>{tag.label}</li>
-        // <ListItem
-        //   key={tag.label}
-        //   first={i === 0}
-        //   label={tag.label}
-        //   amount={tag.amount}
-        //   active={tag.label === activeTag}
-        // />
-      ))}
+      {tags &&
+        tags
+          .sort((a, b) => (a.amount > b.amount ? -1 : 1))
+          .map((tag, i) => {
+            return (
+              <TagItem
+                key={tag.label}
+                first={i === 0}
+                active={activeTagLabel === tag.label}
+                label={tag.label}
+                amount={tag.amount}
+              />
+            );
+          })}
     </ul>
   );
 };
