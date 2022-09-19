@@ -9,6 +9,7 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { data } = useData();
+
   // const { collections, initializeApp, activeCollectionId, activeSnippetId } =
   //   useUserData();
 
