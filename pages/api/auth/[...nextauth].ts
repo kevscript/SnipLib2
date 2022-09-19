@@ -3,7 +3,8 @@ import GithubProvider from "next-auth/providers/github";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
 import { ObjectID } from "bson";
-import { UserData } from "@/mocks/userData";
+import connectMongoose from "@/utils/connectMongoose";
+import UserData, { UserDataType } from "models/UserData";
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -27,37 +28,26 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
 
         if (isNewUser) {
-          const m = await clientPromise;
+          try {
+            // wait for mongoDB
+            const m = await clientPromise;
+            // wait for mongoose
+            await connectMongoose();
 
-          const initUserData: UserData = {
-            userId: user.id,
-            collections: [
-              {
-                _id: new ObjectID(),
-                label: "sandbox",
-                snippets: [
-                  {
-                    _id: new ObjectID(),
-                    title: "Hello World example",
-                    language: "html",
-                    description: "My first snippet on SnipLib.",
-                    content: "<h1>Hello World</h1>",
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                    favorite: false,
-                    public: false,
-                    tags: ["hello", "world"],
-                  },
-                ],
-              },
-            ],
-          };
-
-          const createdUserData = await m
-            .db("sniplib")
-            .collection("usersData")
-            .insertOne(initUserData);
-          console.log("data created", createdUserData);
+            const initUserData: UserDataType = await UserData.create({
+              userId: user.id,
+              collections: [
+                {
+                  label: "sandbox",
+                  snippetIds: [],
+                },
+              ],
+              snippets: [],
+            });
+            console.log(initUserData);
+          } catch (err: any) {
+            console.log(err.message);
+          }
         }
       }
 
