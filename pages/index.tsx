@@ -1,3 +1,4 @@
+import { useData } from "@/hooks/useData";
 import { useUserData } from "@/hooks/useUserData";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
@@ -7,6 +8,8 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { data } = useData();
+
   // const { collections, initializeApp, activeCollectionId, activeSnippetId } =
   //   useUserData();
 
@@ -37,7 +40,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
-      <h1>Loading collection...</h1>
+      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </div>
   );
 };
