@@ -1,4 +1,6 @@
 import { Collection } from "@/mocks/collections";
+import { Snippet } from "@/mocks/snippets";
+import { TagItem } from "@/mocks/tags";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useState } from "react";
@@ -7,10 +9,15 @@ export type UserData = {
   isLoading: boolean;
   isError: boolean;
   collections: Collection[];
+  snippets: Snippet[] | null;
+  tags: TagItem[] | null;
   error: any;
   activeCollectionId: string;
   activeSnippetId: string;
+  activeTagLabel: string;
   initializeApp: () => void;
+  initializeFromCollections: () => void;
+  initializeFromTags: () => void;
   checkSnippetPath: ({
     collectionId,
     snippetId,
@@ -22,9 +29,27 @@ export type UserData = {
     collectionId: string | null;
     snippetId: string | null;
   };
+  checkSnippetPathFromTags: ({
+    tagLabel,
+    snippetId,
+  }: {
+    tagLabel: string;
+    snippetId: string;
+  }) => {
+    isCorrect: boolean;
+    tagLabel?: string;
+    collectionId?: string | null;
+    snippetId: string | null;
+  };
   checkCollectionPath: ({ collectionId }: { collectionId: string }) => {
     isCorrect: boolean;
     collectionId: string | null;
+    snippetId: string | null;
+  };
+  checkTagPath: ({ tagLabel }: { tagLabel: string }) => {
+    isCorrect: boolean;
+    collectionId?: string | null;
+    tagLabel?: string;
     snippetId: string | null;
   };
 };
@@ -44,10 +69,39 @@ const useUserDataProvider = () => {
     error,
   } = useQuery(["userData"], fetchUserData, {
     enabled: status === "authenticated",
+    onSuccess: (collections) => {
+      // init tags and init flatten snippets
+      const initTags: { [key: string]: number } = {};
+      const flattenSnippets: Snippet[] = [];
+
+      collections.forEach((col: any) => {
+        flattenSnippets.push(...col.snippets);
+        col.snippets.forEach((snip: any) => {
+          snip.tags.forEach((tag: string) => {
+            return initTags[tag] ? initTags[tag]++ : (initTags[tag] = 1);
+          });
+        });
+      });
+
+      setSnnippets(flattenSnippets);
+
+      const tagsArr = Object.entries(initTags)
+        .map(([label, amount]) => ({
+          label: label,
+          amount: amount,
+        }))
+        .sort((a, b) => (a.amount > b.amount ? 1 : -1));
+
+      setTags(tagsArr);
+    },
   });
+
+  const [tags, setTags] = useState<TagItem[] | null>(null);
+  const [snippets, setSnnippets] = useState<Snippet[] | null>(null);
 
   const [activeCollectionId, setActiveCollectionId] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
+  const [activeTagLabel, setActiveTagLabel] = useState("");
 
   const initializeApp = () => {
     if (collections) {
@@ -59,6 +113,36 @@ const useUserDataProvider = () => {
         } else {
           setActiveSnippetId("");
         }
+      }
+    }
+  };
+
+  const initializeFromCollections = () => {
+    if (collections) {
+      if (collections.length > 0) {
+        const firstCollection = collections[0];
+        setActiveCollectionId(firstCollection._id);
+        setActiveTagLabel("");
+        if (firstCollection.snippets.length > 0) {
+          setActiveSnippetId(firstCollection.snippets[0]._id);
+        } else {
+          setActiveSnippetId("");
+        }
+      }
+    }
+  };
+
+  const initializeFromTags = () => {
+    if (snippets && tags) {
+      if (tags.length > 0) {
+        const firstTag = tags[0];
+        setActiveTagLabel(firstTag.label);
+        setActiveCollectionId("");
+        let firstSnippetWithTag = snippets.find((snip) =>
+          snip.tags.includes(firstTag.label)
+        );
+
+        firstSnippetWithTag && setActiveSnippetId(firstSnippetWithTag._id);
       }
     }
   };
@@ -76,6 +160,39 @@ const useUserDataProvider = () => {
     return ids;
   };
 
+  const checkTagPath = ({ tagLabel }: { tagLabel: string }) => {
+    const tag = tags?.find((tag) => tag.label === tagLabel);
+    if (tag) {
+      setActiveTagLabel(tagLabel);
+      setActiveCollectionId("");
+
+      const snip = snippets?.find((snip) => snip.tags.includes(tagLabel));
+      if (snip) {
+        setActiveSnippetId(snip._id);
+
+        return {
+          isCorrect: true,
+          tagLabel,
+          snippetId: snip._id,
+        };
+      } else {
+        return {
+          isCorrect: true,
+          tagLabel,
+          snippetId: null,
+        };
+      }
+    }
+
+    // get default snippet
+    const { collectionId, snippetId } = getDefaultSnippet();
+    return {
+      isCorrect: false,
+      collectionId,
+      snippetId,
+    };
+  };
+
   const checkCollectionPath = ({ collectionId }: { collectionId: string }) => {
     const col = collections.find((c: any) => c._id === collectionId);
     if (!col) {
@@ -90,6 +207,7 @@ const useUserDataProvider = () => {
       };
     } else {
       setActiveCollectionId(col._id);
+      setActiveTagLabel("");
       const snip = col.snippets.length > 0 && col.snippets[0];
       if (!snip) {
         setActiveSnippetId("");
@@ -107,6 +225,37 @@ const useUserDataProvider = () => {
         };
       }
     }
+  };
+
+  const checkSnippetPathFromTags = ({
+    tagLabel,
+    snippetId,
+  }: {
+    tagLabel: string;
+    snippetId: string;
+  }) => {
+    const tag = tags?.find((tag) => tag.label === tagLabel);
+    if (tag) {
+      setActiveTagLabel(tag.label);
+      const snip = snippets?.find((snip) => snip._id === snippetId);
+      if (snip?.tags.includes(tag.label)) {
+        setActiveSnippetId(snip._id);
+
+        return {
+          isCorrect: true,
+          tagLabel,
+          snippetId,
+        };
+      }
+    }
+
+    // get default snippet
+    const { collectionId: cId, snippetId: sId } = getDefaultSnippet();
+    return {
+      isCorrect: false,
+      collectionId: cId,
+      snippetId: sId,
+    };
   };
 
   const checkSnippetPath = ({
@@ -156,12 +305,19 @@ const useUserDataProvider = () => {
     isLoading,
     isError,
     collections,
+    tags,
+    snippets,
     error,
     activeCollectionId,
     activeSnippetId,
+    activeTagLabel,
     initializeApp,
+    initializeFromCollections,
+    initializeFromTags,
     checkSnippetPath,
     checkCollectionPath,
+    checkTagPath,
+    checkSnippetPathFromTags,
   };
 };
 

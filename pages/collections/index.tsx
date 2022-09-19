@@ -9,14 +9,18 @@ import { NextCustomPage } from "../_app";
 const CollectionsPage: NextCustomPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { collections, activeCollectionId, activeSnippetId, initializeApp } =
-    useUserData();
+  const {
+    collections,
+    activeCollectionId,
+    activeSnippetId,
+    initializeFromCollections,
+  } = useUserData();
 
   useEffect(() => {
     if (collections && status === "authenticated") {
-      initializeApp();
+      initializeFromCollections();
     }
-  }, [collections, initializeApp, status]);
+  }, [collections, initializeFromCollections, status]);
 
   useEffect(() => {
     if (activeCollectionId) {
@@ -35,7 +39,7 @@ CollectionsPage.authRequired = true;
 CollectionsPage.getLayout = (page: ReactElement) => {
   return (
     <SidebarWrapper>
-      <SnipbarWrapper>{page}</SnipbarWrapper>
+      <SnipbarWrapper filter="collection">{page}</SnipbarWrapper>
     </SidebarWrapper>
   );
 };
