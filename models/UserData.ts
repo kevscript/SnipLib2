@@ -1,17 +1,17 @@
 import { Schema, model, models } from "mongoose";
-import Collection, { CollectionType } from "./Collection";
-import Snippet, { SnippetType } from "./Snippet";
+import { CollectionType, collectionSchema } from "./Collection";
+import { SnippetType, snippetSchema } from "./Snippet";
 
 export type UserDataType = {
   userId: string;
-  collections: [CollectionType];
-  snippets: [SnippetType];
+  collections: CollectionType[];
+  snippets: SnippetType[];
 };
 
 const userDataSchema = new Schema<UserDataType>({
   userId: String,
-  collections: [Collection],
-  snippets: [Snippet],
+  collections: [collectionSchema],
+  snippets: [snippetSchema],
 });
 
 const UserData = models.UserData || model("UserData", userDataSchema);

@@ -7,24 +7,24 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { collections, initializeApp, activeCollectionId, activeSnippetId } =
-    useUserData();
+  // const { collections, initializeApp, activeCollectionId, activeSnippetId } =
+  //   useUserData();
 
-  useEffect(() => {
-    if (collections && status === "authenticated") {
-      initializeApp();
-    }
-  }, [collections, initializeApp, status]);
+  // useEffect(() => {
+  //   if (collections && status === "authenticated") {
+  //     initializeApp();
+  //   }
+  // }, [collections, initializeApp, status]);
 
-  useEffect(() => {
-    if (activeCollectionId) {
-      if (activeSnippetId) {
-        router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
-      } else {
-        router.push(`/collections/${activeCollectionId}`);
-      }
-    }
-  }, [activeCollectionId, activeSnippetId, router]);
+  // useEffect(() => {
+  //   if (activeCollectionId) {
+  //     if (activeSnippetId) {
+  //       router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
+  //     } else {
+  //       router.push(`/collections/${activeCollectionId}`);
+  //     }
+  //   }
+  // }, [activeCollectionId, activeSnippetId, router]);
 
   if (status === "unauthenticated") {
     return (

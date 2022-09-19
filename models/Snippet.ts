@@ -1,6 +1,7 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, ObjectId } from "mongoose";
 
 export type SnippetType = {
+  collectionId: ObjectId;
   title: string;
   language: string;
   description: string;
@@ -12,7 +13,11 @@ export type SnippetType = {
   tags: string[];
 };
 
-const snippetSchema = new Schema<SnippetType>({
+export const snippetSchema = new Schema<SnippetType>({
+  collectionId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -53,7 +58,3 @@ const snippetSchema = new Schema<SnippetType>({
     type: [String],
   },
 });
-
-const Snippet = models.Snippet || model("Snippet", snippetSchema);
-
-export default Snippet;
