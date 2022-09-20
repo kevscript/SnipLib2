@@ -1,5 +1,6 @@
 import connectMongoose from "@/utils/connectMongoose";
 import UserData from "models/UserData";
+import { ObjectID } from "bson";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 
@@ -12,7 +13,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await connectMongoose();
 
-      const userData = await UserData.findOne({ userId: user.id });
+      const userData = await UserData.findOne({
+        userId: new ObjectID(user.id),
+      });
       if (userData) {
         return res.json(userData);
       } else {
@@ -21,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           .json({ error: { message: `No data found for user ${user.id}` } });
       }
     } catch (err: any) {
-      throw res.status(500).json({ error: { message: err.message } });
+      throw res.status(500).json({ error: err });
     }
   } else {
     throw res
