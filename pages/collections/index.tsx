@@ -1,46 +1,25 @@
-import SidebarWrapper from "@/components/layouts/SidebarWrapper";
-import SnipbarWrapper from "@/components/layouts/SnipbarWrapper";
-import { useUserData } from "@/hooks/useUserData";
+import { useData } from "@/hooks/useData";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect } from "react";
-import { NextCustomPage } from "../_app";
+import { useEffect } from "react";
 
-const CollectionsPage: NextCustomPage = () => {
+const CollectionsPage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const {
-    collections,
-    activeCollectionId,
-    activeSnippetId,
-    initializeFromCollections,
-  } = useUserData();
+  const { status } = useSession();
+
+  const { activeCollectionId, activeSnippetId } = useData();
 
   useEffect(() => {
-    if (collections && status === "authenticated") {
-      initializeFromCollections();
+    if (activeCollectionId && status === "authenticated") {
+      router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
     }
-  }, [collections, initializeFromCollections, status]);
+  }, [activeCollectionId, activeSnippetId, router, status]);
 
-  useEffect(() => {
-    if (activeCollectionId) {
-      if (activeSnippetId) {
-        router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
-      } else {
-        router.push(`/collections/${activeCollectionId}`);
-      }
-    }
-  }, [activeCollectionId, activeSnippetId, router]);
-
-  return <h1>Collections Page</h1>;
-};
-
-CollectionsPage.authRequired = true;
-CollectionsPage.getLayout = (page: ReactElement) => {
   return (
-    <SidebarWrapper>
-      <SnipbarWrapper filter="collection">{page}</SnipbarWrapper>
-    </SidebarWrapper>
+    <div className="flex items-center justify-center w-full h-screen">
+      <h1>Loading from /collections/...</h1>
+    </div>
   );
 };
+
 export default CollectionsPage;
