@@ -1,13 +1,14 @@
-import { Schema, model, models, ObjectId } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
 
 export type AccountType = {
+  _id: Types.ObjectId | string;
   provider: string;
   type: string;
   providerAccountId: string;
   access_token: string;
   token_type: string;
   scope: string;
-  userId: ObjectId;
+  userId: Types.ObjectId | string;
 };
 
 const accountSchema = new Schema<AccountType>({

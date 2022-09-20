@@ -1,9 +1,10 @@
-import { Schema, ObjectId } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 export type CollectionType = {
+  _id: Types.ObjectId | string;
   default: boolean;
   label: string;
-  snippetIds: ObjectId[];
+  snippetIds: Array<Types.ObjectId | string>;
 };
 
 export const collectionSchema = new Schema<CollectionType>({
@@ -19,6 +20,8 @@ export const collectionSchema = new Schema<CollectionType>({
   },
   snippetIds: {
     type: [Schema.Types.ObjectId],
+    required: true,
+    default: [],
   },
 });
 

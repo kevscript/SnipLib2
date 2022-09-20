@@ -1,16 +1,17 @@
-import { Schema, ObjectId } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 export type SnippetType = {
-  collectionId: ObjectId;
+  _id: Types.ObjectId | string;
+  collectionId: Types.ObjectId | string;
   title: string;
   language: string;
   description: string;
   content: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: number;
+  updatedAt: number;
   favorite: boolean;
   public: boolean;
-  tags: string[];
+  tags?: string[];
 };
 
 export const snippetSchema = new Schema<SnippetType>({
@@ -35,14 +36,14 @@ export const snippetSchema = new Schema<SnippetType>({
     required: true,
   },
   createdAt: {
-    type: Date,
+    type: Number,
     required: true,
-    default: Date.now,
+    default: Date.now(),
   },
   updatedAt: {
-    type: Date,
+    type: Number,
     required: true,
-    default: Date.now,
+    default: Date.now(),
   },
   favorite: {
     type: Boolean,
@@ -56,5 +57,6 @@ export const snippetSchema = new Schema<SnippetType>({
   },
   tags: {
     type: [String],
+    default: [],
   },
 });
