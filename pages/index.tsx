@@ -1,5 +1,4 @@
 import { useData } from "@/hooks/useData";
-import { useUserData } from "@/hooks/useUserData";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -7,27 +6,14 @@ import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const { data } = useData();
+  const { status } = useSession();
+  const { activeCollectionId, activeSnippetId } = useData();
 
-  // const { collections, initializeApp, activeCollectionId, activeSnippetId } =
-  //   useUserData();
-
-  // useEffect(() => {
-  //   if (collections && status === "authenticated") {
-  //     initializeApp();
-  //   }
-  // }, [collections, initializeApp, status]);
-
-  // useEffect(() => {
-  //   if (activeCollectionId) {
-  //     if (activeSnippetId) {
-  //       router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
-  //     } else {
-  //       router.push(`/collections/${activeCollectionId}`);
-  //     }
-  //   }
-  // }, [activeCollectionId, activeSnippetId, router]);
+  useEffect(() => {
+    if (activeCollectionId && status === "authenticated") {
+      router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
+    }
+  }, [activeCollectionId, activeSnippetId, router, status]);
 
   if (status === "unauthenticated") {
     return (
@@ -39,8 +25,8 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
-      {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+    <div className="flex items-center justify-center w-full h-screen">
+      <h1>Loading...</h1>
     </div>
   );
 };

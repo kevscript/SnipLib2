@@ -1,106 +1,56 @@
-import SnipbarWrapper from "@/components/layouts/SnipbarWrapper";
-import { useUserData } from "@/hooks/useUserData";
-import { Snippet, snippets } from "@/mocks/snippets";
-import { ReactElement, useEffect, useState } from "react";
-
-import { NextCustomPage } from "../../_app";
-import SidebarWrapper from "@/components/layouts/SidebarWrapper";
+import { useData } from "@/hooks/useData";
+import { SnippetType } from "models/Snippet";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-const CollectionSnippetPage: NextCustomPage = () => {
+const SnippetPage = () => {
   const router = useRouter();
+  const { snippetId, collectionId } = router.query;
 
-  const { collections, checkSnippetPath } = useUserData();
-  const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
+  const [snippet, setSnippet] = useState<SnippetType | null>(null);
+
+  const {
+    activeCollectionId,
+    activeSnippetId,
+    collections,
+    snippets,
+    checkSnippet,
+  } = useData();
 
   useEffect(() => {
-    if (collections && router.isReady) {
-      const pathData = checkSnippetPath({
-        collectionId: router.query.collectionId as string,
-        snippetId: router.query.snippetId as string,
-      });
-
-      if (pathData.isCorrect) {
-        const col = collections.find((c) => c._id === pathData.collectionId);
-        const snip = col?.snippets.find((s) => s._id === pathData.snippetId);
-        snip && setActiveSnippet(snip);
+    if (collections && snippets) {
+      if (
+        activeCollectionId === collectionId &&
+        activeSnippetId === snippetId
+      ) {
+        const activeSnippet = snippets.find((s) => s._id === snippetId);
+        activeSnippet && setSnippet(activeSnippet);
       } else {
-        router.push(
-          `/collections/${pathData.collectionId}/${pathData.snippetId}`
-        );
+        checkSnippet({
+          collectionId: collectionId as string,
+          snippetId: snippetId as string,
+        });
       }
     }
-  }, [checkSnippetPath, collections, router]);
+  }, [
+    activeCollectionId,
+    activeSnippetId,
+    checkSnippet,
+    collectionId,
+    collections,
+    snippetId,
+    snippets,
+  ]);
 
-  if (!activeSnippet) return <h1>Loading snippet...</h1>;
-
-  return (
-    <div className="flex-1 p-16">
-      <div className="flex justify-between w-full">
-        <div className="flex text-xs font-bold gap-x-2">
-          <span className="uppercase text-carbon-300">snippet</span>
-          <span>/</span>
-          <span>{activeSnippet.title}</span>
-        </div>
-        <div className="flex flex-nowrap gap-x-4">
-          <button className="px-4 py-1 text-sm rounded-sm bg-marine">
-            snap
-          </button>
-          <button className="px-4 py-1 text-sm rounded-sm bg-marine">
-            edit
-          </button>
-          <button className="px-4 py-1 text-sm rounded-sm bg-marine">
-            delete
-          </button>
-        </div>
+  if (!snippet) {
+    return (
+      <div>
+        <h1>No snippet</h1>
       </div>
-      <div className="flex flex-col w-full mt-12">
-        <h3 className="text-2xl font-bold">{activeSnippet.title}</h3>
-        <p className="mt-4">{activeSnippet.description}</p>
+    );
+  }
 
-        <div className="flex items-center justify-between w-full mt-12">
-          <span className="text-sm">{activeSnippet.language}</span>
-          <ul className="flex flex-nowrap gap-x-2">
-            {activeSnippet.tags.map((tag, i) => (
-              <li
-                key={tag + i}
-                className="flex items-center justify-center px-4 py-1 text-sm bg-black rounded-sm"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <pre className="p-8 mt-2 rounded bg-carbon-600 h-96">
-          {activeSnippet.content}
-        </pre>
-        <div className="flex justify-between mt-2 text-sm text-carbon-300">
-          {activeSnippet.updatedAt !== activeSnippet.createdAt && (
-            <span>
-              edited the{" "}
-              {new Date(activeSnippet.updatedAt).toLocaleDateString()} at{" "}
-              {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
-            </span>
-          )}
-
-          <span>
-            created the {new Date(activeSnippet.updatedAt).toLocaleDateString()}{" "}
-            at {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  return <h1>Snippet title : {snippet.title}</h1>;
 };
 
-CollectionSnippetPage.authRequired = true;
-CollectionSnippetPage.getLayout = (page: ReactElement) => {
-  return (
-    <SidebarWrapper>
-      <SnipbarWrapper filter="collection">{page}</SnipbarWrapper>
-    </SidebarWrapper>
-  );
-};
-
-export default CollectionSnippetPage;
+export default SnippetPage;
