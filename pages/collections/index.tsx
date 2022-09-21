@@ -1,7 +1,8 @@
+import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useData";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 const CollectionsPage = () => {
   const router = useRouter();
@@ -22,4 +23,8 @@ const CollectionsPage = () => {
   );
 };
 
+CollectionsPage.authRequired = true;
+CollectionsPage.getLayout = (page: ReactElement) => {
+  return <BarsWrapper filter="collection">{page}</BarsWrapper>;
+};
 export default CollectionsPage;
