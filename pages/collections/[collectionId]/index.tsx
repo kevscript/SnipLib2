@@ -1,33 +1,9 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import { useCreateSnippet } from "@/hooks/useCreateSnippet";
 import { useData } from "@/hooks/useData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ObjectID } from "bson";
+import { createNewSnippet } from "@/utils/createNewSnippet";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
-
-const createNewSnippetObject = (collectionId: string) => {
-  return {
-    _id: new ObjectID().toString(),
-    title: `Test Snippet ${Date.now()}`,
-    description: "Im a description",
-    content: "console.log('test')",
-    language: "javascript",
-    favorite: false,
-    public: false,
-    collectionId: collectionId,
-    tags: ["hello", "world"],
-  };
-};
-
-const creatSnippet = async (newSnippet: any) => {
-  fetch("/api/snippet/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newSnippet),
-  });
-};
 
 const CollectionPage = () => {
   const router = useRouter();
@@ -41,39 +17,7 @@ const CollectionPage = () => {
     checkCollection,
   } = useData();
 
-  const queryClient = useQueryClient();
-  const mutation = useMutation((newSnippet: any) => creatSnippet(newSnippet), {
-    onMutate: async (newSnippet) => {
-      // cancel the refetch of query
-      await queryClient.cancelQueries(["userData"]);
-
-      // make copy of previous data state to reuse it if error
-      const previousData = queryClient.getQueryData(["userData"]);
-
-      // update the query with new data
-      queryClient.setQueryData(["userData"], (old: any) => {
-        const prevData = { ...old };
-        const collectionIndex = prevData.collections.findIndex(
-          (c: any) => c._id === newSnippet.collectionId
-        );
-        collectionIndex &&
-          prevData.collections[collectionIndex].snippetIds.push(newSnippet._id);
-
-        return {
-          ...prevData,
-          snippets: [...prevData.snippets, newSnippet],
-          collections: [...prevData.collections],
-        };
-      });
-
-      // return the copy of previous data, will be used in onError if needed
-      return { previousData };
-    },
-    onError: (err, newSnippet, context) => {
-      queryClient.setQueryData(["userData"], context?.previousData);
-    },
-    onSettled: () => queryClient.invalidateQueries(["userData"]),
-  });
+  const mutation = useCreateSnippet();
 
   useEffect(() => {
     if (collections && activeCollectionId !== collectionId) {
@@ -82,7 +26,7 @@ const CollectionPage = () => {
   }, [checkCollection, collectionId, collections, activeCollectionId]);
 
   useEffect(() => {
-    if (activeCollectionId && activeCollectionId !== collectionId) {
+    if (activeCollectionId) {
       if (activeSnippetId) {
         router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
       } else {
@@ -104,9 +48,7 @@ const CollectionPage = () => {
             {collections.find((c) => c._id === activeCollectionId)!.label}
           </h1>
           <button
-            onClick={() =>
-              mutation.mutate(createNewSnippetObject(collectionId))
-            }
+            onClick={() => mutation.mutate(createNewSnippet(collectionId))}
             className="p-2 bg-blue-500"
           >
             Create new Snippet in this Collection
