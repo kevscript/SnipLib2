@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import SnippetReadOnly from "@/components/SnippetReadOnly";
 import { useData } from "@/hooks/useData";
 import { SnippetType } from "models/Snippet";
 import { useRouter } from "next/router";
@@ -63,43 +64,7 @@ const SnippetPage = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col w-full mt-12">
-        <h3 className="text-2xl font-bold">{activeSnippet.title}</h3>
-        <p className="mt-4">{activeSnippet.description}</p>
-
-        <div className="flex items-center justify-between w-full mt-12">
-          <span className="text-sm">{activeSnippet.language}</span>
-          <ul className="flex flex-nowrap gap-x-2">
-            {activeSnippet.tags &&
-              activeSnippet.tags.map((tag, i) => (
-                <li
-                  key={tag + i}
-                  className="flex items-center justify-center px-4 py-1 text-sm bg-black rounded-sm"
-                >
-                  {tag}
-                </li>
-              ))}
-          </ul>
-        </div>
-
-        <pre className="p-8 mt-2 rounded bg-carbon-600 h-96">
-          {activeSnippet.content}
-        </pre>
-        <div className="flex justify-between mt-2 text-sm text-carbon-300">
-          {activeSnippet.updatedAt !== activeSnippet.createdAt && (
-            <span>
-              edited the{" "}
-              {new Date(activeSnippet.updatedAt).toLocaleDateString()} at{" "}
-              {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
-            </span>
-          )}
-
-          <span>
-            created the {new Date(activeSnippet.updatedAt).toLocaleDateString()}{" "}
-            at {new Date(activeSnippet.updatedAt).toLocaleTimeString()}
-          </span>
-        </div>
-      </div>
+      <SnippetReadOnly snippet={activeSnippet} />
     </div>
   );
 };
