@@ -11,7 +11,8 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 const Sidebar = () => {
-  const { collections, snippets, activeCollectionId } = useData();
+  const { collections, snippets, activeCollectionId, tags, activeTagLabel } =
+    useData();
 
   const [searchValue, setSearchValue] = useState("");
   const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +74,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* {tags && <TagsList tags={tags} activeTagLabel={activeTagLabel} />} */}
+      {tags && <TagsList tags={tags} activeTagLabel={activeTagLabel} />}
 
       <Authbox />
     </div>

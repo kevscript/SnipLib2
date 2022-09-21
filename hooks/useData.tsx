@@ -5,20 +5,35 @@ import { UserDataType } from "models/UserData";
 import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
+export type Tag = {
+  label: string;
+  amount: number;
+};
+
 export type UserDataProviderReturnValue = {
   isLoading: boolean;
   error: any;
   collections: CollectionType[] | undefined;
   snippets: SnippetType[] | undefined;
+  tags: Tag[] | undefined;
   activeCollectionId: string;
   activeSnippetId: string;
+  activeTagLabel: string;
   checkCollection: (collectionId: string) => void;
-  checkSnippet: ({
+  checkTag: (tagLabel: string) => void;
+  checkCollectionSnippet: ({
     snippetId,
     collectionId,
   }: {
     snippetId: string;
     collectionId: string;
+  }) => void;
+  checkTagSnippet: ({
+    snippetId,
+    tagLabel,
+  }: {
+    snippetId: string;
+    tagLabel: string;
   }) => void;
 };
 
@@ -40,6 +55,8 @@ export const useDataProvider = () => {
     onSuccess: (data) => initApp(data),
   });
 
+  const [tags, setTags] = useState<Tag[] | undefined>(undefined);
+
   const [activeCollectionId, setActiveCollectionId] = useState("");
   const [activeTagLabel, setActiveTagLabel] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
@@ -54,6 +71,27 @@ export const useDataProvider = () => {
       firstSnippet && setActiveSnippetId(firstSnippet._id.toString());
       setActiveCollectionId(defaultCollection._id.toString());
     }
+
+    const newTags = computeTags(data.snippets);
+    newTags && setTags(newTags);
+  };
+
+  const computeTags = (snippets: SnippetType[]) => {
+    const tagsObj: { [key: string]: number } = {};
+
+    snippets.forEach((s) => {
+      s.tags &&
+        s.tags.forEach((tag) => {
+          tagsObj[tag] ? tagsObj[tag]++ : (tagsObj[tag] = 1);
+        });
+    });
+
+    const initTags: Tag[] = Object.entries(tagsObj).map((tag) => ({
+      label: tag[0],
+      amount: tag[1],
+    }));
+
+    return initTags;
   };
 
   const checkCollection = (collectionId: string) => {
@@ -68,6 +106,8 @@ export const useDataProvider = () => {
         firstSnippet
           ? setActiveSnippetId(firstSnippet._id.toString())
           : activeSnippetId && setActiveSnippetId("");
+
+        setActiveTagLabel("");
         setActiveCollectionId(existingCollection._id.toString());
       } else {
         activeCollectionId && setActiveCollectionId("");
@@ -75,7 +115,27 @@ export const useDataProvider = () => {
     }
   };
 
-  const checkSnippet = ({
+  const checkTag = (tagLabel: string) => {
+    if (tags) {
+      const existingTag = tags.find((tag) => tag.label === tagLabel);
+
+      if (existingTag && snippets) {
+        const firstSnippet = snippets.find((s) =>
+          s.tags?.includes(existingTag.label)
+        );
+        firstSnippet
+          ? setActiveSnippetId(firstSnippet._id.toString())
+          : activeSnippetId && setActiveSnippetId("");
+
+        setActiveCollectionId("");
+        setActiveTagLabel(existingTag.label);
+      } else {
+        activeTagLabel && setActiveTagLabel("");
+      }
+    }
+  };
+
+  const checkCollectionSnippet = ({
     snippetId,
     collectionId,
   }: {
@@ -95,6 +155,8 @@ export const useDataProvider = () => {
         existingSnippet
           ? setActiveSnippetId(existingSnippet._id.toString())
           : activeSnippetId && setActiveSnippetId("");
+
+        setActiveTagLabel("");
         setActiveCollectionId(existingCollection._id.toString());
       } else {
         activeCollectionId && setActiveCollectionId("");
@@ -102,15 +164,46 @@ export const useDataProvider = () => {
     }
   };
 
+  const checkTagSnippet = ({
+    snippetId,
+    tagLabel,
+  }: {
+    snippetId: string;
+    tagLabel: string;
+  }) => {
+    if (tags) {
+      const existingTag = tags.find((tag) => tag.label === tagLabel);
+
+      if (existingTag && snippets) {
+        const existingSnippet = snippets.find(
+          (s) => s._id === snippetId && s.tags?.includes(existingTag.label)
+        );
+
+        existingSnippet
+          ? setActiveSnippetId(existingSnippet._id.toString())
+          : activeSnippetId && setActiveSnippetId("");
+
+        setActiveCollectionId("");
+        setActiveTagLabel(existingTag.label);
+      } else {
+        activeTagLabel && setActiveTagLabel("");
+      }
+    }
+  };
+
   return {
     collections,
     snippets,
+    tags,
     error,
     isLoading,
     activeCollectionId,
     activeSnippetId,
+    activeTagLabel,
     checkCollection,
-    checkSnippet,
+    checkTag,
+    checkCollectionSnippet,
+    checkTagSnippet,
   };
 };
 

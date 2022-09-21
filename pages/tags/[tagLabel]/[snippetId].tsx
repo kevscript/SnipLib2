@@ -6,41 +6,33 @@ import { ReactElement, useEffect, useState } from "react";
 
 const SnippetPage = () => {
   const router = useRouter();
-  const { snippetId, collectionId } = router.query;
+  const { snippetId, tagLabel } = router.query;
 
   const [activeSnippet, setActiveSnippet] = useState<SnippetType | null>(null);
 
-  const {
-    activeCollectionId,
-    activeSnippetId,
-    collections,
-    snippets,
-    checkCollectionSnippet,
-  } = useData();
+  const { activeSnippetId, snippets, tags, activeTagLabel, checkTagSnippet } =
+    useData();
 
   useEffect(() => {
-    if (collections && snippets) {
-      if (
-        activeCollectionId === collectionId &&
-        activeSnippetId === snippetId
-      ) {
+    if (tags && snippets) {
+      if (activeTagLabel === tagLabel && activeSnippetId === snippetId) {
         const activeSnip = snippets.find((s) => s._id === snippetId);
         activeSnip && setActiveSnippet(activeSnip);
       } else {
-        checkCollectionSnippet({
-          collectionId: collectionId as string,
+        checkTagSnippet({
+          tagLabel: tagLabel as string,
           snippetId: snippetId as string,
         });
       }
     }
   }, [
-    activeCollectionId,
     activeSnippetId,
-    checkCollectionSnippet,
-    collectionId,
-    collections,
+    activeTagLabel,
+    checkTagSnippet,
     snippetId,
     snippets,
+    tagLabel,
+    tags,
   ]);
 
   if (!activeSnippet) {
@@ -114,6 +106,6 @@ const SnippetPage = () => {
 
 SnippetPage.authRequired = true;
 SnippetPage.getLayout = (page: ReactElement) => {
-  return <BarsWrapper filter="collection">{page}</BarsWrapper>;
+  return <BarsWrapper filter="tag">{page}</BarsWrapper>;
 };
 export default SnippetPage;
