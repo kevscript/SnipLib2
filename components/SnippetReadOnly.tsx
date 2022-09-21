@@ -1,4 +1,5 @@
 import { SnippetType } from "models/Snippet";
+import CodeMirror from "./CodeMirror";
 
 export type SnippetProps = {
   snippet: SnippetType;
@@ -25,9 +26,8 @@ const SnippetReadOnly = ({ snippet }: SnippetProps) => {
         </ul>
       </div>
 
-      <pre className="p-8 mt-2 rounded bg-carbon-600 h-96">
-        {snippet.content}
-      </pre>
+      <CodeMirror doc={snippet.content} readOnly />
+
       <div className="flex justify-between mt-2 text-sm text-carbon-300">
         {snippet.updatedAt !== snippet.createdAt && (
           <span>
