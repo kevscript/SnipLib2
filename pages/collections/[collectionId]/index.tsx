@@ -26,7 +26,7 @@ const CollectionPage = () => {
   }, [checkCollection, collectionId, collections, activeCollectionId]);
 
   useEffect(() => {
-    if (activeCollectionId) {
+    if (activeCollectionId && activeCollectionId === collectionId) {
       if (activeSnippetId) {
         router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
       } else {
