@@ -1,4 +1,4 @@
-import { useUserData } from "@/hooks/useUserData";
+import { useData } from "@/hooks/useData";
 import React, { useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
@@ -11,8 +11,7 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 const Sidebar = () => {
-  const { collections, activeCollectionId, tags, activeTagLabel } =
-    useUserData();
+  const { collections, snippets, activeCollectionId } = useData();
 
   const [searchValue, setSearchValue] = useState("");
   const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,10 +58,11 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {collections && (
+      {collections && snippets && (
         <CollectionsList
           collections={collections}
-          activeId={activeCollectionId}
+          snippets={snippets}
+          activeCollectionId={activeCollectionId}
         />
       )}
 
@@ -73,7 +73,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {tags && <TagsList tags={tags} activeTagLabel={activeTagLabel} />}
+      {/* {tags && <TagsList tags={tags} activeTagLabel={activeTagLabel} />} */}
 
       <Authbox />
     </div>
