@@ -17,14 +17,14 @@ const TagPage = () => {
   }, [checkTag, tagLabel, activeTagLabel, tags]);
 
   useEffect(() => {
-    if (activeTagLabel) {
+    if (activeTagLabel && activeTagLabel === tagLabel) {
       if (activeSnippetId) {
         router.push(`/tags/${activeTagLabel}/${activeSnippetId}`);
       } else {
         router.push(`/tags/${activeTagLabel}`);
       }
     }
-  }, [activeTagLabel, activeSnippetId, router]);
+  }, [activeTagLabel, activeSnippetId, router, tagLabel]);
 
   if (activeTagLabel !== tagLabel) {
     return <h1>Loading ...</h1>;
