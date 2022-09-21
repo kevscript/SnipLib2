@@ -1,35 +1,33 @@
 import { useEffect, useState } from "react";
-import { useUserData } from "@/hooks/useUserData";
 import { Snippet } from "@/mocks/snippets";
 import TagBarHeader from "./TagBarHeader";
 import TagSnipItem from "./TagSnipItem";
 import { useRouter } from "next/router";
+import { useData } from "@/hooks/useData";
+import { tags } from "@/mocks/tags";
+import { SnippetType } from "models/Snippet";
 
 const TagBar = () => {
   const router = useRouter();
-  const { activeTagLabel, collections, activeSnippetId } = useUserData();
+  const { activeTagLabel, snippets, activeSnippetId } = useData();
 
-  const [snippetsList, setSnippetsList] = useState<Snippet[]>([]);
+  const [activeTagSnippets, setActiveTagSnippets] = useState<
+    SnippetType[] | null
+  >(null);
 
   useEffect(() => {
-    if (collections && router.isReady) {
-      const snippetsWithTag: Snippet[] = [];
-
-      collections.forEach((col) => {
-        col.snippets.forEach((snip) => {
-          snip.tags.includes(router.query.tagLabel as string) &&
-            snippetsWithTag.push(snip);
-        });
-      });
-
-      setSnippetsList(snippetsWithTag);
+    if (snippets && activeTagLabel && tags) {
+      const snippetsWithTag = snippets.filter((s) =>
+        s.tags?.includes(activeTagLabel)
+      );
+      setActiveTagSnippets(snippetsWithTag);
     }
-  }, [collections, router]);
+  }, [activeTagLabel, snippets]);
 
-  if (snippetsList.length === 0) {
+  if (!activeTagLabel) {
     return (
       <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
-        <h1>No snippets with tag {router.query.tagLabel}</h1>
+        <h1>Loading...</h1>
       </div>
     );
   }
@@ -40,21 +38,21 @@ const TagBar = () => {
         <TagBarHeader label={router.query.tagLabel as string} />
         <div className="w-full h-[2px] bg-carbon-600"></div>
 
-        {snippetsList.length > 0 ? (
+        {activeTagSnippets && activeTagSnippets.length > 0 && (
           <ul className="flex flex-col flex-1 overflow-y-auto">
-            {snippetsList.map((snippet, i) => (
+            {activeTagSnippets.map((snippet, i) => (
               <TagSnipItem
-                key={snippet._id}
+                key={snippet._id.toString()}
                 snippet={snippet}
-                activeTagLabel={router.query.tagLabel as string}
+                activeTagLabel={activeTagLabel}
                 isActive={activeSnippetId === snippet._id}
               />
             ))}
           </ul>
-        ) : (
-          <div className="bg-red">
-            <span>No snippet yet in this collection</span>
-          </div>
+        )}
+
+        {activeTagSnippets && activeTagSnippets.length === 0 && (
+          <h1>No snippet yet with this Tag</h1>
         )}
       </>
     </div>
