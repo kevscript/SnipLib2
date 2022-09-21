@@ -1,8 +1,9 @@
+import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ObjectID } from "bson";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 const createNewSnippetObject = (collectionId: string) => {
   return {
@@ -126,4 +127,8 @@ const CollectionPage = () => {
   );
 };
 
+CollectionPage.authRequired = true;
+CollectionPage.getLayout = (page: ReactElement) => {
+  return <BarsWrapper filter="collection">{page}</BarsWrapper>;
+};
 export default CollectionPage;
