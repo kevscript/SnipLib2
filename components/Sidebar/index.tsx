@@ -5,6 +5,7 @@ import FolderIcon from "../icons/Folder";
 import PlusIcon from "../icons/Plus";
 import TagIcon from "../icons/Tag";
 import Switcher from "../shared/Switcher";
+import CreateCollectionWidget from "../widgets/CreateCollectionWidget";
 import Authbox from "./Authbox";
 import CollectionsList from "./CollectionsList";
 import Searchbox from "./Searchbox";
@@ -53,9 +54,7 @@ const Sidebar = () => {
             </span>
           )}
 
-          <div className="flex items-center justify-center w-6 h-6 ml-4 rounded cursor-pointer bg-carbon-400 hover:bg-carbon-300">
-            <PlusIcon className="w-4 h-4" />
-          </div>
+          <CreateCollectionWidget />
         </div>
       </div>
 

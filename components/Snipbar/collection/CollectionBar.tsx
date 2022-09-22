@@ -40,7 +40,7 @@ const CollectionBar = () => {
   return (
     <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
       <>
-        <CollectionBarHeader label={activeCollection.label} />
+        <CollectionBarHeader collection={activeCollection} />
         <div className="w-full h-[2px] bg-carbon-600"></div>
 
         {activeCollectionSnippets && activeCollectionSnippets.length > 0 && (
