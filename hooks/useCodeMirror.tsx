@@ -1,7 +1,6 @@
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { useCallback, useEffect, useState } from "react";
-import { javascript } from "@codemirror/lang-javascript";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { StreamLanguage } from "@codemirror/language";
 import { langList } from "@/utils/langList";
@@ -42,7 +41,7 @@ export const useCodeMirror = ({ doc, readOnly, lang }: UseCodeMirrorParams) => {
         dracula,
         customTheme,
         // javascript({ jsx: true, typescript: true }),
-        EditorState.readOnly.of(false),
+        EditorState.readOnly.of(readOnly),
         StreamLanguage.define(langMode),
       ],
     });
