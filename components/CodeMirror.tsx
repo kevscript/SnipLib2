@@ -3,13 +3,14 @@ import { useCodeMirror } from "@/hooks/useCodeMirror";
 export type CodeMirrorProps = {
   doc: string;
   readOnly: boolean;
+  lang: string;
 };
 
-const CodeMirror = ({ doc, readOnly }: CodeMirrorProps) => {
-  const { ref } = useCodeMirror({ doc, readOnly });
+const CodeMirror = ({ doc, readOnly, lang }: CodeMirrorProps) => {
+  const { ref } = useCodeMirror({ doc, readOnly, lang });
 
   return (
-    <div className="w-full px-2 py-4 mt-2 overflow-auto rounded bg-carbon-600 h-96">
+    <div className="w-full mt-2 overflow-auto rounded bg-carbon-600">
       <div ref={ref}></div>
     </div>
   );

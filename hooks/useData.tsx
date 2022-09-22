@@ -53,6 +53,7 @@ export const useDataProvider = () => {
   } = useQuery(["userData"], fetchUserData, {
     enabled: status === "authenticated",
     onSuccess: (data) => initApp(data),
+    refetchOnWindowFocus: false,
   });
 
   const [tags, setTags] = useState<Tag[] | undefined>(undefined);

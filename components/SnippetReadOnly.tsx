@@ -1,3 +1,4 @@
+import { langList } from "@/utils/langList";
 import { SnippetType } from "models/Snippet";
 import CodeMirror from "./CodeMirror";
 
@@ -12,7 +13,9 @@ const SnippetReadOnly = ({ snippet }: SnippetProps) => {
       <p className="mt-4">{snippet.description}</p>
 
       <div className="flex items-center justify-between w-full mt-12">
-        <span className="text-sm">{snippet.language}</span>
+        <span className="text-sm">
+          {langList.find((l) => l.id === snippet.language)?.label}
+        </span>
         <ul className="flex flex-nowrap gap-x-2">
           {snippet.tags &&
             snippet.tags.map((tag, i) => (
@@ -26,7 +29,7 @@ const SnippetReadOnly = ({ snippet }: SnippetProps) => {
         </ul>
       </div>
 
-      <CodeMirror doc={snippet.content} readOnly />
+      <CodeMirror doc={snippet.content} lang={snippet.language} readOnly />
 
       <div className="flex justify-between mt-2 text-sm text-carbon-300">
         {snippet.updatedAt !== snippet.createdAt && (
