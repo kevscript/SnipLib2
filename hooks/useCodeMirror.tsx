@@ -1,13 +1,18 @@
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { useCallback, useEffect, useState } from "react";
+import { javascript } from "@codemirror/lang-javascript";
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { StreamLanguage } from "@codemirror/language";
+import { langList } from "@/utils/langList";
 
 type UseCodeMirrorParams = {
   doc: string;
   readOnly: boolean;
+  lang: string;
 };
 
-export const useCodeMirror = ({ doc, readOnly }: UseCodeMirrorParams) => {
+export const useCodeMirror = ({ doc, readOnly, lang }: UseCodeMirrorParams) => {
   const [element, setElement] = useState<HTMLElement>();
 
   const ref = useCallback((node: HTMLElement | null) => {
@@ -19,27 +24,36 @@ export const useCodeMirror = ({ doc, readOnly }: UseCodeMirrorParams) => {
   useEffect(() => {
     if (!element) return;
 
+    const langMode = langList.find((l) => l.id === lang)?.mode!;
+
+    const customTheme = EditorView.theme({
+      "&": {
+        fontSize: "14px",
+        height: "320px",
+        paddingTop: "16px",
+        paddingBottom: "16px",
+      },
+    });
+
+    const startState = EditorState.create({
+      doc: doc,
+      extensions: [
+        basicSetup,
+        dracula,
+        customTheme,
+        // javascript({ jsx: true, typescript: true }),
+        EditorState.readOnly.of(false),
+        StreamLanguage.define(langMode),
+      ],
+    });
+
     const view = new EditorView({
-      state: EditorState.create({
-        doc: doc,
-        extensions: [
-          basicSetup,
-          EditorView.theme({
-            ".cm-line": { background: "transparent" },
-            ".cm-activeLine": { background: "transparent" },
-            ".cm-gutter": { background: "transparent" },
-            ".cm-gutters": { background: "transparent", border: "none" },
-            ".cm-gutterElement": { background: "transparent" },
-            ".cm-activeLineGutter": { background: "transparent" },
-          }),
-          EditorState.readOnly.of(readOnly),
-        ],
-      }),
+      state: startState,
       parent: element,
     });
 
     return () => view?.destroy();
-  }, [element, doc]);
+  }, [element, doc, readOnly, lang]);
 
   return { ref };
 };
