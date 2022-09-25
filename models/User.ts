@@ -1,31 +1,14 @@
-import { Schema, model, models, Types } from "mongoose";
+import { ObjectId } from "mongodb";
+import * as z from "zod";
 
-export type UserType = {
-  _id: Types.ObjectId | string;
-  name: string;
-  email: string;
-  image: string;
-  emailVerified: any;
-};
-
-const userSchema = new Schema<UserType>({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  image: {
-    type: String,
-  },
-  emailVerified: {
-    required: false,
-  },
+const User = z.object({
+  _id: z.instanceof(ObjectId),
+  name: z.string(),
+  email: z.string(),
+  image: z.string(),
+  emailVerified: z.any(),
 });
 
-const User = models.User || model("User", userSchema);
+type User = z.infer<typeof User>;
 
 export default User;

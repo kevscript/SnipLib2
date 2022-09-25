@@ -1,20 +1,16 @@
-import { Schema, model, models, Types } from "mongoose";
-import { CollectionType, collectionSchema } from "./Collection";
-import { SnippetType, snippetSchema } from "./Snippet";
+import { ObjectId } from "mongodb";
+import * as z from "zod";
+import { db } from "../lib/mongodb";
+import List from "./List";
+import Snippet from "./Snippet";
 
-export type UserDataType = {
-  _id: Types.ObjectId | string;
-  userId: string;
-  collections: CollectionType[];
-  snippets: SnippetType[];
-};
-
-const userDataSchema = new Schema<UserDataType>({
-  userId: Schema.Types.ObjectId,
-  collections: [collectionSchema],
-  snippets: [snippetSchema],
+export const UserData = z.object({
+  _id: z.instanceof(ObjectId),
+  userId: z.instanceof(ObjectId),
+  lists: z.array(List),
+  snippets: z.array(Snippet),
 });
 
-const UserData = models.UserData || model("UserData", userDataSchema);
+export type UserData = z.infer<typeof UserData>;
 
-export default UserData;
+export const UsersData = db.collection<UserData>("usersData");

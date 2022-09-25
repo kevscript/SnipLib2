@@ -1,7 +1,7 @@
-import connectMongoose from "@/utils/connectMongoose";
+import { clientPromise } from "@/lib/mongodb";
 import { ObjectID } from "bson";
-import { SnippetType } from "models/Snippet";
-import UserData from "models/UserData";
+import Snippet from "models/Snippet";
+import { UsersData } from "models/UserData";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 
@@ -12,29 +12,37 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (user) {
     try {
-      await connectMongoose();
+      await clientPromise;
 
-      const newSnippet: SnippetType = {
-        ...req.body,
-        _id: new ObjectID(req.body._iq),
-        collectionId: new ObjectID(req.body.collectionId),
-      };
+      const newSnippet = req.body;
+      const valid = Snippet.parse(newSnippet);
 
-      const newData = await UserData.findOneAndUpdate(
-        { userId: new ObjectID(user.id) },
-        {
-          $push: {
-            snippets: newSnippet,
-            "collections.$[collection].snippetIds": newSnippet._id,
+      if (valid) {
+        const createdSnippet = await UsersData.findOneAndUpdate(
+          { userId: new ObjectID(user.id) },
+          {
+            $push: {
+              snippets: newSnippet,
+              "collections.$[collection].snippetIds": newSnippet._id,
+            },
           },
-        },
-        {
-          arrayFilters: [{ "collection._id": newSnippet.collectionId }],
-        }
-      );
+          {
+            arrayFilters: [{ "collection._id": newSnippet.collectionId }],
+          }
+        );
 
-      if (newData) {
-        return res.json({ ...newData, _id: newSnippet._id });
+        if (createdSnippet) {
+          console.log("created new snippet", newSnippet);
+          return res.json(newSnippet);
+        } else {
+          throw res.status(500).json({
+            error: { message: "Something went wrong with snippet creation" },
+          });
+        }
+      } else {
+        throw res
+          .status(500)
+          .json({ error: { message: "Req.query is not a valid Snippet" } });
       }
     } catch (err) {
       throw res.status(500).json({ error: err });
