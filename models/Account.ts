@@ -1,26 +1,17 @@
-import { Schema, model, models, Types } from "mongoose";
+import { ObjectId } from "mongodb";
+import * as z from "zod";
 
-export type AccountType = {
-  _id: Types.ObjectId | string;
-  provider: string;
-  type: string;
-  providerAccountId: string;
-  access_token: string;
-  token_type: string;
-  scope: string;
-  userId: Types.ObjectId | string;
-};
-
-const accountSchema = new Schema<AccountType>({
-  provider: String,
-  type: String,
-  providerAccountId: String,
-  access_token: String,
-  token_type: String,
-  scope: String,
-  userId: Schema.Types.ObjectId,
+const Account = z.object({
+  _id: z.instanceof(ObjectId),
+  userId: z.instanceof(ObjectId),
+  provider: z.string(),
+  type: z.string(),
+  providerAccountId: z.string(),
+  access_token: z.string(),
+  token_type: z.string(),
+  scope: z.string(),
 });
 
-const Account = models.Account || model("Account", accountSchema);
+type Account = z.infer<typeof Account>;
 
 export default Account;
