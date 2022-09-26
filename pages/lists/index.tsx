@@ -6,21 +6,21 @@ import { NextCustomPage } from "../_app";
 
 const ListsPage: NextCustomPage = () => {
   const router = useRouter();
-  const { data, checkListsRoutePath } = useUserData();
+  const { data, checkListsRootPath } = useUserData();
 
   const [listErrorMessage, setListErrorMessage] = useState("");
 
   useEffect(() => {
     if (data && router.isReady) {
-      const check = checkListsRoutePath();
+      const check = checkListsRootPath();
 
       if (check.valid) {
-        router.replace(check.redirectPath);
+        router.replace(check.redirectPath!);
       } else {
-        setListErrorMessage("No original List");
+        setListErrorMessage(check.error!);
       }
     }
-  }, [checkListsRoutePath, data, router]);
+  }, [checkListsRootPath, data, router]);
 
   return (
     <div>

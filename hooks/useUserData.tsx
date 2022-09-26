@@ -9,13 +9,22 @@ export type Tag = { label: string; amount: number };
 
 type UserDataContext = {
   data: UserData | undefined;
-  tags: Tag[];
+  tags: Tag[] | undefined;
   activeListId: string;
   activeTagLabel: string;
   activeSnippetId: string;
   initState: (d: UserData) => void;
-  checkListsRoutePath: () => { valid: boolean; redirectPath: string };
+  checkListsRootPath: () => {
+    valid: boolean;
+    redirectPath: string | null;
+    error?: string;
+  };
+  checkTagsRootPath: () => { redirectPath: string };
   checkListPath: (id: string) => {
+    valid: boolean;
+    redirectPath: string;
+  };
+  checkTagPath: (label: string) => {
     valid: boolean;
     redirectPath: string;
   };
@@ -24,6 +33,16 @@ type UserDataContext = {
     snippetId,
   }: {
     listId: string;
+    snippetId: string;
+  }) => {
+    valid: boolean;
+    redirectPath: string;
+  };
+  checkSnippetPathFromTag: ({
+    tagLabel,
+    snippetId,
+  }: {
+    tagLabel: string;
     snippetId: string;
   }) => {
     valid: boolean;
@@ -44,7 +63,7 @@ export const useUserdataProvider = () => {
   const [activeTagLabel, setActiveTagLabel] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
 
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[] | undefined>(undefined);
 
   const computeTags = (snippets: Snippet[]) => {
     const tagsObj: { [key: string]: number } = {};
@@ -76,8 +95,28 @@ export const useUserdataProvider = () => {
     computeTags(data.snippets);
   };
 
-  const checkListsRoutePath = useCallback(() => {
+  const checkTagsRootPath = useCallback(() => {
+    const sortedTags = tags?.sort((a, b) => (a.label > b.label ? 1 : -1));
+    const firstTag = sortedTags && sortedTags[0];
+    setActiveListId("");
+    setActiveSnippetId("");
+    if (firstTag) {
+      console.log(firstTag);
+      setActiveTagLabel(firstTag.label);
+      return {
+        redirectPath: `/tags/${firstTag.label}`,
+      };
+    } else {
+      setActiveTagLabel("");
+      return {
+        redirectPath: `/lists`,
+      };
+    }
+  }, [tags]);
+
+  const checkListsRootPath = useCallback(() => {
     const originalList = data?.lists.find((l) => l.original === true);
+    setActiveTagLabel("");
     if (originalList) {
       const snippet = data?.snippets.find(
         (s) => s.listId.toString() === originalList._id.toString()
@@ -101,15 +140,58 @@ export const useUserdataProvider = () => {
     } else {
       return {
         valid: false,
-        redirectPath: "No original List",
+        redirectPath: null,
+        error: "No original list",
       };
     }
   }, [data]);
 
+  const checkTagPath = useCallback(
+    (tagLabel: string) => {
+      if (tags) {
+        const existingTag = tags.find((t) => t.label === tagLabel);
+        setActiveSnippetId("");
+        if (existingTag) {
+          const initSnippet = data?.snippets.find((s) =>
+            s.tags.includes(tagLabel)
+          );
+
+          if (initSnippet) {
+            setActiveTagLabel(tagLabel);
+            setActiveSnippetId(initSnippet._id.toString());
+            return {
+              valid: false,
+              redirectPath: `/tags/${tagLabel}/${initSnippet._id.toString()}`,
+            };
+          } else {
+            setActiveTagLabel(tagLabel);
+            setActiveSnippetId("");
+            return {
+              valid: true,
+              redirectPath: `/tags/${tagLabel}`,
+            };
+          }
+        } else {
+          setActiveTagLabel("");
+          return {
+            valid: false,
+            redirectPath: `/tags`,
+          };
+        }
+      } else {
+        return {
+          valid: false,
+          redirectPath: `/lists`,
+        };
+      }
+    },
+    [tags, data]
+  );
+
   const checkListPath = useCallback(
     (listId: string) => {
       const existingList = data?.lists.find((l) => l._id.toString() === listId);
-
+      setActiveTagLabel("");
       if (existingList) {
         const initSnippet = data?.snippets.find(
           (s) => s.listId.toString() === listId
@@ -141,10 +223,56 @@ export const useUserdataProvider = () => {
     [data]
   );
 
+  const checkSnippetPathFromTag = useCallback(
+    ({ tagLabel, snippetId }: { tagLabel: string; snippetId: string }) => {
+      if (tags) {
+        const existingTag = tags.find((t) => t.label === tagLabel);
+        setActiveListId("");
+        if (existingTag) {
+          const snippet = data?.snippets.find(
+            (s) => s._id.toString() === snippetId
+          );
+          const snippetHasTag = snippet && snippet.tags.includes(tagLabel);
+
+          if (snippetHasTag) {
+            setActiveTagLabel(tagLabel);
+            setActiveSnippetId(snippetId);
+            return {
+              valid: true,
+              redirectPath: `/tags/${tagLabel}/${snippetId}`,
+            };
+          } else {
+            setActiveTagLabel(tagLabel);
+            setActiveSnippetId("");
+            return {
+              valid: false,
+              redirectPath: `/tags/${tagLabel}`,
+            };
+          }
+        } else {
+          setActiveTagLabel("");
+          setActiveSnippetId("");
+          return {
+            valid: false,
+            redirectPath: `/tags`,
+          };
+        }
+      } else {
+        setActiveTagLabel("");
+        setActiveSnippetId("");
+        return {
+          valid: false,
+          redirectPath: `/lists`,
+        };
+      }
+    },
+    [data, tags]
+  );
+
   const checkSnippetPathFromList = useCallback(
     ({ listId, snippetId }: { listId: string; snippetId: string }) => {
       const existingList = data?.lists.find((l) => l._id.toString() === listId);
-
+      setActiveTagLabel("");
       if (existingList) {
         const snippet = data?.snippets.find(
           (s) => s._id.toString() === snippetId
@@ -186,9 +314,12 @@ export const useUserdataProvider = () => {
     activeTagLabel,
     activeSnippetId,
     initState,
-    checkListsRoutePath,
+    checkListsRootPath,
+    checkTagsRootPath,
     checkListPath,
+    checkTagPath,
     checkSnippetPathFromList,
+    checkSnippetPathFromTag,
   };
 };
 
