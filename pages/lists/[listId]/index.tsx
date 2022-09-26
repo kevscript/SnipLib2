@@ -8,16 +8,18 @@ const ListPage = () => {
   const { listId } = router.query;
   const { activeListId, data, checkListPath } = useUserData();
 
+  const [calledPush, setCalledPush] = useState(false);
+
   useEffect(() => {
-    console.log("/lists/listId");
     if (data && router.isReady) {
       const check = checkListPath(listId as string);
 
-      if (!check.valid) {
-        router.push(check.redirectPath);
+      if (!check.valid && !calledPush) {
+        router.replace(check.redirectPath);
+        setCalledPush(true);
       }
     }
-  }, [activeListId, checkListPath, data, listId, router]);
+  }, [checkListPath, data, listId, calledPush, router]);
 
   return (
     <div>

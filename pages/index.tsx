@@ -10,7 +10,8 @@ const Home: NextPage = () => {
   useEffect(() => {
     console.log("/ home");
     if (status === "authenticated" && router.isReady) {
-      router.push(`/lists`);
+      console.log("rerouting");
+      router.replace(`/lists`);
     }
   }, [router, status]);
 

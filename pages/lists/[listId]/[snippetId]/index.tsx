@@ -12,6 +12,8 @@ const SnippetPage = () => {
 
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
+  const [calledPush, setCalledPush] = useState(false);
+
   useEffect(() => {
     if (data && router.isReady) {
       const check = checkSnippetPathFromList({
@@ -19,18 +21,17 @@ const SnippetPage = () => {
         snippetId: snippetId as string,
       });
 
-      if (!check.valid) {
-        router.push(check.redirectPath);
-      } else {
-        const snippet = data.snippets.find(
-          (s) => s._id.toString() === snippetId
-        );
-        snippet && setActiveSnippet(snippet);
+      if (!check.valid && !calledPush) {
+        router.replace(check.redirectPath);
+        setCalledPush(true);
       }
-    }
-  }, [data, listId, snippetId, router, checkSnippetPathFromList]);
 
-  if (!activeSnippet) return <h1>No snippet</h1>;
+      const snippet = data.snippets.find((s) => s._id.toString() === snippetId);
+      snippet && setActiveSnippet(snippet);
+    }
+  }, [data, listId, snippetId, checkSnippetPathFromList, calledPush, router]);
+
+  if (!activeSnippet) return <h1>Loading snippet...</h1>;
 
   return (
     <div className="flex-1 p-16">
