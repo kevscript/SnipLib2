@@ -1,14 +1,14 @@
-import { SnipbarFilter } from "../layouts/SnipbarWrapper";
-import CollectionBar from "./collection/CollectionBar";
+import { BarsFilter } from "../layouts/BarsWrapper";
+import ListBar from "./list/ListBar";
 import TagBar from "./tag/TagBar";
 
 export type SnipbarProps = {
-  filter: SnipbarFilter;
+  filter: BarsFilter;
 };
 
 const Snipbar = ({ filter }: SnipbarProps) => {
-  if (filter === "collection") {
-    return <CollectionBar />;
+  if (filter === "list") {
+    return <ListBar />;
   }
 
   if (filter === "tag") {

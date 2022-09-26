@@ -1,19 +1,22 @@
-import { useData } from "@/hooks/useData";
+import { useUserData } from "@/hooks/useUserData";
 import React, { useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
-import PlusIcon from "../icons/Plus";
 import TagIcon from "../icons/Tag";
+import { BarsFilter } from "../layouts/BarsWrapper";
 import Switcher from "../shared/Switcher";
-import CreateCollectionWidget from "../widgets/CreateCollectionWidget";
+import CreateListWidget from "../widgets/CreateListWidget";
 import Authbox from "./Authbox";
-import CollectionsList from "./CollectionsList";
+import Lists from "./Lists";
 import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
-const Sidebar = () => {
-  const { collections, snippets, activeCollectionId, tags, activeTagLabel } =
-    useData();
+export type SidebarProps = {
+  filter: BarsFilter;
+};
+
+const Sidebar = ({ filter }: SidebarProps) => {
+  const { data, tags, activeListId, activeTagLabel } = useUserData();
 
   const [searchValue, setSearchValue] = useState("");
   const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,24 +48,24 @@ const Sidebar = () => {
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
           <FolderIcon className="w-4 h-4 stroke-marine" />
-          <span className="ml-4 text-xs font-bold uppercase">Collections</span>
+          <span className="ml-4 text-xs font-bold uppercase">Lists</span>
         </div>
         <div className="flex items-center flex-nowrap">
-          {collections && (
+          {data?.lists && (
             <span className="text-sm text-carbon-300">
-              {collections.length}/32
+              {data.lists.length}/32
             </span>
           )}
 
-          <CreateCollectionWidget />
+          <CreateListWidget />
         </div>
       </div>
 
-      {collections && snippets && (
-        <CollectionsList
-          collections={collections}
-          snippets={snippets}
-          activeCollectionId={activeCollectionId}
+      {data?.lists && data?.snippets && (
+        <Lists
+          lists={data.lists}
+          snippets={data.snippets}
+          activeListId={filter === "list" ? activeListId : ""}
         />
       )}
 

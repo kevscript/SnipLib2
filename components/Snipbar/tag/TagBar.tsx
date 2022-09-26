@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
-import { Snippet } from "@/mocks/snippets";
 import TagBarHeader from "./TagBarHeader";
 import TagSnipItem from "./TagSnipItem";
 import { useRouter } from "next/router";
-import { useData } from "@/hooks/useData";
 import { tags } from "@/mocks/tags";
-import { SnippetType } from "models/Snippet";
+import Snippet from "models/Snippet";
+import { useUserData } from "@/hooks/useUserData";
 
 const TagBar = () => {
   const router = useRouter();
-  const { activeTagLabel, snippets, activeSnippetId } = useData();
+  const { activeTagLabel, data, activeSnippetId } = useUserData();
 
-  const [activeTagSnippets, setActiveTagSnippets] = useState<
-    SnippetType[] | null
-  >(null);
+  const [activeTagSnippets, setActiveTagSnippets] = useState<Snippet[] | null>(
+    null
+  );
 
   useEffect(() => {
-    if (snippets && activeTagLabel && tags) {
-      const snippetsWithTag = snippets.filter((s) =>
+    if (data && activeTagLabel && tags) {
+      const snippetsWithTag = data.snippets.filter((s) =>
         s.tags?.includes(activeTagLabel)
       );
       setActiveTagSnippets(snippetsWithTag);
     }
-  }, [activeTagLabel, snippets]);
+  }, [activeTagLabel, data]);
 
   if (!activeTagLabel) {
     return (
@@ -45,7 +44,7 @@ const TagBar = () => {
                 key={snippet._id.toString()}
                 snippet={snippet}
                 activeTagLabel={activeTagLabel}
-                isActive={activeSnippetId === snippet._id}
+                isActive={activeSnippetId === snippet._id.toString()}
               />
             ))}
           </ul>

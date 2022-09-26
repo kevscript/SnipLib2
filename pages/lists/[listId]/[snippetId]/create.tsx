@@ -7,6 +7,7 @@ const CreateSnippetPage = () => {
 
 CreateSnippetPage.authRequired = true;
 CreateSnippetPage.getLayout = (page: ReactElement) => {
-  return <BarsWrapper filter="collection">{page}</BarsWrapper>;
+  return <BarsWrapper filter="list">{page}</BarsWrapper>;
 };
+
 export default CreateSnippetPage;

@@ -1,8 +1,8 @@
-import { SnippetType } from "models/Snippet";
+import Snippet from "models/Snippet";
 import Link from "next/link";
 
 export type TagSnipItemProps = {
-  snippet: SnippetType;
+  snippet: Snippet;
   isActive: boolean;
   activeTagLabel: string;
 };

@@ -1,56 +1,36 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import SnippetReadOnly from "@/components/SnippetReadOnly";
-import { useData } from "@/hooks/useData";
-import { SnippetType } from "models/Snippet";
+import { useUserData } from "@/hooks/useUserData";
+import Snippet from "models/Snippet";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 
 const SnippetPage = () => {
   const router = useRouter();
-  const { snippetId, collectionId } = router.query;
+  const { listId, snippetId } = router.query;
+  const { data, checkSnippetPathFromList } = useUserData();
 
-  const [activeSnippet, setActiveSnippet] = useState<SnippetType | null>(null);
-
-  const {
-    activeCollectionId,
-    activeSnippetId,
-    collections,
-    snippets,
-    checkCollectionSnippet,
-  } = useData();
+  const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   useEffect(() => {
-    if (collections && snippets) {
-      if (
-        activeCollectionId === collectionId &&
-        activeSnippetId === snippetId
-      ) {
-        const activeSnip = snippets.find((s) => s._id === snippetId);
-        activeSnip && setActiveSnippet(activeSnip);
+    if (data && router.isReady) {
+      const check = checkSnippetPathFromList({
+        listId: listId as string,
+        snippetId: snippetId as string,
+      });
+
+      if (!check.valid) {
+        router.push(check.redirectPath);
       } else {
-        checkCollectionSnippet({
-          collectionId: collectionId as string,
-          snippetId: snippetId as string,
-        });
+        const snippet = data.snippets.find(
+          (s) => s._id.toString() === snippetId
+        );
+        snippet && setActiveSnippet(snippet);
       }
     }
-  }, [
-    activeCollectionId,
-    activeSnippetId,
-    checkCollectionSnippet,
-    collectionId,
-    collections,
-    snippetId,
-    snippets,
-  ]);
+  }, [data, listId, snippetId, router, checkSnippetPathFromList]);
 
-  if (!activeSnippet) {
-    return (
-      <div>
-        <h1>No snippet</h1>
-      </div>
-    );
-  }
+  if (!activeSnippet) return <h1>No snippet</h1>;
 
   return (
     <div className="flex-1 p-16">
@@ -79,6 +59,7 @@ const SnippetPage = () => {
 
 SnippetPage.authRequired = true;
 SnippetPage.getLayout = (page: ReactElement) => {
-  return <BarsWrapper filter="collection">{page}</BarsWrapper>;
+  return <BarsWrapper filter="list">{page}</BarsWrapper>;
 };
+
 export default SnippetPage;

@@ -18,8 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       if (userData) {
-        console.log(userData);
-        res.json({ userData });
+        res.json({ ...userData });
       } else {
         throw res
           .status(500)
