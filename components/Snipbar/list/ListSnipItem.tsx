@@ -1,24 +1,19 @@
-import { Snippet } from "@/mocks/snippets";
-import { SnippetType } from "models/Snippet";
+import Snippet from "models/Snippet";
 import Link from "next/link";
 
-export type CollectionSnipItemProps = {
-  snippet: SnippetType;
+export type ListSnipItemProps = {
+  snippet: Snippet;
   isActive: boolean;
-  collectionId: string;
+  listId: string;
 };
 
-const CollectionSnipItem = ({
-  snippet,
-  isActive,
-  collectionId,
-}: CollectionSnipItemProps) => {
+const ListSnipItem = ({ snippet, isActive, listId }: ListSnipItemProps) => {
   return (
     <Link
       href={{
-        pathname: `/collections/[collectionId]/[snippetId]`,
+        pathname: `/lists/[listId]/[snippetId]`,
         query: {
-          collectionId: collectionId,
+          listId: listId,
           snippetId: snippet._id.toString(),
         },
       }}
@@ -47,4 +42,4 @@ const CollectionSnipItem = ({
   );
 };
 
-export default CollectionSnipItem;
+export default ListSnipItem;

@@ -1,9 +1,9 @@
 import { langList } from "@/utils/langList";
-import { SnippetType } from "models/Snippet";
+import Snippet from "models/Snippet";
 import CodeMirror from "./CodeMirror";
 
 export type SnippetProps = {
-  snippet: SnippetType;
+  snippet: Snippet;
 };
 
 const SnippetReadOnly = ({ snippet }: SnippetProps) => {

@@ -2,9 +2,9 @@ import { useState } from "react";
 import PlusIcon from "../icons/Plus";
 import Modal from "../Modal";
 
-type CreateCollectionWidgetProps = {};
+type CreateListWidgetProps = {};
 
-const CreateCollectionWidget = ({}: CreateCollectionWidgetProps) => {
+const CreateListWidget = ({}: CreateListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -17,10 +17,10 @@ const CreateCollectionWidget = ({}: CreateCollectionWidgetProps) => {
       </div>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <h1>Create New Collection</h1>
+        <h1>Create New List</h1>
       </Modal>
     </>
   );
 };
 
-export default CreateCollectionWidget;
+export default CreateListWidget;

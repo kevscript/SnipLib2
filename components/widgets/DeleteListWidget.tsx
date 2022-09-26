@@ -1,15 +1,13 @@
-import { CollectionType } from "models/Collection";
+import List from "models/List";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
 
-type DeleteCollectionWidgetProps = {
-  collection: CollectionType;
+type DeleteListWidgetProps = {
+  list: List;
 };
 
-const DeleteCollectionWidget = ({
-  collection,
-}: DeleteCollectionWidgetProps) => {
+const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,10 +20,10 @@ const DeleteCollectionWidget = ({
       </li>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <h1>Delete {collection.label}</h1>
+        <h1>Delete {list.label}</h1>
       </Modal>
     </>
   );
 };
 
-export default DeleteCollectionWidget;
+export default DeleteListWidget;

@@ -3,7 +3,7 @@ import * as z from "zod";
 
 const Snippet = z.object({
   _id: z.instanceof(ObjectId),
-  collectionId: z.instanceof(ObjectId),
+  listId: z.instanceof(ObjectId),
   title: z.string().min(1),
   language: z.string().min(1),
   description: z.string().default(""),

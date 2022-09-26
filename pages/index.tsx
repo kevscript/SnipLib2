@@ -1,4 +1,3 @@
-import { useData } from "@/hooks/useData";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -7,13 +6,13 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { status } = useSession();
-  const { activeCollectionId, activeSnippetId } = useData();
 
   useEffect(() => {
-    if (activeCollectionId && status === "authenticated") {
-      router.push(`/collections/${activeCollectionId}/${activeSnippetId}`);
+    console.log("/ home");
+    if (status === "authenticated" && router.isReady) {
+      router.push(`/lists`);
     }
-  }, [activeCollectionId, activeSnippetId, router, status]);
+  }, [router, status]);
 
   if (status === "unauthenticated") {
     return (

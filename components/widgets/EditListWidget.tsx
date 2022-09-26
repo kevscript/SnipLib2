@@ -1,13 +1,13 @@
-import { CollectionType } from "models/Collection";
+import List from "models/List";
 import { useState } from "react";
 import EditIcon from "../icons/Edit";
 import Modal from "../Modal";
 
-type EditCollectionWidgetProps = {
-  collection: CollectionType;
+type EditListWidgetProps = {
+  list: List;
 };
 
-const EditCollectionWidget = ({ collection }: EditCollectionWidgetProps) => {
+const EditListWidget = ({ list }: EditListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -20,10 +20,10 @@ const EditCollectionWidget = ({ collection }: EditCollectionWidgetProps) => {
       </li>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <h1>Edit {collection.label}</h1>
+        <h1>Edit {list.label}</h1>
       </Modal>
     </>
   );
 };
 
-export default EditCollectionWidget;
+export default EditListWidget;

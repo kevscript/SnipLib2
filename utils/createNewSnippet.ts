@@ -1,4 +1,5 @@
 import { ObjectID } from "bson";
+import Snippet from "models/Snippet";
 
 export const createNewSnippet = (collectionId: string) => {
   return {
@@ -12,4 +13,18 @@ export const createNewSnippet = (collectionId: string) => {
     collectionId: collectionId,
     tags: ["hello", "world"],
   };
+};
+
+const s: Snippet = {
+  _id: new ObjectID(),
+  listId: new ObjectID(),
+  title: "Im a title",
+  description: "Im a description",
+  language: "javascript",
+  content: "console.log('hello world')",
+  favorite: false,
+  public: false,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+  tags: ["hello", "world"],
 };
