@@ -6,17 +6,16 @@ import { NextCustomPage } from "../_app";
 
 const ListsPage: NextCustomPage = () => {
   const router = useRouter();
-  const { activeListId, data, initState, checkListsRoutePath } = useUserData();
+  const { data, checkListsRoutePath } = useUserData();
 
   const [listErrorMessage, setListErrorMessage] = useState("");
 
   useEffect(() => {
-    console.log("/lists")
     if (data && router.isReady) {
       const check = checkListsRoutePath();
 
       if (check.valid) {
-        router.push(check.redirectPath);
+        router.replace(check.redirectPath);
       } else {
         setListErrorMessage("No original List");
       }
