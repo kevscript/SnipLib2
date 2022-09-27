@@ -15,8 +15,8 @@ const TagSnipItem = ({
   return (
     <Link
       href={{
-        pathname: `/tags/[tagLabel]/[snippetId]`,
-        query: { tagLabel: activeTagLabel, snippetId: snippet._id.toString() },
+        pathname: `/snippets/[snippetId]`,
+        query: { snippetId: snippet._id.toString() },
       }}
       passHref
     >

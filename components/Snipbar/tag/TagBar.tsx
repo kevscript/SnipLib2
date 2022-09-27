@@ -2,26 +2,37 @@ import { useEffect, useState } from "react";
 import TagBarHeader from "./TagBarHeader";
 import TagSnipItem from "./TagSnipItem";
 import { useRouter } from "next/router";
-import { tags } from "@/mocks/tags";
 import Snippet from "models/Snippet";
-import { useUserData } from "@/hooks/useUserData";
+import { Tag } from "@/hooks/useData";
+import { UserData } from "models/UserData";
 
-const TagBar = () => {
+export type TagBarProps = {
+  tags: Tag[] | undefined;
+  snippets: UserData["snippets"] | undefined;
+  activeTagLabel: string;
+  activeSnippetId: string;
+};
+
+const TagBar = ({
+  tags,
+  snippets,
+  activeSnippetId,
+  activeTagLabel,
+}: TagBarProps) => {
   const router = useRouter();
-  const { activeTagLabel, data, activeSnippetId } = useUserData();
 
   const [activeTagSnippets, setActiveTagSnippets] = useState<Snippet[] | null>(
     null
   );
 
   useEffect(() => {
-    if (data && activeTagLabel && tags) {
-      const snippetsWithTag = data.snippets.filter((s) =>
+    if (snippets && activeTagLabel && tags) {
+      const snippetsWithTag = snippets.filter((s) =>
         s.tags?.includes(activeTagLabel)
       );
       setActiveTagSnippets(snippetsWithTag);
     }
-  }, [activeTagLabel, data]);
+  }, [activeTagLabel, snippets, tags]);
 
   if (!activeTagLabel) {
     return (
@@ -34,7 +45,7 @@ const TagBar = () => {
   return (
     <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
       <>
-        <TagBarHeader label={router.query.tagLabel as string} />
+        <TagBarHeader label={activeTagLabel} />
         <div className="w-full h-[2px] bg-carbon-600"></div>
 
         {activeTagSnippets && activeTagSnippets.length > 0 && (

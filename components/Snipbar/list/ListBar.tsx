@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import Snippet from "models/Snippet";
-import { useUserData } from "@/hooks/useUserData";
 import List from "models/List";
 import ListBarHeader from "./ListBarHeader";
 import ListSnipItem from "./ListSnipItem";
+import { UserData } from "models/UserData";
 
-const ListBar = () => {
-  const { data, activeListId, activeSnippetId } = useUserData();
+export type ListBarProps = {
+  lists: UserData["lists"] | undefined;
+  snippets: UserData["snippets"] | undefined;
+  activeListId: string;
+  activeSnippetId: string;
+};
 
+const ListBar = ({
+  lists,
+  snippets,
+  activeListId,
+  activeSnippetId,
+}: ListBarProps) => {
   const [activeList, setActiveList] = useState<List | null>(null);
 
   const [activeListSnippets, setActiveListSnippets] = useState<
@@ -15,20 +25,20 @@ const ListBar = () => {
   >(null);
 
   useEffect(() => {
-    if (activeListId && data?.snippets && data.lists) {
-      const list = data.lists.find((l) => l._id.toString() === activeListId);
-      const listSnippets = data.snippets.filter(
+    if (activeListId && snippets && lists) {
+      const list = lists.find((l) => l._id.toString() === activeListId);
+      const listSnippets = snippets.filter(
         (s) => s.listId.toString() === activeListId
       );
       list && setActiveList(list);
       listSnippets && setActiveListSnippets(listSnippets);
     }
-  }, [activeListId, data]);
+  }, [activeListId, snippets, lists]);
 
   if (!activeList) {
     return (
       <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
-        <h1>Loading...</h1>
+        <h1>Loading Listbar...</h1>
       </div>
     );
   }

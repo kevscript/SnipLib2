@@ -1,4 +1,6 @@
-import { useUserData } from "@/hooks/useUserData";
+import { BarMode } from "@/hooks/useData";
+import { Tag, useUserData } from "@/hooks/useUserData";
+import { UserData } from "models/UserData";
 import React, { useState } from "react";
 import FavoriteIcon from "../icons/Favorite";
 import FolderIcon from "../icons/Folder";
@@ -12,17 +14,30 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
 export type SidebarProps = {
-  filter: BarsFilter;
+  activeBarMode: BarMode;
+  searchValue: string;
+  handleSearchValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  lists: UserData["lists"] | undefined;
+  snippets: UserData["snippets"] | undefined;
+  tags: Tag[] | undefined;
+  activeListId: string;
+  activeTagLabel: string;
+  activateList: (id: string) => void;
+  activateTag: (label: string) => void;
 };
 
-const Sidebar = ({ filter }: SidebarProps) => {
-  const { data, tags, activeListId, activeTagLabel } = useUserData();
-
-  const [searchValue, setSearchValue] = useState("");
-  const handleSearchValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
-
+const Sidebar = ({
+  activeBarMode,
+  activeListId,
+  activeTagLabel,
+  lists,
+  snippets,
+  tags,
+  searchValue,
+  handleSearchValue,
+  activateList,
+  activateTag,
+}: SidebarProps) => {
   return (
     <div className="flex flex-col flex-shrink-0 h-screen p-8 overflow-hidden w-96 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
@@ -30,10 +45,7 @@ const Sidebar = ({ filter }: SidebarProps) => {
         <Switcher />
       </div>
 
-      <Searchbox
-        value={searchValue}
-        handleValueChange={handleSearchValueChange}
-      />
+      <Searchbox value={searchValue} handleValueChange={handleSearchValue} />
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
@@ -51,21 +63,20 @@ const Sidebar = ({ filter }: SidebarProps) => {
           <span className="ml-4 text-xs font-bold uppercase">Lists</span>
         </div>
         <div className="flex items-center flex-nowrap">
-          {data?.lists && (
-            <span className="text-sm text-carbon-300">
-              {data.lists.length}/32
-            </span>
+          {lists && (
+            <span className="text-sm text-carbon-300">{lists.length}/32</span>
           )}
 
           <CreateListWidget />
         </div>
       </div>
 
-      {data?.lists && data?.snippets && (
+      {lists && snippets && (
         <Lists
-          lists={data.lists}
-          snippets={data.snippets}
-          activeListId={filter === "list" ? activeListId : ""}
+          lists={lists}
+          snippets={snippets}
+          activeListId={activeBarMode === "list" ? activeListId : ""}
+          activateList={activateList}
         />
       )}
 
@@ -76,7 +87,13 @@ const Sidebar = ({ filter }: SidebarProps) => {
         </div>
       </div>
 
-      {tags && <TagsList tags={tags} activeTagLabel={activeTagLabel} />}
+      {tags && (
+        <TagsList
+          tags={tags}
+          activeTagLabel={activeTagLabel}
+          activateTag={activateTag}
+        />
+      )}
 
       <Authbox />
     </div>
