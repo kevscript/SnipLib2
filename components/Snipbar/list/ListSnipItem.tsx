@@ -11,9 +11,8 @@ const ListSnipItem = ({ snippet, isActive, listId }: ListSnipItemProps) => {
   return (
     <Link
       href={{
-        pathname: `/lists/[listId]/[snippetId]`,
+        pathname: `/snippets/[snippetId]`,
         query: {
-          listId: listId,
           snippetId: snippet._id.toString(),
         },
       }}

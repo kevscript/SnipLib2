@@ -6,6 +6,7 @@ import { NextPage } from "next";
 import AuthGuard from "@/components/AuthGuard";
 import { ReactElement, ReactNode } from "react";
 import { UserDataProvider } from "@/hooks/useUserData";
+import { DataProvider } from "@/hooks/useData";
 
 export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
   authRequired?: boolean;
@@ -22,13 +23,15 @@ function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <UserDataProvider>
+        {/* <UserDataProvider> */}
+        <DataProvider>
           {Component.authRequired ? (
             <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
           ) : (
             <>{getLayout(<Component {...pageProps} />)}</>
           )}
-        </UserDataProvider>
+        </DataProvider>
+        {/* </UserDataProvider> */}
       </QueryClientProvider>
     </SessionProvider>
   );

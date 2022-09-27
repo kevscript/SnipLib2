@@ -15,12 +15,7 @@ const ListBarHeader = ({ list }: ListBarHeaderProps) => {
       <div className="flex justify-between mt-2 flex-nowrap">
         <span className="font-bold">{list.label}</span>
         <ul className="flex items-center flex-nowrap gap-x-2">
-          <Link
-            href={{
-              pathname: "/lists/[listId]/create",
-              query: { listId: list._id.toString() },
-            }}
-          >
+          <Link href={{ pathname: "/snippets/create" }}>
             <li className="flex items-center justify-center w-6 h-6 rounded cursor-pointer bg-carbon-400 group hover:bg-marine-500">
               <PlusIcon className="w-4 h-4" />
             </li>

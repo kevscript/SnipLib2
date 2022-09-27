@@ -1,229 +1,117 @@
 import Snippet from "models/Snippet";
-// import { useQuery } from "@tanstack/react-query";
-// import { CollectionType } from "models/Collection";
-// import { SnippetType } from "models/Snippet";
-// import { UserDataType } from "models/UserData";
-// import { useSession } from "next-auth/react";
-// import { createContext, useContext, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getUserData } from "@/utils/getUserData";
+import { UserData } from "models/UserData";
 
-// export type Tag = {
-//   label: string;
-//   amount: number;
-// };
+export type Tag = {
+  label: string;
+  amount: number;
+};
 
-// export type UserDataProviderReturnValue = {
-//   isLoading: boolean;
-//   error: any;
-//   collections: CollectionType[] | undefined;
-//   snippets: SnippetType[] | undefined;
-//   tags: Tag[] | undefined;
-//   activeCollectionId: string;
-//   activeSnippetId: string;
-//   activeTagLabel: string;
-//   checkCollection: (collectionId: string) => void;
-//   checkTag: (tagLabel: string) => void;
-//   checkCollectionSnippet: ({
-//     snippetId,
-//     collectionId,
-//   }: {
-//     snippetId: string;
-//     collectionId: string;
-//   }) => void;
-//   checkTagSnippet: ({
-//     snippetId,
-//     tagLabel,
-//   }: {
-//     snippetId: string;
-//     tagLabel: string;
-//   }) => void;
-// };
+export type BarMode = "list" | "tag" | "search";
 
-// const getUserData = async (userId: string) => {
-//   const res = await fetch(`/api/data/${userId}`);
-//   const data = await res.json();
-//   console.log(data);
-//   return data;
-// };
+export type UserDataProviderReturnValue = {
+  lists: UserData["lists"] | undefined;
+  snippets: UserData["snippets"] | undefined;
+  tags: Tag[] | undefined;
+  activeListId: string;
+  activeTagLabel: string;
+  activeSnippetId: string;
+  activeBarMode: BarMode;
+  activateList: (id: string) => void;
+  activateTag: (label: string) => void;
+};
 
-// export const fetchUserData = async () => {
-//   const res = await fetch("/api/userData");
-//   const data: UserDataType = await res.json();
-//   return data;
-// };
+export const useDataProvider = () => {
+  const { status, data: session } = useSession();
 
-// export const useDataProvider = () => {
-//   const { status, data: session } = useSession();
+  const { data } = useQuery(["userData"], getUserData, {
+    enabled: status === "authenticated",
+    onSuccess: (data) => initState(data),
+    refetchOnWindowFocus: false,
+  });
 
-//   const {
-//     data: { collections, snippets } = {},
-//     error,
-//     isLoading,
-//   } = useQuery(["userData"], () => getUserData(session!.user.id!), {
-//     enabled:
-//       (session && session.user.id && status === "authenticated") === true,
-//     onSuccess: (data) => initApp(data),
-//     refetchOnWindowFocus: false,
-//   });
+  const [tags, setTags] = useState<Tag[] | undefined>(undefined);
 
-//   const [tags, setTags] = useState<Tag[] | undefined>(undefined);
+  const [activeListId, setActiveListId] = useState("");
+  const [activeTagLabel, setActiveTagLabel] = useState("");
+  const [activeSnippetId, setActiveSnippetId] = useState("");
+  const [activeBarMode, setActiveBarMode] = useState<BarMode>("list");
 
-//   const [activeCollectionId, setActiveCollectionId] = useState("");
-//   const [activeTagLabel, setActiveTagLabel] = useState("");
-//   const [activeSnippetId, setActiveSnippetId] = useState("");
+  const computeTags = (snippets: Snippet[]) => {
+    const tagsObj: { [key: string]: number } = {};
+    snippets.forEach((snip) => {
+      snip.tags.forEach((tag) => {
+        tagsObj[tag] ? tagsObj[tag]++ : (tagsObj[tag] = 1);
+      });
+    });
+    const initTags = Object.entries(tagsObj).map((tag) => ({
+      label: tag[0],
+      amount: tag[1],
+    }));
 
-//   const initApp = (data: UserDataType) => {
-//     const defaultCollection = data.collections?.find((c) => c.default);
+    setTags(initTags);
+  };
 
-//     if (defaultCollection) {
-//       const firstSnippet = data.snippets.find(
-//         (s: any) => s.collectionId === defaultCollection._id
-//       );
-//       firstSnippet && setActiveSnippetId(firstSnippet._id.toString());
-//       setActiveCollectionId(defaultCollection._id.toString());
-//     }
+  const initState = (data: UserData) => {
+    const { lists, snippets } = data;
+    const originalList = lists.find((l) => l.original === true);
+    if (originalList) {
+      setActiveListId(originalList._id.toString());
+      const firstSnippet = snippets.find(
+        (s) => s.listId.toString() === originalList._id.toString()
+      );
+      if (firstSnippet) {
+        setActiveSnippetId(firstSnippet._id.toString());
+      }
+    }
+    computeTags(data.snippets);
+  };
 
-//     const newTags = computeTags(data.snippets);
-//     newTags && setTags(newTags);
-//   };
+  const activateList = (id: string) => {
+    if (id !== activeListId) {
+      const exists = data?.lists.find((l) => l._id.toString() === id);
+      if (exists) {
+        setActiveListId(id);
+        activeBarMode !== "list" && setActiveBarMode("list");
+        setActiveTagLabel("");
+      }
+    }
+  };
 
-//   const computeTags = (snippets: SnippetType[]) => {
-//     const tagsObj: { [key: string]: number } = {};
+  const activateTag = (label: string) => {
+    if (label !== activeTagLabel) {
+      const exists = tags?.find((t) => t.label === label);
+      if (exists) {
+        setActiveTagLabel(label);
+        activeBarMode !== "tag" && setActiveBarMode("tag");
+        setActiveListId("");
+      }
+    }
+  };
 
-//     snippets.forEach((s) => {
-//       s.tags &&
-//         s.tags.forEach((tag) => {
-//           tagsObj[tag] ? tagsObj[tag]++ : (tagsObj[tag] = 1);
-//         });
-//     });
+  return {
+    lists: data?.lists,
+    snippets: data?.snippets,
+    tags,
+    activeListId,
+    activeSnippetId,
+    activeTagLabel,
+    activeBarMode,
+    activateList,
+    activateTag,
+  } as UserDataProviderReturnValue;
+};
 
-//     const initTags: Tag[] = Object.entries(tagsObj).map((tag) => ({
-//       label: tag[0],
-//       amount: tag[1],
-//     }));
+export const dataContext = createContext({} as UserDataProviderReturnValue);
 
-//     return initTags;
-//   };
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  const data = useDataProvider();
+  return <dataContext.Provider value={data}>{children}</dataContext.Provider>;
+};
 
-//   const checkCollection = (collectionId: string) => {
-//     if (collections) {
-//       const existingCollection = collections.find(
-//         (c) => c._id === collectionId
-//       );
-//       if (existingCollection && snippets) {
-//         const firstSnippet = snippets.find(
-//           (s) => s.collectionId === existingCollection._id
-//         );
-//         firstSnippet
-//           ? setActiveSnippetId(firstSnippet._id.toString())
-//           : activeSnippetId && setActiveSnippetId("");
-
-//         setActiveTagLabel("");
-//         setActiveCollectionId(existingCollection._id.toString());
-//       } else {
-//         activeCollectionId && setActiveCollectionId("");
-//       }
-//     }
-//   };
-
-//   const checkTag = (tagLabel: string) => {
-//     if (tags) {
-//       const existingTag = tags.find((tag) => tag.label === tagLabel);
-
-//       if (existingTag && snippets) {
-//         const firstSnippet = snippets.find((s) =>
-//           s.tags?.includes(existingTag.label)
-//         );
-//         firstSnippet
-//           ? setActiveSnippetId(firstSnippet._id.toString())
-//           : activeSnippetId && setActiveSnippetId("");
-
-//         setActiveCollectionId("");
-//         setActiveTagLabel(existingTag.label);
-//       } else {
-//         activeTagLabel && setActiveTagLabel("");
-//       }
-//     }
-//   };
-
-//   const checkCollectionSnippet = ({
-//     snippetId,
-//     collectionId,
-//   }: {
-//     snippetId: string;
-//     collectionId: string;
-//   }) => {
-//     if (collections) {
-//       const existingCollection = collections.find(
-//         (c) => c._id === collectionId
-//       );
-
-//       if (existingCollection && snippets) {
-//         const existingSnippet = snippets.find(
-//           (s) => s._id === snippetId && s.collectionId === collectionId
-//         );
-
-//         existingSnippet
-//           ? setActiveSnippetId(existingSnippet._id.toString())
-//           : activeSnippetId && setActiveSnippetId("");
-
-//         setActiveTagLabel("");
-//         setActiveCollectionId(existingCollection._id.toString());
-//       } else {
-//         activeCollectionId && setActiveCollectionId("");
-//       }
-//     }
-//   };
-
-//   const checkTagSnippet = ({
-//     snippetId,
-//     tagLabel,
-//   }: {
-//     snippetId: string;
-//     tagLabel: string;
-//   }) => {
-//     if (tags) {
-//       const existingTag = tags.find((tag) => tag.label === tagLabel);
-
-//       if (existingTag && snippets) {
-//         const existingSnippet = snippets.find(
-//           (s) => s._id === snippetId && s.tags?.includes(existingTag.label)
-//         );
-
-//         existingSnippet
-//           ? setActiveSnippetId(existingSnippet._id.toString())
-//           : activeSnippetId && setActiveSnippetId("");
-
-//         setActiveCollectionId("");
-//         setActiveTagLabel(existingTag.label);
-//       } else {
-//         activeTagLabel && setActiveTagLabel("");
-//       }
-//     }
-//   };
-
-//   return {
-//     collections,
-//     snippets,
-//     tags,
-//     error,
-//     isLoading,
-//     activeCollectionId,
-//     activeSnippetId,
-//     activeTagLabel,
-//     checkCollection,
-//     checkTag,
-//     checkCollectionSnippet,
-//     checkTagSnippet,
-//   };
-// };
-
-// export const dataContext = createContext({} as UserDataProviderReturnValue);
-
-// export const DataProvider = ({ children }: { children: React.ReactNode }) => {
-//   const data = useDataProvider();
-//   return <dataContext.Provider value={data}>{children}</dataContext.Provider>;
-// };
-
-// export const useData = () => {
-//   return useContext(dataContext);
-// };
+export const useData = () => {
+  return useContext(dataContext);
+};
