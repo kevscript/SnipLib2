@@ -1,19 +1,17 @@
-import { BarMode } from "@/hooks/useData";
-import { Tag, useUserData } from "@/hooks/useUserData";
+import { BarMode, Tag } from "@/hooks/useData";
 import { UserData } from "models/UserData";
-import React, { useState } from "react";
-import FavoriteIcon from "../icons/Favorite";
-import FolderIcon from "../icons/Folder";
-import TagIcon from "../icons/Tag";
-import { BarsFilter } from "../layouts/BarsWrapper";
-import Switcher from "../shared/Switcher";
-import CreateListWidget from "../widgets/CreateListWidget";
+import React from "react";
+import FavoriteIcon from "@/components/icons/Favorite";
+import FolderIcon from "@/components/icons/Folder";
+import TagIcon from "@/components/icons/Tag";
+import Switcher from "@/components/shared/Switcher";
+import CreateListWidget from "@/components/widgets/CreateListWidget";
 import Authbox from "./Authbox";
 import Lists from "./Lists";
 import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 
-export type SidebarProps = {
+export type SideBarProps = {
   activeBarMode: BarMode;
   searchValue: string;
   handleSearchValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -26,7 +24,7 @@ export type SidebarProps = {
   activateTag: (label: string) => void;
 };
 
-const Sidebar = ({
+const SideBar = ({
   activeBarMode,
   activeListId,
   activeTagLabel,
@@ -37,7 +35,7 @@ const Sidebar = ({
   handleSearchValue,
   activateList,
   activateTag,
-}: SidebarProps) => {
+}: SideBarProps) => {
   return (
     <div className="flex flex-col flex-shrink-0 h-screen p-8 overflow-hidden w-96 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
@@ -100,4 +98,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default SideBar;

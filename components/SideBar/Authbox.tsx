@@ -1,7 +1,7 @@
-import MoreIcon from "../icons/More";
+import MoreIcon from "@/components/icons/More";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
-import GithubIcon from "../icons/Github";
+import GithubIcon from "@/components/icons/Github";
 
 const Authbox = () => {
   const { data, status } = useSession();

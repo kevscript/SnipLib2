@@ -1,4 +1,4 @@
-import Snippet from "models/Snippet";
+import Snippet from "@/models/Snippet";
 import Link from "next/link";
 
 export type ListSnipItemProps = {

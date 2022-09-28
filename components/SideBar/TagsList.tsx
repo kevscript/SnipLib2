@@ -1,8 +1,8 @@
-import { TagItem as TagItemType } from "@/mocks/tags";
+import { Tag } from "@/hooks/useData";
 import TagItem from "./TagItem";
 
 export type TagsListProps = {
-  tags: TagItemType[] | null;
+  tags: Tag[] | null;
   activeTagLabel: string;
   activateTag: (label: string) => void;
 };

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import CrossIcon from "./icons/Cross";
+import CrossIcon from "@/components/icons/Cross";
 
 export type ModalProps = {
   children: ReactNode;
