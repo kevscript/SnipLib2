@@ -8,14 +8,39 @@ import { ReactElement, useEffect, useState } from "react";
 const SnippetPage = () => {
   const router = useRouter();
   const { snippetId } = router.query;
-  const { snippets } = useData();
+  const { snippets, activateSnippet, activeSnippetId } = useData();
 
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
+  const [snippetError, setSnippetError] = useState<string | null>(null);
 
   useEffect(() => {
-    const snippet = snippets?.find((s) => s._id.toString() === snippetId);
-    snippet && setActiveSnippet(snippet);
-  }, [snippetId, snippets]);
+    // check url to set activeSnippet
+    if (snippetId && snippets) {
+      const snippet = snippets.find((s) => s._id.toString() === snippetId);
+      if (snippet) {
+        activateSnippet(snippetId as string);
+        setActiveSnippet(snippet);
+      }
+    }
+  }, [activateSnippet, snippetId, snippets]);
+
+  useEffect(() => {
+    // if url check could not set an active snippet, check state for activeSnippetId
+    if (!activeSnippet && activeSnippetId && activeSnippetId !== snippetId) {
+      router.push({
+        pathname: "/snippets/[snippetId]",
+        query: { snippetId: activeSnippetId },
+      });
+    }
+  }, [activeSnippetId, router, snippetId, activeSnippet]);
+
+  if (snippetError) {
+    return (
+      <div>
+        <h1>{snippetError}</h1>
+      </div>
+    );
+  }
 
   if (!activeSnippet) return <h1>Loading snippet...</h1>;
 

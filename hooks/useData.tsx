@@ -22,12 +22,14 @@ export type UserDataProviderReturnValue = {
   activeBarMode: BarMode;
   activateList: (id: string) => void;
   activateTag: (label: string) => void;
+  activateSnippet: (id: string) => void;
+  isLoading: boolean;
 };
 
 export const useDataProvider = () => {
   const { status, data: session } = useSession();
 
-  const { data } = useQuery(["userData"], getUserData, {
+  const { data, isLoading } = useQuery(["userData"], getUserData, {
     enabled: status === "authenticated",
     onSuccess: (data) => initState(data),
     refetchOnWindowFocus: false,
@@ -58,13 +60,33 @@ export const useDataProvider = () => {
   const initState = (data: UserData) => {
     const { lists, snippets } = data;
     const originalList = lists.find((l) => l.original === true);
+    // if original list exists
     if (originalList) {
-      setActiveListId(originalList._id.toString());
-      const firstSnippet = snippets.find(
-        (s) => s.listId.toString() === originalList._id.toString()
-      );
-      if (firstSnippet) {
-        setActiveSnippetId(firstSnippet._id.toString());
+      if (snippets.length === 0) {
+        // init it by default if no snippet in app yet
+        setActiveListId(originalList._id.toString());
+      } else {
+        // otherwise look for a snippet in original list to init
+        const originalHasSnippets = snippets.some(
+          (s) => s.listId.toString() === originalList._id.toString()
+        );
+        if (originalHasSnippets) {
+          // if found, init both original list and its snippet
+          setActiveListId(originalList._id.toString());
+          const firstSnippet = snippets.find(
+            (s) => s.listId.toString() === originalList._id.toString()
+          );
+          firstSnippet && setActiveSnippetId(firstSnippet._id.toString());
+        } else {
+          // if original list does not have snippets,
+          // but there is snippets still in other lists
+          // sort them by updated date and init the latest
+          const sortedSnippetsByUpdateDate = snippets.sort((a, b) =>
+            a.updatedAt > b.updatedAt ? 1 : -1
+          );
+          setActiveSnippetId(sortedSnippetsByUpdateDate[0]._id.toString());
+          setActiveListId(sortedSnippetsByUpdateDate[0]._id.toString());
+        }
       }
     }
     computeTags(data.snippets);
@@ -92,6 +114,29 @@ export const useDataProvider = () => {
     }
   };
 
+  const activateSnippet = (id: string) => {
+    if (id !== activeSnippetId) {
+      const exists = data?.snippets.find((s) => s._id.toString() === id);
+      if (exists) {
+        setActiveSnippetId(id);
+
+        if (
+          activeBarMode === "list" &&
+          activeListId !== exists.listId.toString()
+        ) {
+          setActiveListId(exists.listId.toString());
+        }
+        if (
+          activeBarMode === "tag" &&
+          exists.tags.length > 0 &&
+          !exists.tags.includes(activeTagLabel)
+        ) {
+          setActiveTagLabel(exists.tags[0]);
+        }
+      }
+    }
+  };
+
   return {
     lists: data?.lists,
     snippets: data?.snippets,
@@ -102,6 +147,8 @@ export const useDataProvider = () => {
     activeBarMode,
     activateList,
     activateTag,
+    activateSnippet,
+    isLoading,
   } as UserDataProviderReturnValue;
 };
 
