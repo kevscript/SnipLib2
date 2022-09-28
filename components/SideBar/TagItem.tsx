@@ -1,27 +1,24 @@
-import Link from "next/link";
 import Branch from "./Branch";
 
-export type ListItemProps = {
+export type TagItemProps = {
   first?: boolean;
   label: string;
   amount: number;
   active: boolean;
-  listId: string;
-  activateList: (id: string) => void;
+  activateTag: (label: string) => void;
 };
 
-const ListItem = ({
-  first = false,
+const TagItem = ({
+  first,
+  active,
   label,
   amount,
-  active,
-  listId,
-  activateList,
-}: ListItemProps) => {
+  activateTag,
+}: TagItemProps) => {
   return (
     <li
       className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group"
-      onClick={() => activateList(listId)}
+      onClick={() => activateTag(label)}
     >
       <div className="flex flex-nowrap">
         <Branch short={first} active={active} />
@@ -30,7 +27,7 @@ const ListItem = ({
             active ? "text-white" : "text-carbon-300"
           } group-hover:text-white`}
         >
-          {label}
+          {"#" + label}
         </span>
       </div>
       <div className="flex justify-center w-6">
@@ -46,4 +43,4 @@ const ListItem = ({
   );
 };
 
-export default ListItem;
+export default TagItem;

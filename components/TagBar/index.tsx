@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import TagBarHeader from "./TagBarHeader";
 import TagSnipItem from "./TagSnipItem";
 import { useRouter } from "next/router";
-import Snippet from "models/Snippet";
+import Snippet from "@/models/Snippet";
 import { Tag } from "@/hooks/useData";
-import { UserData } from "models/UserData";
+import { UserData } from "@/models/UserData";
 
 export type TagBarProps = {
   tags: Tag[] | undefined;

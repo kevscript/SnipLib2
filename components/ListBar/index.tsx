@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Snippet from "models/Snippet";
-import List from "models/List";
+import Snippet from "@/models/Snippet";
+import List from "@/models/List";
 import ListBarHeader from "./ListBarHeader";
 import ListSnipItem from "./ListSnipItem";
-import { UserData } from "models/UserData";
+import { UserData } from "@/models/UserData";
 
 export type ListBarProps = {
   lists: UserData["lists"] | undefined;

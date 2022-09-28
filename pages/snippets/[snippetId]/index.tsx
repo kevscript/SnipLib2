@@ -1,7 +1,7 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import SnippetReadOnly from "@/components/SnippetReadOnly";
 import { useData } from "@/hooks/useData";
-import Snippet from "models/Snippet";
+import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 

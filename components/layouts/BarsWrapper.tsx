@@ -1,9 +1,8 @@
 import { useData } from "@/hooks/useData";
 import { useState } from "react";
-import Sidebar from "../Sidebar";
-import Snipbar from "../Snipbar";
-import ListBar from "../Snipbar/list/ListBar";
-import TagBar from "../Snipbar/tag/TagBar";
+import SideBar from "@/components/SideBar";
+import ListBar from "@/components/ListBar";
+import TagBar from "@/components/TagBar";
 
 export type BarsFilter = "list" | "tag" | "search";
 
@@ -32,7 +31,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
   return (
     <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
       <div className="flex flex-shrink-0 flex-nowrap">
-        <Sidebar
+        <SideBar
           lists={lists}
           snippets={snippets}
           tags={tags}

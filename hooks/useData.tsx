@@ -1,9 +1,9 @@
-import Snippet from "models/Snippet";
+import Snippet from "@/models/Snippet";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { getUserData } from "@/utils/getUserData";
-import { UserData } from "models/UserData";
+import { UserData } from "@/models/UserData";
 
 export type Tag = {
   label: string;

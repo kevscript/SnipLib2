@@ -1,5 +1,5 @@
-import List from "models/List";
-import Snippet from "models/Snippet";
+import List from "@/models/List";
+import Snippet from "@/models/Snippet";
 import ListItem from "./ListItem";
 
 export type ListsProps = {

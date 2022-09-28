@@ -1,7 +1,7 @@
 import PlusIcon from "@/components/icons/Plus";
 import DeleteListWidget from "@/components/widgets/DeleteListWidget";
 import EditListWidget from "@/components/widgets/EditListWidget";
-import List from "models/List";
+import List from "@/models/List";
 import Link from "next/link";
 
 export type ListBarHeaderProps = {

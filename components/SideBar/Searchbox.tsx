@@ -1,4 +1,4 @@
-import SearchIcon from "../icons/Search";
+import SearchIcon from "@/components/icons/Search";
 
 export type SearchboxProps = {
   value: string;
