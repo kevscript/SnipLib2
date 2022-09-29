@@ -3,6 +3,7 @@ import { useState } from "react";
 import SideBar from "@/components/SideBar";
 import ListBar from "@/components/ListBar";
 import TagBar from "@/components/TagBar";
+import SearchBar from "../SearchBar";
 
 export type BarsFilter = "list" | "tag" | "search";
 
@@ -18,15 +19,12 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
     activeListId,
     activeSnippetId,
     activeTagLabel,
+    activeSearchValue,
     activeBarMode,
     activateList,
     activateTag,
+    activateSearch,
   } = useData();
-
-  const [searchValue, setSearchValue] = useState("");
-  const handleSearchValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
 
   return (
     <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
@@ -38,10 +36,9 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
           activeListId={activeListId}
           activeTagLabel={activeTagLabel}
           activeBarMode={activeBarMode}
-          searchValue={searchValue}
-          handleSearchValue={handleSearchValue}
           activateList={activateList}
           activateTag={activateTag}
+          activateSearch={activateSearch}
         />
         {activeBarMode === "list" && (
           <ListBar
@@ -56,6 +53,13 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
             tags={tags}
             snippets={snippets}
             activeTagLabel={activeTagLabel}
+            activeSnippetId={activeSnippetId}
+          />
+        )}
+        {activeBarMode === "search" && (
+          <SearchBar
+            snippets={snippets}
+            activeSearchValue={activeSearchValue}
             activeSnippetId={activeSnippetId}
           />
         )}

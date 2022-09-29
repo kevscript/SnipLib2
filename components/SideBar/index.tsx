@@ -13,8 +13,6 @@ import TagsList from "./TagsList";
 
 export type SideBarProps = {
   activeBarMode: BarMode;
-  searchValue: string;
-  handleSearchValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
   lists: UserData["lists"] | undefined;
   snippets: UserData["snippets"] | undefined;
   tags: Tag[] | undefined;
@@ -22,6 +20,7 @@ export type SideBarProps = {
   activeTagLabel: string;
   activateList: (id: string) => void;
   activateTag: (label: string) => void;
+  activateSearch: (value: string) => void;
 };
 
 const SideBar = ({
@@ -31,10 +30,9 @@ const SideBar = ({
   lists,
   snippets,
   tags,
-  searchValue,
-  handleSearchValue,
   activateList,
   activateTag,
+  activateSearch,
 }: SideBarProps) => {
   return (
     <div className="flex flex-col flex-shrink-0 h-screen p-8 overflow-hidden w-96 bg-carbon-600">
@@ -43,7 +41,7 @@ const SideBar = ({
         <Switcher />
       </div>
 
-      <Searchbox value={searchValue} handleValueChange={handleSearchValue} />
+      <Searchbox activateSearch={activateSearch} />
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
