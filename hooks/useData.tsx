@@ -1,7 +1,7 @@
 import Snippet from "@/models/Snippet";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { getUserData } from "@/utils/getUserData";
 import { UserData } from "@/models/UserData";
 
@@ -19,15 +19,17 @@ export type UserDataProviderReturnValue = {
   activeListId: string;
   activeTagLabel: string;
   activeSnippetId: string;
+  activeSearchValue: string;
   activeBarMode: BarMode;
   activateList: (id: string) => void;
   activateTag: (label: string) => void;
   activateSnippet: (id: string) => void;
+  activateSearch: (value: string) => void;
   isLoading: boolean;
 };
 
 export const useDataProvider = () => {
-  const { status, data: session } = useSession();
+  const { status } = useSession();
 
   const { data, isLoading } = useQuery(["userData"], getUserData, {
     enabled: status === "authenticated",
@@ -40,6 +42,7 @@ export const useDataProvider = () => {
   const [activeListId, setActiveListId] = useState("");
   const [activeTagLabel, setActiveTagLabel] = useState("");
   const [activeSnippetId, setActiveSnippetId] = useState("");
+  const [activeSearchValue, setActiveSearchValue] = useState("");
   const [activeBarMode, setActiveBarMode] = useState<BarMode>("list");
 
   const computeTags = (snippets: Snippet[]) => {
@@ -92,6 +95,18 @@ export const useDataProvider = () => {
     computeTags(data.snippets);
   };
 
+  const activateSearch = (value: string) => {
+    if (activeSearchValue !== value) {
+      console.log("searchValue", value);
+      setActiveSearchValue(value);
+      activeBarMode !== "search" && setActiveBarMode("search");
+      setActiveListId("");
+      setActiveTagLabel("");
+    } else {
+      console.log(value, "already the search value");
+    }
+  };
+
   const activateList = (id: string) => {
     if (id !== activeListId) {
       const exists = data?.lists.find((l) => l._id.toString() === id);
@@ -99,6 +114,7 @@ export const useDataProvider = () => {
         setActiveListId(id);
         activeBarMode !== "list" && setActiveBarMode("list");
         setActiveTagLabel("");
+        setActiveSearchValue("");
       }
     }
   };
@@ -110,6 +126,7 @@ export const useDataProvider = () => {
         setActiveTagLabel(label);
         activeBarMode !== "tag" && setActiveBarMode("tag");
         setActiveListId("");
+        setActiveSearchValue("");
       }
     }
   };
@@ -133,6 +150,10 @@ export const useDataProvider = () => {
         ) {
           setActiveTagLabel(exists.tags[0]);
         }
+        if (activeBarMode === "search") {
+          setActiveListId("");
+          setActiveTagLabel("");
+        }
       }
     }
   };
@@ -144,10 +165,12 @@ export const useDataProvider = () => {
     activeListId,
     activeSnippetId,
     activeTagLabel,
+    activeSearchValue,
     activeBarMode,
     activateList,
     activateTag,
     activateSnippet,
+    activateSearch,
     isLoading,
   } as UserDataProviderReturnValue;
 };

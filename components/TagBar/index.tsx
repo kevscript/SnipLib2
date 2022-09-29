@@ -44,27 +44,25 @@ const TagBar = ({
 
   return (
     <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
-      <>
-        <TagBarHeader label={activeTagLabel} />
-        <div className="w-full h-[2px] bg-carbon-600"></div>
+      <TagBarHeader label={activeTagLabel} />
+      <div className="w-full h-[2px] bg-carbon-600"></div>
 
-        {activeTagSnippets && activeTagSnippets.length > 0 && (
-          <ul className="flex flex-col flex-1 overflow-y-auto">
-            {activeTagSnippets.map((snippet, i) => (
-              <TagSnipItem
-                key={snippet._id.toString()}
-                snippet={snippet}
-                activeTagLabel={activeTagLabel}
-                isActive={activeSnippetId === snippet._id.toString()}
-              />
-            ))}
-          </ul>
-        )}
+      {activeTagSnippets && activeTagSnippets.length > 0 && (
+        <ul className="flex flex-col flex-1 overflow-y-auto">
+          {activeTagSnippets.map((snippet, i) => (
+            <TagSnipItem
+              key={snippet._id.toString()}
+              snippet={snippet}
+              activeTagLabel={activeTagLabel}
+              isActive={activeSnippetId === snippet._id.toString()}
+            />
+          ))}
+        </ul>
+      )}
 
-        {activeTagSnippets && activeTagSnippets.length === 0 && (
-          <h1>No snippet yet with this Tag</h1>
-        )}
-      </>
+      {activeTagSnippets && activeTagSnippets.length === 0 && (
+        <h1>No snippet yet with this Tag</h1>
+      )}
     </div>
   );
 };
