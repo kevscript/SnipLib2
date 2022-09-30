@@ -27,6 +27,7 @@ export type UserDataProviderReturnValue = {
   activateSearch: (value: string) => void;
   isLoading: boolean;
   forceActivateList: (id: string) => void;
+  initState: (data: UserData) => void;
 };
 
 export const useDataProvider = () => {
@@ -184,6 +185,7 @@ export const useDataProvider = () => {
     activateSearch,
     isLoading,
     forceActivateList,
+    initState,
   } as UserDataProviderReturnValue;
 };
 
