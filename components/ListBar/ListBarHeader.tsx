@@ -21,7 +21,7 @@ const ListBarHeader = ({ list }: ListBarHeaderProps) => {
             </li>
           </Link>
           <EditListWidget list={list} />
-          <DeleteListWidget list={list} />
+          {!list.original && <DeleteListWidget list={list} />}
         </ul>
       </div>
     </div>
