@@ -26,6 +26,7 @@ export type UserDataProviderReturnValue = {
   activateSnippet: (id: string) => void;
   activateSearch: (value: string) => void;
   isLoading: boolean;
+  forceActivateList: (id: string) => void;
 };
 
 export const useDataProvider = () => {
@@ -33,10 +34,14 @@ export const useDataProvider = () => {
 
   const { data, isLoading } = useQuery(["userData"], getUserData, {
     enabled: status === "authenticated",
-    onSuccess: (data) => initState(data),
+    onSuccess: (data) => {
+      !isInitialiazed && initState(data);
+      computeTags(data.snippets);
+    },
     refetchOnWindowFocus: false,
   });
 
+  const [isInitialiazed, setIsInitialized] = useState(false);
   const [tags, setTags] = useState<Tag[] | undefined>(undefined);
 
   const [activeListId, setActiveListId] = useState("");
@@ -92,7 +97,7 @@ export const useDataProvider = () => {
         }
       }
     }
-    computeTags(data.snippets);
+    setIsInitialized(true);
   };
 
   const activateSearch = (value: string) => {
@@ -117,6 +122,12 @@ export const useDataProvider = () => {
         setActiveSearchValue("");
       }
     }
+  };
+
+  const forceActivateList = (id: string) => {
+    setActiveListId(id);
+    setActiveTagLabel("");
+    setActiveSearchValue("");
   };
 
   const activateTag = (label: string) => {
@@ -172,6 +183,7 @@ export const useDataProvider = () => {
     activateSnippet,
     activateSearch,
     isLoading,
+    forceActivateList,
   } as UserDataProviderReturnValue;
 };
 
