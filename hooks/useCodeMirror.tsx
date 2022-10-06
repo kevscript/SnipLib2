@@ -1,58 +1,85 @@
 import { EditorView, basicSetup } from "codemirror";
+import { keymap } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { indentWithTab } from "@codemirror/commands";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { StreamLanguage } from "@codemirror/language";
 import { langList } from "@/utils/langList";
 
 type UseCodeMirrorParams = {
-  doc: string;
-  readOnly: boolean;
-  lang: string;
+  setEditorView?: (view: EditorView) => void;
+  doc?: string;
+  readOnly?: boolean;
+  lang?: string;
 };
 
-export const useCodeMirror = ({ doc, readOnly, lang }: UseCodeMirrorParams) => {
-  const [element, setElement] = useState<HTMLElement>();
-
-  const ref = useCallback((node: HTMLElement | null) => {
-    if (!node) return;
-
-    setElement(node);
-  }, []);
+export const useCodeMirror = ({
+  setEditorView,
+  doc = "",
+  readOnly = false,
+  lang = "javascript",
+}: UseCodeMirrorParams) => {
+  const container = useRef<null | HTMLDivElement>(null);
+  const editor = useRef<null | EditorView>(null);
 
   useEffect(() => {
-    if (!element) return;
+    if (container.current) {
+      const langMode = langList.find((l) => l.id === lang)?.mode!;
+      const customStyles = EditorView.theme({
+        "&": {
+          fontSize: "14px",
+          height: "320px",
+          paddingTop: "16px",
+          paddingBottom: "16px",
+        },
+      });
 
-    const langMode = langList.find((l) => l.id === lang)?.mode!;
+      if (!editor.current) {
+        const initView = new EditorView({
+          state: EditorState.create({
+            doc: doc,
+            extensions: [
+              basicSetup,
+              dracula,
+              customStyles,
+              keymap.of([indentWithTab]),
+              EditorState.readOnly.of(readOnly),
+              StreamLanguage.define(langMode),
+            ],
+          }),
+          parent: container.current,
+        });
 
-    const customTheme = EditorView.theme({
-      "&": {
-        fontSize: "14px",
-        height: "320px",
-        paddingTop: "16px",
-        paddingBottom: "16px",
-      },
-    });
+        editor.current = initView;
+        setEditorView && setEditorView(initView);
+      } else {
+        const doc = editor.current.state.doc;
 
-    const startState = EditorState.create({
-      doc: doc,
-      extensions: [
-        basicSetup,
-        dracula,
-        customTheme,
-        // javascript({ jsx: true, typescript: true }),
-        EditorState.readOnly.of(readOnly),
-        StreamLanguage.define(langMode),
-      ],
-    });
+        editor.current.destroy();
+        const newView = new EditorView({
+          state: EditorState.create({
+            doc: doc,
+            extensions: [
+              basicSetup,
+              dracula,
+              customStyles,
+              keymap.of([indentWithTab]),
+              EditorState.readOnly.of(readOnly),
+              StreamLanguage.define(langMode),
+            ],
+          }),
+          parent: container.current,
+        });
+        editor.current = newView;
+        setEditorView && setEditorView(newView);
+      }
+    }
 
-    const view = new EditorView({
-      state: startState,
-      parent: element,
-    });
+    return () => {
+      editor.current?.destroy();
+    };
+  }, [doc, readOnly, lang, setEditorView]);
 
-    return () => view?.destroy();
-  }, [element, doc, readOnly, lang]);
-
-  return { ref };
+  return { container, editor };
 };
