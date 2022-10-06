@@ -28,7 +28,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
 
   return (
     <div className="flex w-screen h-screen overflow-x-hidden bg-carbon-700 flex-nowrap">
-      <div className="flex flex-shrink-0 flex-nowrap">
+      <div className="fixed flex flex-shrink-0 flex-nowrap">
         <SideBar
           lists={lists}
           snippets={snippets}
@@ -64,7 +64,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
           />
         )}
       </div>
-      {children}
+      <div className="ml-[768px] flex-1">{children}</div>
     </div>
   );
 };
