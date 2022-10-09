@@ -1,5 +1,6 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import SnippetReadOnly from "@/components/SnippetReadOnly";
+import DeleteSnippetWidget from "@/components/widgets/DeleteSnippetWidget";
 import { useData } from "@/hooks/useData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -59,9 +60,7 @@ const SnippetPage = () => {
           <button className="px-4 py-1 text-sm rounded-sm bg-marine">
             edit
           </button>
-          <button className="px-4 py-1 text-sm rounded-sm bg-marine">
-            delete
-          </button>
+          <DeleteSnippetWidget snippet={activeSnippet} />
         </div>
       </div>
       <SnippetReadOnly snippet={activeSnippet} />
