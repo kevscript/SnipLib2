@@ -1,10 +1,9 @@
 import CreateSnippetForm, {
   CreateSnippetFormErrors,
   CreateSnippetFormState,
-} from "@/components/forms/createSnippetForm";
+} from "@/components/forms/CreateSnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useData";
-import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
