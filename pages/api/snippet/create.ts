@@ -14,7 +14,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await clientPromise;
 
-      const newSnippet = req.body;
+      const newSnippet: Snippet = {
+        ...req.body,
+        _id: new ObjectID(req.body._id),
+        listId: new ObjectID(req.body.listId),
+      };
       const valid = Snippet.parse(newSnippet);
 
       if (valid) {
@@ -23,11 +27,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           {
             $push: {
               snippets: newSnippet,
-              "collections.$[collection].snippetIds": newSnippet._id,
+              "lists.$[list].snippetIds": newSnippet._id,
             },
           },
           {
-            arrayFilters: [{ "collection._id": newSnippet.collectionId }],
+            arrayFilters: [{ list: newSnippet.listId }],
           }
         );
 
