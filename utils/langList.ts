@@ -8,6 +8,15 @@ import { html } from "@codemirror/legacy-modes/mode/xml";
 import { python } from "@codemirror/legacy-modes/mode/python";
 import { cpp, csharp, java } from "@codemirror/legacy-modes/mode/clike";
 import { rust } from "@codemirror/legacy-modes/mode/rust";
+import { StreamParser } from "@codemirror/language";
+
+export type LanguageIds = typeof langList[number]["id"];
+
+export type LanguageListItem = {
+  readonly label: string;
+  readonly id: string;
+  readonly mode: StreamParser<unknown>;
+};
 
 export const langList = [
   {
@@ -60,4 +69,4 @@ export const langList = [
     id: "java",
     mode: java,
   },
-];
+] as const;
