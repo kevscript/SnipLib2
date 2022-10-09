@@ -1,17 +1,18 @@
 import { EditorView, basicSetup } from "codemirror";
 import { keymap } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { indentWithTab } from "@codemirror/commands";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { StreamLanguage } from "@codemirror/language";
-import { langList } from "@/utils/langList";
+import { langList, LanguageIds } from "@/utils/langList";
 
 type UseCodeMirrorParams = {
   setEditorView?: (view: EditorView) => void;
   doc?: string;
   readOnly?: boolean;
-  lang?: string;
+  lang?: LanguageIds;
+  handleEditorContent?: (value: string) => void;
 };
 
 export const useCodeMirror = ({
@@ -19,13 +20,15 @@ export const useCodeMirror = ({
   doc = "",
   readOnly = false,
   lang = "javascript",
+  handleEditorContent,
 }: UseCodeMirrorParams) => {
   const container = useRef<null | HTMLDivElement>(null);
   const editor = useRef<null | EditorView>(null);
+  const [isFocused, setisFocused] = useState(false);
 
   useEffect(() => {
     if (container.current) {
-      const langMode = langList.find((l) => l.id === lang)?.mode!;
+      const langMode = langList.find((l) => l.id === lang)!.mode;
       const customStyles = EditorView.theme({
         "&": {
           fontSize: "14px",
@@ -34,6 +37,8 @@ export const useCodeMirror = ({
           paddingBottom: "16px",
         },
       });
+
+      console.log("editor useEffect triggered");
 
       if (!editor.current) {
         const initView = new EditorView({
@@ -46,6 +51,18 @@ export const useCodeMirror = ({
               keymap.of([indentWithTab]),
               EditorState.readOnly.of(readOnly),
               StreamLanguage.define(langMode),
+              EditorView.updateListener.of((x) => {
+                if (x.focusChanged) {
+                  editor.current?.hasFocus
+                    ? setisFocused(true)
+                    : setisFocused(false);
+                }
+
+                if (x.docChanged) {
+                  const currDoc = x.state.doc.toString() as string;
+                  handleEditorContent && handleEditorContent(currDoc);
+                }
+              }),
             ],
           }),
           parent: container.current,
@@ -67,6 +84,18 @@ export const useCodeMirror = ({
               keymap.of([indentWithTab]),
               EditorState.readOnly.of(readOnly),
               StreamLanguage.define(langMode),
+              EditorView.updateListener.of((x) => {
+                if (x.focusChanged) {
+                  editor.current?.hasFocus
+                    ? setisFocused(true)
+                    : setisFocused(false);
+                }
+
+                if (x.docChanged) {
+                  const currDoc = x.state.doc.toString() as string;
+                  handleEditorContent && handleEditorContent(currDoc);
+                }
+              }),
             ],
           }),
           parent: container.current,
@@ -79,7 +108,7 @@ export const useCodeMirror = ({
     return () => {
       editor.current?.destroy();
     };
-  }, [doc, readOnly, lang, setEditorView]);
+  }, [doc, readOnly, lang, setEditorView, handleEditorContent]);
 
-  return { container, editor };
+  return { container, editor, isFocused };
 };

@@ -1,12 +1,12 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
+import { LanguageIds } from "@/utils/langList";
 import { EditorView } from "codemirror";
-import { useEffect } from "react";
 
 export type CodeMirrorProps = {
   setEditorView?: (view: EditorView) => void;
   doc?: string;
   readOnly?: boolean;
-  lang?: string;
+  lang?: LanguageIds;
 };
 
 const CodeMirror = ({
@@ -23,7 +23,7 @@ const CodeMirror = ({
   });
 
   return (
-    <div className="w-full mt-2 overflow-auto rounded bg-carbon-600">
+    <div className="w-full overflow-auto rounded bg-carbon-600">
       <p className="sr-only">
         The Editor uses Tab key to indent code. If you are focused on the editor
         and want to keep navigating instead of indenting code : press Escape,
