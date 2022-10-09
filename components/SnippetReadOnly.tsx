@@ -1,4 +1,4 @@
-import { langList } from "@/utils/langList";
+import { langList, LanguageIds } from "@/utils/langList";
 import Snippet from "@/models/Snippet";
 import CodeMirror from "./CodeMirror";
 
@@ -29,7 +29,11 @@ const SnippetReadOnly = ({ snippet }: SnippetProps) => {
         </ul>
       </div>
 
-      <CodeMirror doc={snippet.content} lang={snippet.language} readOnly />
+      <CodeMirror
+        doc={snippet.content}
+        lang={snippet.language as LanguageIds}
+        readOnly
+      />
 
       <div className="flex justify-between mt-2 text-sm text-carbon-300">
         {snippet.updatedAt !== snippet.createdAt && (
