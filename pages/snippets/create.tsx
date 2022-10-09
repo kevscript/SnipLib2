@@ -1,155 +1,104 @@
-import CodeMirror from "@/components/CodeMirror";
-import CrossIcon from "@/components/icons/Cross";
+import CreateSnippetForm, {
+  CreateSnippetFormErrors,
+  CreateSnippetFormState,
+} from "@/components/forms/createSnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useData";
+import List from "@/models/List";
+import Snippet from "@/models/Snippet";
+import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
-import { EditorView } from "codemirror";
-import React, { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import React from "react";
+
+const initFormValues: CreateSnippetFormState = {
+  title: "",
+  description: "",
+  listId: "",
+  tag: "",
+  language: "javascript",
+  content: "",
+};
+
+const initFormErrors: CreateSnippetFormErrors = {
+  title: [],
+  listId: [],
+  description: [],
+  tags: [],
+  language: [],
+  content: [],
+};
 
 const CreateSnippetPage = () => {
-  const { lists, activeListId } = useData();
+  const router = useRouter();
+  const { lists, activeListId, activateSnippet } = useData();
 
-  const [titleValue, setTitleValue] = useState("");
-  const [descriptionValue, setDescriptionValue] = useState("");
-  const [selectedListId, setSelectedListId] = useState("");
-  const [tagValue, setTagValue] = useState("");
-  const [tagsList, setTagsList] = useState<string[]>([]);
-  const [selectedLangId, setSelectedLangId] = useState("javascript");
+  const queryClient = useQueryClient();
+  const { mutate: createSnippet } = useMutation(
+    (newSnippet: Snippet) => {
+      return fetch("/api/snippet/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newSnippet),
+      });
+    },
+    {
+      onMutate: async (newSnippet) => {
+        await queryClient.cancelQueries(["userData"]);
+        const previousData: UserData | undefined = queryClient.getQueryData([
+          "userData",
+        ]);
+        let newData: UserData | null = null;
+        if (previousData) {
+          newData = { ...previousData };
+          // add new snippet
+          newData.snippets.push(newSnippet);
+          // add snippet id to list
+          const newSnippetListIdIndex = newData.lists.findIndex(
+            (l) => l._id.toString() === newSnippet.listId.toString()
+          );
+          if (newSnippetListIdIndex) {
+            newData.lists[newSnippetListIdIndex].snippetIds.push(
+              newSnippet._id
+            );
+          }
 
-  const [editorView, setEditorView] = useState<null | EditorView>(null);
+          queryClient.setQueryData(["userData"], newData);
+        }
 
-  const handleTagAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (tagValue && !tagsList.includes(tagValue) && tagsList.length < 5) {
-        tagsList.push(tagValue.trim());
-        setTagValue("");
-      }
+        return { previousData, newData };
+      },
+      onError: (error, newSnippet, ctx) => console.log("error", error),
+      onSettled: (data, error, newSnippet, ctx) => {
+        queryClient.invalidateQueries(["userData"]);
+
+        if (!error) {
+          console.log("no Error wit snippet creation");
+          activateSnippet(newSnippet._id.toString());
+          router.push({
+            pathname: "/snippets/[snippetId]",
+            query: { snippetId: newSnippet._id.toString() },
+          });
+        }
+      },
     }
-  };
-
-  const handleContent = () => {
-    console.log(editorView?.state.doc.toString());
-  };
-
-  const removeTag = (tag: string) => {
-    if (tagsList.includes(tag)) {
-      const newTagList = tagsList.filter((t) => t !== tag);
-      setTagsList(newTagList);
-    }
-  };
-
-  useEffect(() => {
-    activeListId && setSelectedListId(activeListId);
-  }, [activeListId]);
+  );
 
   return (
     <div className="flex-1 p-16">
-      <div className="flex items-center justify-between flex-1">
-        <div className="flex text-xs font-bold gap-x-2">
-          <span className="uppercase text-carbon-300">Create</span>
-          <span>/</span>
-          <span>New Snippet</span>
-        </div>
-        <div className="flex flex-nowrap gap-x-4">
-          <button className="px-4 py-1 rounded-sm bg-marine-500 drop-shadow-sm">
-            Create
-          </button>
-          <button className="px-4 py-1 rounded-sm bg-carbon-400 drop-shadow-sm">
-            Cancel
-          </button>
-        </div>
-      </div>
-
-      <form className="flex flex-col mt-12 gap-y-4">
-        <div className="flex gap-x-4">
-          <label htmlFor="" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Title</span>
-            <input
-              type="text"
-              value={titleValue}
-              onChange={(e) => setTitleValue(e.target.value)}
-              className="h-10 px-2 mt-2 border-none rounded-sm outline-none focus:outline-marine-500 bg-carbon-400"
-              autoFocus
-            />
-          </label>
-          <label htmlFor="" className="flex flex-col">
-            <span className="ml-2 text-sm font-bold">List</span>
-            <select
-              defaultValue={selectedListId}
-              onChange={(e) => setSelectedListId(e.target.value)}
-              className="h-10 px-2 mt-2 border-none rounded-sm outline-none focus:outline-marine-500 bg-carbon-400 min-w-[128px] cursor-pointer"
-            >
-              {lists &&
-                lists.map((list) => (
-                  <option key={list._id.toString()} value={list._id.toString()}>
-                    {list.label}
-                  </option>
-                ))}
-            </select>
-          </label>
-        </div>
-        <div className="flex mt-4">
-          <label htmlFor="" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Description</span>
-            <textarea
-              value={descriptionValue}
-              onChange={(e) => setDescriptionValue(e.target.value)}
-              className="min-h-[40px] h-24 p-2 mt-2 border-none rounded-sm outline-none focus:outline-marine-500 bg-carbon-400"
-            />
-          </label>
-        </div>
-        <div className="flex mt-4 gap-x-4">
-          <label className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Tags</span>
-            <div className="flex mt-2 border-none rounded-sm outline-none flex-nowrap gap-x-2 focus-within:outline-marine-500 bg-carbon-400">
-              {tagsList.length > 0 && (
-                <ul className="flex items-center">
-                  {tagsList.map((tag) => (
-                    <li
-                      key={tag}
-                      className="flex items-center justify-center h-8 px-1.5 ml-1 rounded-sm bg-marine-500 flex-nowrap gap-x-2 cursor-pointer"
-                      onClick={() => removeTag(tag)}
-                    >
-                      <span className="text-sm text-white">{tag}</span>
-                      <CrossIcon className="w-4 h-4 stroke-white" />
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              <input
-                type="text"
-                value={tagValue}
-                onChange={(e) => setTagValue(e.target.value)}
-                onKeyDown={(e) => handleTagAdd(e)}
-                className="flex-1 h-10 px-2 bg-transparent border-none outline-none"
-                disabled={tagsList.length >= 5}
-              />
-            </div>
-          </label>
-          <label className="flex flex-col">
-            <span className="ml-2 text-sm font-bold">Language</span>
-            <select
-              defaultValue={selectedLangId}
-              onChange={(e) => setSelectedLangId(e.target.value)}
-              className="h-10 px-2 mt-2 border-none rounded-sm outline-none focus:outline-marine-500 bg-carbon-400 min-w-[128px] cursor-pointer"
-            >
-              {langList &&
-                langList.map((lang) => (
-                  <option key={lang.id} value={lang.id}>
-                    {lang.label}
-                  </option>
-                ))}
-            </select>
-          </label>
-        </div>
-        <div className="mt-4">
-          <div className="flex flex-col">
-            <span className="ml-2 text-sm font-bold">Snippet</span>
-            <CodeMirror setEditorView={setEditorView} lang={selectedLangId} />
-          </div>
-        </div>
-      </form>
+      {lists && langList && activeListId && (
+        <CreateSnippetForm
+          activeListId={activeListId}
+          initFormValues={initFormValues}
+          initFormErrors={initFormErrors}
+          langList={langList}
+          lists={lists}
+          createSnippet={createSnippet}
+        />
+      )}
     </div>
   );
 };
