@@ -64,7 +64,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
           />
         )}
       </div>
-      <div className="ml-[768px] flex-1">{children}</div>
+      <div className="ml-[704px] flex-1">{children}</div>
     </div>
   );
 };
