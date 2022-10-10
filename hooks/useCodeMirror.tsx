@@ -8,7 +8,6 @@ import { StreamLanguage } from "@codemirror/language";
 import { langList, LanguageIds } from "@/utils/langList";
 
 type UseCodeMirrorParams = {
-  setEditorView?: (view: EditorView) => void;
   doc?: string;
   readOnly?: boolean;
   lang?: LanguageIds;
@@ -16,7 +15,6 @@ type UseCodeMirrorParams = {
 };
 
 export const useCodeMirror = ({
-  setEditorView,
   doc = "",
   readOnly = false,
   lang = "javascript",
@@ -38,7 +36,7 @@ export const useCodeMirror = ({
         },
       });
 
-      console.log("editor useEffect triggered");
+      console.log("editor useEffect triggered", doc);
 
       if (!editor.current) {
         const initView = new EditorView({
@@ -69,10 +67,7 @@ export const useCodeMirror = ({
         });
 
         editor.current = initView;
-        setEditorView && setEditorView(initView);
       } else {
-        const doc = editor.current.state.doc;
-
         editor.current.destroy();
         const newView = new EditorView({
           state: EditorState.create({
@@ -101,14 +96,13 @@ export const useCodeMirror = ({
           parent: container.current,
         });
         editor.current = newView;
-        setEditorView && setEditorView(newView);
       }
     }
 
     return () => {
       editor.current?.destroy();
     };
-  }, [doc, readOnly, lang, setEditorView, handleEditorContent]);
+  }, [doc, readOnly, lang, handleEditorContent]);
 
   return { container, editor, isFocused };
 };
