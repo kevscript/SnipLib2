@@ -23,7 +23,7 @@ const Searchbox = ({ activateSearch }: SearchboxProps) => {
       />
 
       <button
-        className={`absolute top-0 right-0 flex items-center justify-center w-16 h-full`}
+        className={`absolute top-0 right-0 flex items-center justify-center w-12 h-full`}
         disabled={!searchValue}
         onClick={() => activateSearch(searchValue)}
       >
