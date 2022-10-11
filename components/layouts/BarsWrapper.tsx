@@ -1,4 +1,4 @@
-import { useData } from "@/hooks/useData";
+import { useData } from "@/hooks/useUserData";
 import { useState } from "react";
 import SideBar from "@/components/SideBar";
 import ListBar from "@/components/ListBar";
@@ -9,9 +9,10 @@ export type BarsFilter = "list" | "tag" | "search";
 
 export type BarsWrapperProps = {
   children: React.ReactNode;
+  mode: BarsFilter;
 };
 
-const BarsWrapper = ({ children }: BarsWrapperProps) => {
+const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
   const {
     lists,
     snippets,
@@ -21,9 +22,9 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
     activeTagLabel,
     activeSearchValue,
     activeBarMode,
-    activateList,
-    activateTag,
-    activateSearch,
+    // activateList,
+    // activateTag,
+    // activateSearch,
   } = useData();
 
   return (
@@ -36,12 +37,9 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
           activeListId={activeListId}
           activeTagLabel={activeTagLabel}
           activeBarMode={activeBarMode}
-          activateList={activateList}
-          activateTag={activateTag}
-          activateSearch={activateSearch}
         />
         <div className="h-full w-96">
-          {activeBarMode === "list" && (
+          {mode === "list" && (
             <ListBar
               lists={lists}
               snippets={snippets}
@@ -49,7 +47,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
               activeSnippetId={activeSnippetId}
             />
           )}
-          {activeBarMode === "tag" && (
+          {mode === "tag" && (
             <TagBar
               tags={tags}
               snippets={snippets}
@@ -57,7 +55,7 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
               activeSnippetId={activeSnippetId}
             />
           )}
-          {activeBarMode === "search" && (
+          {mode === "search" && (
             <SearchBar
               snippets={snippets}
               activeSearchValue={activeSearchValue}

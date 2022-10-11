@@ -43,7 +43,7 @@ export type UserDataProviderReturnValue = {
 export const useDataProvider = () => {
   const { status } = useSession();
 
-  const { data, isLoading, isSuccess } = useQuery(["userData"], getUserData, {
+  const { data, isSuccess } = useQuery(["userData"], getUserData, {
     enabled: status === "authenticated",
     onSuccess: (data) => {
       computeTags(data.snippets);
@@ -109,6 +109,7 @@ export const useDataProvider = () => {
     snippetId: string;
   }) => {
     if (isSuccess) {
+      setActiveBarMode("list");
       if (listId !== activeListId) {
         const listExists = data.lists.find((l) => l._id.toString() === listId);
         if (!listExists) {
@@ -136,6 +137,7 @@ export const useDataProvider = () => {
 
   const checkList = (listId: string) => {
     if (isSuccess) {
+      setActiveBarMode("list");
       if (listId !== activeListId) {
         const listExists = data.lists.find((l) => l._id.toString() === listId);
 
