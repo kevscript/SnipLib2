@@ -5,7 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { NextPage } from "next";
 import AuthGuard from "@/components/AuthGuard";
 import { ReactElement, ReactNode } from "react";
-import { DataProvider } from "@/hooks/useData";
+import { DataProvider } from "@/hooks/useUserData";
 
 export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
   authRequired?: boolean;

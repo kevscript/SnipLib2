@@ -1,339 +1,197 @@
+import Snippet from "@/models/Snippet";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import React, { createContext, useContext, useState } from "react";
 import { getUserData } from "@/utils/getUserData";
-// import { useQuery } from "@tanstack/react-query";
-// import Snippet from "models/Snippet";
-// import { UserData } from "models/UserData";
-// import { useSession } from "next-auth/react";
-// import React, { createContext, useCallback, useContext, useState } from "react";
+import { UserData } from "@/models/UserData";
+import { snippets } from "@codemirror/lang-javascript";
+import { string } from "zod";
 
-// export type Tag = { label: string; amount: number };
+export type Tag = {
+  label: string;
+  amount: number;
+};
 
-// type UserDataContext = {
-//   data: UserData | undefined;
-//   tags: Tag[] | undefined;
-//   activeListId: string;
-//   activeTagLabel: string;
-//   activeSnippetId: string;
-//   initState: (d: UserData) => void;
-//   checkListsRootPath: () => {
-//     valid: boolean;
-//     redirectPath: string | null;
-//     error?: string;
-//   };
-//   checkTagsRootPath: () => { redirectPath: string };
-//   checkListPath: (id: string) => {
-//     valid: boolean;
-//     redirectPath: string;
-//   };
-//   checkTagPath: (label: string) => {
-//     valid: boolean;
-//     redirectPath: string;
-//   };
-//   checkSnippetPathFromList: ({
-//     listId,
-//     snippetId,
-//   }: {
-//     listId: string;
-//     snippetId: string;
-//   }) => {
-//     valid: boolean;
-//     redirectPath: string;
-//   };
-//   checkSnippetPathFromTag: ({
-//     tagLabel,
-//     snippetId,
-//   }: {
-//     tagLabel: string;
-//     snippetId: string;
-//   }) => {
-//     valid: boolean;
-//     redirectPath: string;
-//   };
-// };
+export type BarMode = "list" | "tag" | "search";
 
-// export const useUserdataProvider = () => {
-//   const { status } = useSession();
+type CheckListReturnValue = {
+  valid: boolean;
+  isEmpty?: boolean;
+  path?: string;
+};
 
-//   const { data } = useQuery(["userData"], getUserData, {
-//     enabled: status === "authenticated",
-//     onSuccess: (data) => initState(data),
-//     refetchOnWindowFocus: false,
-//   });
+type CheckListSnippetParams = {
+  listId: string;
+  snippetId: string;
+};
 
-//   const [activeListId, setActiveListId] = useState("");
-//   const [activeTagLabel, setActiveTagLabel] = useState("");
-//   const [activeSnippetId, setActiveSnippetId] = useState("");
+export type UserDataProviderReturnValue = {
+  lists: UserData["lists"] | undefined;
+  snippets: UserData["snippets"] | undefined;
+  tags: Tag[] | undefined;
+  activeListId: string;
+  activeTagLabel: string;
+  activeSnippetId: string;
+  activeSearchValue: string;
+  activeBarMode: BarMode;
+  initOriginalList: () => { path: string };
+  isSuccess: boolean;
+  checkList: (listId: string) => CheckListReturnValue;
+  checkListSnippet: (p: CheckListSnippetParams) => { valid: boolean };
+};
 
-//   const [tags, setTags] = useState<Tag[] | undefined>(undefined);
+export const useDataProvider = () => {
+  const { status } = useSession();
 
-//   const computeTags = (snippets: Snippet[]) => {
-//     const tagsObj: { [key: string]: number } = {};
-//     snippets.forEach((snip) => {
-//       snip.tags.forEach((tag) => {
-//         tagsObj[tag] ? tagsObj[tag]++ : (tagsObj[tag] = 1);
-//       });
-//     });
-//     const initTags = Object.entries(tagsObj).map((tag) => ({
-//       label: tag[0],
-//       amount: tag[1],
-//     }));
+  const { data, isLoading, isSuccess } = useQuery(["userData"], getUserData, {
+    enabled: status === "authenticated",
+    onSuccess: (data) => {
+      computeTags(data.snippets);
+    },
+    refetchOnWindowFocus: false,
+  });
 
-//     setTags(initTags);
-//   };
+  const [isInitialiazed, setIsInitialized] = useState(false);
+  const [tags, setTags] = useState<Tag[] | undefined>(undefined);
 
-//   const initState = (data: UserData) => {
-//     const { lists, snippets } = data;
-//     const originalList = lists.find((l) => l.original === true);
-//     if (originalList) {
-//       setActiveListId(originalList._id.toString());
-//       const firstSnippet = snippets.find(
-//         (s) => s.listId.toString() === originalList._id.toString()
-//       );
-//       if (firstSnippet) {
-//         setActiveSnippetId(firstSnippet._id.toString());
-//       }
-//     }
-//     computeTags(data.snippets);
-//   };
+  const [activeListId, setActiveListId] = useState("");
+  const [activeTagLabel, setActiveTagLabel] = useState("");
+  const [activeSnippetId, setActiveSnippetId] = useState("");
+  const [activeSearchValue, setActiveSearchValue] = useState("");
+  const [activeBarMode, setActiveBarMode] = useState<BarMode>("list");
 
-//   const checkTagsRootPath = useCallback(() => {
-//     const sortedTags = tags?.sort((a, b) => (a.label > b.label ? 1 : -1));
-//     const firstTag = sortedTags && sortedTags[0];
-//     setActiveListId("");
-//     setActiveSnippetId("");
-//     if (firstTag) {
-//       console.log(firstTag);
-//       setActiveTagLabel(firstTag.label);
-//       return {
-//         redirectPath: `/tags/${firstTag.label}`,
-//       };
-//     } else {
-//       setActiveTagLabel("");
-//       return {
-//         redirectPath: `/lists`,
-//       };
-//     }
-//   }, [tags]);
+  const computeTags = (snippets: Snippet[]) => {
+    const tagsObj: { [key: string]: number } = {};
+    snippets.forEach((snip) => {
+      snip.tags.forEach((tag) => {
+        tagsObj[tag] ? tagsObj[tag]++ : (tagsObj[tag] = 1);
+      });
+    });
+    const initTags = Object.entries(tagsObj).map((tag) => ({
+      label: tag[0],
+      amount: tag[1],
+    }));
 
-//   const checkListsRootPath = useCallback(() => {
-//     const originalList = data?.lists.find((l) => l.original === true);
-//     setActiveTagLabel("");
-//     if (originalList) {
-//       const snippet = data?.snippets.find(
-//         (s) => s.listId.toString() === originalList._id.toString()
-//       );
+    setTags(initTags);
+  };
 
-//       if (snippet) {
-//         setActiveListId(originalList._id.toString());
-//         setActiveSnippetId(snippet._id.toString());
-//         return {
-//           valid: true,
-//           redirectPath: `/lists/${originalList._id.toString()}/${snippet._id.toString()}`,
-//         };
-//       } else {
-//         setActiveListId(originalList._id.toString());
-//         setActiveSnippetId("");
-//         return {
-//           valid: true,
-//           redirectPath: `/lists/${originalList._id.toString()}`,
-//         };
-//       }
-//     } else {
-//       return {
-//         valid: false,
-//         redirectPath: null,
-//         error: "No original list",
-//       };
-//     }
-//   }, [data]);
+  const initOriginalList = () => {
+    if (isSuccess) {
+      setActiveBarMode("list");
+      const originalList = data.lists.find((l) => l.original);
 
-//   const checkTagPath = useCallback(
-//     (tagLabel: string) => {
-//       if (tags) {
-//         const existingTag = tags.find((t) => t.label === tagLabel);
-//         setActiveSnippetId("");
-//         if (existingTag) {
-//           const initSnippet = data?.snippets.find((s) =>
-//             s.tags.includes(tagLabel)
-//           );
+      if (originalList) {
+        setActiveListId(originalList._id.toString());
+        const originalSnippets = data.snippets
+          .filter((s) => s.listId.toString() === originalList._id.toString())
+          .sort((a, b) => (a.title > b.title ? -1 : 1));
 
-//           if (initSnippet) {
-//             setActiveTagLabel(tagLabel);
-//             setActiveSnippetId(initSnippet._id.toString());
-//             return {
-//               valid: false,
-//               redirectPath: `/tags/${tagLabel}/${initSnippet._id.toString()}`,
-//             };
-//           } else {
-//             setActiveTagLabel(tagLabel);
-//             setActiveSnippetId("");
-//             return {
-//               valid: true,
-//               redirectPath: `/tags/${tagLabel}`,
-//             };
-//           }
-//         } else {
-//           setActiveTagLabel("");
-//           return {
-//             valid: false,
-//             redirectPath: `/tags`,
-//           };
-//         }
-//       } else {
-//         return {
-//           valid: false,
-//           redirectPath: `/lists`,
-//         };
-//       }
-//     },
-//     [tags, data]
-//   );
+        if (originalSnippets.length > 0) {
+          const defaultSnippet = originalSnippets[0];
+          setActiveSnippetId(defaultSnippet._id.toString());
 
-//   const checkListPath = useCallback(
-//     (listId: string) => {
-//       const existingList = data?.lists.find((l) => l._id.toString() === listId);
-//       setActiveTagLabel("");
-//       if (existingList) {
-//         const initSnippet = data?.snippets.find(
-//           (s) => s.listId.toString() === listId
-//         );
+          return {
+            path: `/lists/${originalList._id.toString()}/${defaultSnippet._id.toString()}`,
+          };
+        } else {
+          setActiveSnippetId("");
+          return { path: `/lists/${originalList._id.toString()}` };
+        }
+      }
+    }
+  };
 
-//         if (initSnippet) {
-//           setActiveListId(existingList._id.toString());
-//           setActiveSnippetId(initSnippet._id.toString());
-//           return {
-//             valid: false,
-//             redirectPath: `/lists/${listId}/${initSnippet._id.toString()}`,
-//           };
-//         } else {
-//           setActiveListId(existingList._id.toString());
-//           setActiveSnippetId("");
-//           return {
-//             valid: true,
-//             redirectPath: `/lists/${listId}}`,
-//           };
-//         }
-//       } else {
-//         setActiveListId("");
-//         return {
-//           valid: false,
-//           redirectPath: `/lists`,
-//         };
-//       }
-//     },
-//     [data]
-//   );
+  const checkListSnippet = ({
+    listId,
+    snippetId,
+  }: {
+    listId: string;
+    snippetId: string;
+  }) => {
+    if (isSuccess) {
+      if (listId !== activeListId) {
+        const listExists = data.lists.find((l) => l._id.toString() === listId);
+        if (!listExists) {
+          return { valid: false };
+        }
+        setActiveListId(listExists._id.toString());
+      }
 
-//   const checkSnippetPathFromTag = useCallback(
-//     ({ tagLabel, snippetId }: { tagLabel: string; snippetId: string }) => {
-//       if (tags) {
-//         const existingTag = tags.find((t) => t.label === tagLabel);
-//         setActiveListId("");
-//         if (existingTag) {
-//           const snippet = data?.snippets.find(
-//             (s) => s._id.toString() === snippetId
-//           );
-//           const snippetHasTag = snippet && snippet.tags.includes(tagLabel);
+      if (snippetId !== activeSnippetId) {
+        const snippetExists = data.snippets.find(
+          (s) =>
+            s._id.toString() === snippetId && s.listId.toString() === listId
+        );
+        if (!snippetExists) {
+          return { valid: false };
+        }
 
-//           if (snippetHasTag) {
-//             setActiveTagLabel(tagLabel);
-//             setActiveSnippetId(snippetId);
-//             return {
-//               valid: true,
-//               redirectPath: `/tags/${tagLabel}/${snippetId}`,
-//             };
-//           } else {
-//             setActiveTagLabel(tagLabel);
-//             setActiveSnippetId("");
-//             return {
-//               valid: false,
-//               redirectPath: `/tags/${tagLabel}`,
-//             };
-//           }
-//         } else {
-//           setActiveTagLabel("");
-//           setActiveSnippetId("");
-//           return {
-//             valid: false,
-//             redirectPath: `/tags`,
-//           };
-//         }
-//       } else {
-//         setActiveTagLabel("");
-//         setActiveSnippetId("");
-//         return {
-//           valid: false,
-//           redirectPath: `/lists`,
-//         };
-//       }
-//     },
-//     [data, tags]
-//   );
+        setActiveSnippetId(snippetId);
+        return { valid: true };
+      }
 
-//   const checkSnippetPathFromList = useCallback(
-//     ({ listId, snippetId }: { listId: string; snippetId: string }) => {
-//       const existingList = data?.lists.find((l) => l._id.toString() === listId);
-//       setActiveTagLabel("");
-//       if (existingList) {
-//         const snippet = data?.snippets.find(
-//           (s) => s._id.toString() === snippetId
-//         );
-//         const snippetIsInList =
-//           snippet && snippet.listId.toString() === existingList._id.toString();
+      return { valid: true };
+    }
+  };
 
-//         if (snippetIsInList) {
-//           setActiveListId(listId);
-//           setActiveSnippetId(snippetId);
-//           return {
-//             valid: true,
-//             redirectPath: `/lists/${listId}/${snippetId}`,
-//           };
-//         } else {
-//           setActiveListId(listId);
-//           setActiveSnippetId("");
-//           return {
-//             valid: false,
-//             redirectPath: `/lists/${listId}`,
-//           };
-//         }
-//       } else {
-//         setActiveListId("");
-//         setActiveSnippetId("");
-//         return {
-//           valid: false,
-//           redirectPath: `/lists`,
-//         };
-//       }
-//     },
-//     [data]
-//   );
+  const checkList = (listId: string) => {
+    if (isSuccess) {
+      if (listId !== activeListId) {
+        const listExists = data.lists.find((l) => l._id.toString() === listId);
 
-//   return {
-//     data,
-//     tags,
-//     activeListId,
-//     activeTagLabel,
-//     activeSnippetId,
-//     initState,
-//     checkListsRootPath,
-//     checkTagsRootPath,
-//     checkListPath,
-//     checkTagPath,
-//     checkSnippetPathFromList,
-//     checkSnippetPathFromTag,
-//   };
-// };
+        if (!listExists) {
+          return { valid: false };
+        }
 
-// export const userDataContext = createContext({} as UserDataContext);
+        setActiveListId(listExists._id.toString());
+      }
 
-// export const UserDataProvider = ({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) => {
-//   const data = useUserdataProvider();
-//   return (
-//     <userDataContext.Provider value={data}>{children}</userDataContext.Provider>
-//   );
-// };
+      const listSnippets = data.snippets
+        .filter((s) => s.listId.toString() === listId)
+        .sort((a, b) => (a.title > b.title ? -1 : 1));
 
-// export const useUserData = () => useContext(userDataContext);
+      if (listSnippets.length > 0) {
+        const defaultSnippet = listSnippets[0];
+        setActiveSnippetId(defaultSnippet._id.toString());
+
+        return {
+          valid: true,
+          isEmpty: false,
+          path: `/lists/${listId}/${defaultSnippet._id.toString()}`,
+        };
+      } else {
+        setActiveSnippetId("");
+        return {
+          valid: true,
+          isEmpty: true,
+        };
+      }
+    }
+  };
+
+  return {
+    lists: data?.lists,
+    snippets: data?.snippets,
+    tags,
+    activeListId,
+    activeSnippetId,
+    activeTagLabel,
+    activeSearchValue,
+    activeBarMode,
+    initOriginalList,
+    isSuccess,
+    checkList,
+    checkListSnippet,
+  } as UserDataProviderReturnValue;
+};
+
+export const dataContext = createContext({} as UserDataProviderReturnValue);
+
+export const DataProvider = ({ children }: { children: React.ReactNode }) => {
+  const data = useDataProvider();
+  return <dataContext.Provider value={data}>{children}</dataContext.Provider>;
+};
+
+export const useData = () => {
+  return useContext(dataContext);
+};
