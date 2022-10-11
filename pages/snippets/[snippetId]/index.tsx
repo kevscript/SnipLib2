@@ -53,7 +53,7 @@ const SnippetPage = () => {
   if (!activeSnippet) return <h1>Loading snippet...</h1>;
 
   return (
-    <div className="flex-1 p-16">
+    <div className="flex-1 p-16 min-w-[640px]">
       <div className="flex justify-between w-full">
         <div className="flex text-xs font-bold gap-x-2">
           <span className="uppercase text-carbon-300">snippet</span>

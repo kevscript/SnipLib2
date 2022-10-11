@@ -88,7 +88,7 @@ const CreateSnippetPage = () => {
 
   return (
     <div className="w-full p-16 min-w-[640px]">
-      {lists && langList && activeListId && (
+      {lists && langList && (
         <CreateSnippetForm
           activeListId={activeListId}
           initFormValues={initFormValues}

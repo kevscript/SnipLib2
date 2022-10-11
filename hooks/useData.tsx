@@ -28,6 +28,7 @@ export type UserDataProviderReturnValue = {
   isLoading: boolean;
   forceActivateList: (id: string) => void;
   initState: (data: UserData) => void;
+  resetActiveSnippetId: () => void;
 };
 
 export const useDataProvider = () => {
@@ -103,13 +104,11 @@ export const useDataProvider = () => {
 
   const activateSearch = (value: string) => {
     if (activeSearchValue !== value) {
-      console.log("searchValue", value);
       setActiveSearchValue(value);
       activeBarMode !== "search" && setActiveBarMode("search");
       setActiveListId("");
+      setActiveSnippetId("");
       setActiveTagLabel("");
-    } else {
-      console.log(value, "already the search value");
     }
   };
 
@@ -170,6 +169,8 @@ export const useDataProvider = () => {
     }
   };
 
+  const resetActiveSnippetId = () => setActiveSnippetId("");
+
   return {
     lists: data?.lists,
     snippets: data?.snippets,
@@ -186,6 +187,7 @@ export const useDataProvider = () => {
     isLoading,
     forceActivateList,
     initState,
+    resetActiveSnippetId,
   } as UserDataProviderReturnValue;
 };
 

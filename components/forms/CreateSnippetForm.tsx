@@ -6,6 +6,7 @@ import CrossIcon from "../icons/Cross";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import Snippet from "@/models/Snippet";
 import { ObjectID } from "bson";
+import Link from "next/link";
 
 const yupTag = yup
   .string()
@@ -168,9 +169,11 @@ const CreateSnippetForm = ({
           >
             Create
           </button>
-          <button className="px-4 py-1 rounded-sm bg-carbon-400 drop-shadow-sm">
-            Cancel
-          </button>
+          <Link href={"/snippets/"}>
+            <button className="px-4 py-1 rounded-sm bg-carbon-400 drop-shadow-sm">
+              Cancel
+            </button>
+          </Link>
         </div>
       </div>
 
