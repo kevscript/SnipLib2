@@ -19,8 +19,6 @@ const TagBar = ({
   activeSnippetId,
   activeTagLabel,
 }: TagBarProps) => {
-  const router = useRouter();
-
   const [activeTagSnippets, setActiveTagSnippets] = useState<Snippet[] | null>(
     null
   );

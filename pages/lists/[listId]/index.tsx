@@ -34,16 +34,7 @@ const ListPage = () => {
         setListIsEmpty(true);
       }
     }
-  }, [
-    activeListId,
-    setRouterWasCalled,
-    checkList,
-    isSuccess,
-    listId,
-    lists,
-    router,
-    routerWasCalled,
-  ]);
+  }, [checkList, isSuccess, listId, lists, router, routerWasCalled]);
 
   if (listError) {
     return <div>ERROR: {listError}</div>;
