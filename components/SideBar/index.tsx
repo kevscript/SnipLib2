@@ -69,7 +69,7 @@ const SideBar = ({
         />
       )}
 
-      {/* <div className="flex items-center justify-between mt-8 flex-nowrap">
+      <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
           <TagIcon className="w-4 h-4 stroke-marine" />
           <span className="ml-4 text-xs font-bold uppercase">Tags</span>
@@ -79,10 +79,9 @@ const SideBar = ({
       {tags && (
         <TagsList
           tags={tags}
-          activeTagLabel={activeTagLabel}
-          activateTag={activateTag}
+          activeTagLabel={activeBarMode === "tag" ? activeTagLabel : ""}
         />
-      )} */}
+      )}
 
       <Authbox />
     </div>

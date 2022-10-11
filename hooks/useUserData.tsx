@@ -4,8 +4,6 @@ import { useSession } from "next-auth/react";
 import React, { createContext, useContext, useState } from "react";
 import { getUserData } from "@/utils/getUserData";
 import { UserData } from "@/models/UserData";
-import { snippets } from "@codemirror/lang-javascript";
-import { string } from "zod";
 
 export type Tag = {
   label: string;
@@ -20,8 +18,19 @@ type CheckListReturnValue = {
   path?: string;
 };
 
+type CheckTagReturnValue = {
+  valid: boolean;
+  isEmpty?: boolean;
+  path?: string;
+};
+
 type CheckListSnippetParams = {
   listId: string;
+  snippetId: string;
+};
+
+type CheckTagSnippetParams = {
+  tagLabel: string;
   snippetId: string;
 };
 
@@ -35,9 +44,12 @@ export type UserDataProviderReturnValue = {
   activeSearchValue: string;
   activeBarMode: BarMode;
   initOriginalList: () => { path: string };
+  initDefaultTag: () => { path: string };
   isSuccess: boolean;
   checkList: (listId: string) => CheckListReturnValue;
+  checktTag: (tagLabel: string) => CheckTagReturnValue;
   checkListSnippet: (p: CheckListSnippetParams) => { valid: boolean };
+  checkTagSnippet: (p: CheckTagSnippetParams) => { valid: boolean };
 };
 
 export const useDataProvider = () => {
@@ -75,6 +87,33 @@ export const useDataProvider = () => {
     setTags(initTags);
   };
 
+  const initDefaultTag = () => {
+    if (isSuccess && tags && tags.length > 0) {
+      setActiveBarMode("tag");
+      const sortedTags = tags.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+      const defaultTag = sortedTags[0];
+
+      if (defaultTag) {
+        setActiveTagLabel(defaultTag.label);
+        const sortedTagSnippets = data.snippets
+          .filter((s) => s.tags.includes(defaultTag.label))
+          .sort((a, b) => (a.title > b.title ? -1 : 1));
+
+        if (sortedTagSnippets.length > 0) {
+          const defaultSnippet = sortedTagSnippets[0];
+          setActiveSnippetId(defaultSnippet._id.toString());
+
+          return {
+            path: `/tags/${defaultTag.label}/${defaultSnippet._id.toString()}`,
+          };
+        } else {
+          setActiveSnippetId("");
+          return { path: `/tags/${defaultTag.label}` };
+        }
+      }
+    }
+  };
+
   const initOriginalList = () => {
     if (isSuccess) {
       setActiveBarMode("list");
@@ -98,6 +137,39 @@ export const useDataProvider = () => {
           return { path: `/lists/${originalList._id.toString()}` };
         }
       }
+    }
+  };
+
+  const checkTagSnippet = ({
+    tagLabel,
+    snippetId,
+  }: {
+    tagLabel: string;
+    snippetId: string;
+  }) => {
+    if (isSuccess && tags) {
+      setActiveBarMode("tag");
+      if (tagLabel !== activeTagLabel) {
+        const tagExists = tags.find((t) => t.label === tagLabel);
+        if (!tagExists) {
+          return { valid: false };
+        }
+        setActiveTagLabel(tagExists.label);
+      }
+
+      if (snippetId !== activeSnippetId) {
+        const snippetExists = data.snippets.find(
+          (s) => s._id.toString() === snippetId && s.tags.includes(tagLabel)
+        );
+        if (!snippetExists) {
+          return { valid: false };
+        }
+
+        setActiveSnippetId(snippetId);
+        return { valid: true };
+      }
+
+      return { valid: true };
     }
   };
 
@@ -132,6 +204,42 @@ export const useDataProvider = () => {
       }
 
       return { valid: true };
+    }
+  };
+
+  const checktTag = (tagLabel: string) => {
+    if (isSuccess && tags) {
+      setActiveBarMode("tag");
+      if (tagLabel !== activeTagLabel) {
+        const tagExists = tags.find((t) => t.label === tagLabel);
+
+        if (!tagExists) {
+          return { valid: false };
+        }
+
+        setActiveTagLabel(tagExists.label);
+      }
+
+      const tagSnippets = data.snippets
+        .filter((s) => s.tags.includes(tagLabel))
+        .sort((a, b) => (a.title > b.title ? -1 : 1));
+
+      if (tagSnippets.length > 0) {
+        const defaultSnippet = tagSnippets[0];
+        setActiveSnippetId(defaultSnippet._id.toString());
+
+        return {
+          valid: true,
+          isEmpty: false,
+          path: `/tags/${tagLabel}/${defaultSnippet._id.toString()}`,
+        };
+      } else {
+        setActiveSnippetId("");
+        return {
+          valid: true,
+          isEmpty: true,
+        };
+      }
     }
   };
 
@@ -181,9 +289,12 @@ export const useDataProvider = () => {
     activeSearchValue,
     activeBarMode,
     initOriginalList,
+    initDefaultTag,
     isSuccess,
     checkList,
     checkListSnippet,
+    checktTag,
+    checkTagSnippet,
   } as UserDataProviderReturnValue;
 };
 
