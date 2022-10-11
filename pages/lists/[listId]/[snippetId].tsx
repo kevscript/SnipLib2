@@ -1,3 +1,4 @@
+import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -39,6 +40,11 @@ const ListSnippetPage = () => {
   }
 
   return <div>Active Snippet : {activeSnippet?.title}</div>;
+};
+
+ListSnippetPage.authRequired = true;
+ListSnippetPage.getLayout = (page: React.ReactElement) => {
+  return <BarsWrapper mode="list">{page}</BarsWrapper>;
 };
 
 export default ListSnippetPage;

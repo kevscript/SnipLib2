@@ -6,10 +6,9 @@ export type ListsProps = {
   lists: List[];
   snippets: Snippet[];
   activeListId: string;
-  activateList: (id: string) => void;
 };
 
-const Lists = ({ lists, activeListId, snippets, activateList }: ListsProps) => {
+const Lists = ({ lists, activeListId, snippets }: ListsProps) => {
   return (
     <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {lists.map((list, i) => (
@@ -23,7 +22,6 @@ const Lists = ({ lists, activeListId, snippets, activateList }: ListsProps) => {
           }
           active={list._id.toString() === activeListId}
           listId={list._id.toString()}
-          activateList={activateList}
         />
       ))}
     </ul>

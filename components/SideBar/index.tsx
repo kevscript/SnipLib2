@@ -18,9 +18,6 @@ export type SideBarProps = {
   tags: Tag[] | undefined;
   activeListId: string;
   activeTagLabel: string;
-  activateList: (id: string) => void;
-  activateTag: (label: string) => void;
-  activateSearch: (value: string) => void;
 };
 
 const SideBar = ({
@@ -30,9 +27,6 @@ const SideBar = ({
   lists,
   snippets,
   tags,
-  activateList,
-  activateTag,
-  activateSearch,
 }: SideBarProps) => {
   return (
     <div className="flex flex-col h-full p-8 overflow-hidden w-80 bg-carbon-600">
@@ -41,7 +35,7 @@ const SideBar = ({
         <Switcher />
       </div>
 
-      <Searchbox activateSearch={activateSearch} />
+      {/* <Searchbox activateSearch={activateSearch} /> */}
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
@@ -72,11 +66,10 @@ const SideBar = ({
           lists={lists}
           snippets={snippets}
           activeListId={activeBarMode === "list" ? activeListId : ""}
-          activateList={activateList}
         />
       )}
 
-      <div className="flex items-center justify-between mt-8 flex-nowrap">
+      {/* <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
           <TagIcon className="w-4 h-4 stroke-marine" />
           <span className="ml-4 text-xs font-bold uppercase">Tags</span>
@@ -89,7 +82,7 @@ const SideBar = ({
           activeTagLabel={activeTagLabel}
           activateTag={activateTag}
         />
-      )}
+      )} */}
 
       <Authbox />
     </div>

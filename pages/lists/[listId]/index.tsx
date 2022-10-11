@@ -1,3 +1,4 @@
+import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
 import { useRouter } from "next/router";
@@ -53,6 +54,11 @@ const ListPage = () => {
   }
 
   return <div>Loading...</div>;
+};
+
+ListPage.authRequired = true;
+ListPage.getLayout = (page: React.ReactElement) => {
+  return <BarsWrapper mode="list">{page}</BarsWrapper>;
 };
 
 export default ListPage;
