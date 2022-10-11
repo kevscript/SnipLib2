@@ -36,14 +36,14 @@ const TagBar = ({
 
   if (!activeTagLabel) {
     return (
-      <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
+      <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
         <h1>Loading...</h1>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col flex-shrink-0 h-screen pt-8 overflow-hidden w-96 bg-carbon-500">
+    <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
       <TagBarHeader label={activeTagLabel} />
       <div className="w-full h-[2px] bg-carbon-600"></div>
 

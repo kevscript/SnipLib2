@@ -26,7 +26,9 @@ const ListSnipItem = ({ snippet, isActive, listId }: ListSnipItemProps) => {
       >
         <span className="font-semibold">{snippet.title}</span>
         <div className="flex mt-3 flex-nowrap">
-          <span className="text-xs text-marine">{snippet.language}</span>
+          <span className="text-xs capitalize text-marine">
+            {snippet.language}
+          </span>
           <ul className="flex items-baseline ml-4 flex-nowrap gap-x-2">
             {snippet.tags &&
               snippet.tags.map((tag, i) => (

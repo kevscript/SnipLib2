@@ -40,32 +40,34 @@ const BarsWrapper = ({ children }: BarsWrapperProps) => {
           activateTag={activateTag}
           activateSearch={activateSearch}
         />
-        {activeBarMode === "list" && (
-          <ListBar
-            lists={lists}
-            snippets={snippets}
-            activeListId={activeListId}
-            activeSnippetId={activeSnippetId}
-          />
-        )}
-        {activeBarMode === "tag" && (
-          <TagBar
-            tags={tags}
-            snippets={snippets}
-            activeTagLabel={activeTagLabel}
-            activeSnippetId={activeSnippetId}
-          />
-        )}
-        {activeBarMode === "search" && (
-          <SearchBar
-            snippets={snippets}
-            activeSearchValue={activeSearchValue}
-            activeSnippetId={activeSnippetId}
-          />
-        )}
+        <div className="h-full w-96">
+          {activeBarMode === "list" && (
+            <ListBar
+              lists={lists}
+              snippets={snippets}
+              activeListId={activeListId}
+              activeSnippetId={activeSnippetId}
+            />
+          )}
+          {activeBarMode === "tag" && (
+            <TagBar
+              tags={tags}
+              snippets={snippets}
+              activeTagLabel={activeTagLabel}
+              activeSnippetId={activeSnippetId}
+            />
+          )}
+          {activeBarMode === "search" && (
+            <SearchBar
+              snippets={snippets}
+              activeSearchValue={activeSearchValue}
+              activeSnippetId={activeSnippetId}
+            />
+          )}
+        </div>
       </div>
 
-      <div className="flex-1 h-screen overflow-auto">{children}</div>
+      <div className="flex-1 h-screen overflow-auto ">{children}</div>
     </div>
   );
 };
