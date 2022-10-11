@@ -1,3 +1,4 @@
+import { useData } from "@/hooks/useUserData";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -6,12 +7,20 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { status } = useSession();
+  const { isSuccess, initOriginalList } = useData();
 
   useEffect(() => {
-    if (status === "authenticated" && router.isReady) {
-      router.replace(`/snippets`);
+    if (isSuccess && status === "authenticated" && router.isReady) {
+      const { path } = initOriginalList();
+      router.replace({ pathname: path });
     }
-  }, [router, status]);
+  }, [initOriginalList, router, status, isSuccess]);
+
+  // useEffect(() => {
+  //   if (status === "authenticated" && router.isReady) {
+  //     router.replace(`/snippets`);
+  //   }
+  // }, [router, status]);
 
   if (status === "unauthenticated") {
     return (
