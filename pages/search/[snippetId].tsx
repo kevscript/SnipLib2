@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -60,7 +61,11 @@ const SearchSnippetPage = () => {
     return <div>Active snippet: {activeSnippet.title}</div>;
   }
 
-  return <div>Loading...</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 SearchSnippetPage.authRequired = true;

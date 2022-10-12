@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -21,7 +22,11 @@ const TagsPage = () => {
     }
   }, [initDefaultTag, initOriginalList, isSuccess, router, status, tags]);
 
-  return <div>Tags Page</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 TagsPage.authRequired = true;

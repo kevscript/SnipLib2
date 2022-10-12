@@ -36,36 +36,31 @@ const ListBar = ({
   }, [activeListId, snippets, lists]);
 
   if (!activeList) {
-    return (
-      <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
-        <h1>Loading Listbar...</h1>
-      </div>
-    );
+    return null;
   }
 
   return (
     <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
-      <>
-        <ListBarHeader list={activeList} />
-        <div className="w-full h-[2px] bg-carbon-600"></div>
+      <ListBarHeader list={activeList} />
 
-        {activeListSnippets && activeListSnippets.length > 0 && (
-          <ul className="flex flex-col flex-1 overflow-y-auto">
-            {activeListSnippets.map((snippet, i) => (
-              <ListSnipItem
-                key={snippet._id.toString()}
-                snippet={snippet}
-                listId={activeListId}
-                isActive={activeSnippetId === snippet._id.toString()}
-              />
-            ))}
-          </ul>
-        )}
+      {activeListSnippets && activeListSnippets.length > 0 && (
+        <ul className="flex flex-col flex-1 overflow-y-auto">
+          {activeListSnippets.map((snippet, i) => (
+            <ListSnipItem
+              key={snippet._id.toString()}
+              snippet={snippet}
+              listId={activeListId}
+              isActive={activeSnippetId === snippet._id.toString()}
+            />
+          ))}
+        </ul>
+      )}
 
-        {activeListSnippets && activeListSnippets.length === 0 && (
-          <h1>No snippet yet in this list</h1>
-        )}
-      </>
+      {activeListSnippets && activeListSnippets.length === 0 && (
+        <div className="w-full p-8 text-sm bg-carbon-400">
+          <span>No snippet yet in this list.</span>
+        </div>
+      )}
     </div>
   );
 };

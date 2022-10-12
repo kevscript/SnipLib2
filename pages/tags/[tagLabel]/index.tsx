@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { Tag, useData } from "@/hooks/useUserData";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -14,7 +15,7 @@ const TagPage = () => {
   const [tagError, setTagError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSuccess && router.isReady && !routerWasCalled) {
+    if (isSuccess && router.isReady && !routerWasCalled && tags) {
       const { valid, isEmpty, path } = checktTag(tagLabel as string);
 
       if (!valid) {
@@ -43,7 +44,11 @@ const TagPage = () => {
     return <div>You do not have a snippet yet under #{activeTag?.label}</div>;
   }
 
-  return <div>Loading...last:</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 TagPage.authRequired = true;

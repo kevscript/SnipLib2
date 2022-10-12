@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -37,7 +38,11 @@ const TagSnippetPage = () => {
   }
 
   if (!activeSnippet) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <Loader />
+      </div>
+    );
   }
 
   return <div>Active Snippet : {activeSnippet?.title}</div>;
