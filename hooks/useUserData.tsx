@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import React, { createContext, useContext, useState } from "react";
 import { getUserData } from "@/utils/getUserData";
 import { UserData } from "@/models/UserData";
+import { filterMatchingSnippets } from "@/utils/filterMatchingSnippets";
 
 export type Tag = {
   label: string;
@@ -24,6 +25,12 @@ type CheckTagReturnValue = {
   path?: string;
 };
 
+type CheckSearchReturnValue = {
+  valid: boolean;
+  path?: string;
+  hasMatches?: boolean;
+};
+
 type CheckListSnippetParams = {
   listId: string;
   snippetId: string;
@@ -31,6 +38,11 @@ type CheckListSnippetParams = {
 
 type CheckTagSnippetParams = {
   tagLabel: string;
+  snippetId: string;
+};
+
+type CheckSearchSnippetParams = {
+  searchValue: string;
   snippetId: string;
 };
 
@@ -48,8 +60,11 @@ export type UserDataProviderReturnValue = {
   isSuccess: boolean;
   checkList: (listId: string) => CheckListReturnValue;
   checktTag: (tagLabel: string) => CheckTagReturnValue;
+  checkSearch: (searchValue: string) => CheckSearchReturnValue;
   checkListSnippet: (p: CheckListSnippetParams) => { valid: boolean };
   checkTagSnippet: (p: CheckTagSnippetParams) => { valid: boolean };
+  checkSearchSnippet: (p: CheckSearchSnippetParams) => { valid: boolean };
+  updateSearchValue: (searchValue: string) => void;
 };
 
 export const useDataProvider = () => {
@@ -63,7 +78,6 @@ export const useDataProvider = () => {
     refetchOnWindowFocus: false,
   });
 
-  const [isInitialiazed, setIsInitialized] = useState(false);
   const [tags, setTags] = useState<Tag[] | undefined>(undefined);
 
   const [activeListId, setActiveListId] = useState("");
@@ -243,6 +257,74 @@ export const useDataProvider = () => {
     }
   };
 
+  const updateSearchValue = (searchValue: string) => {
+    if (searchValue.trim() && searchValue !== activeSearchValue) {
+      setActiveSearchValue(searchValue);
+    }
+  };
+
+  const checkSearchSnippet = ({
+    searchValue,
+    snippetId,
+  }: {
+    searchValue: string;
+    snippetId: string;
+  }) => {
+    if (isSuccess) {
+      setActiveBarMode("search");
+
+      if (!searchValue.trim()) {
+        return { valid: false };
+      }
+
+      const filteredSnippets = filterMatchingSnippets({
+        snippets: data.snippets,
+        searchValue: searchValue,
+      }).sort((a, b) => (a.title > b.title ? -1 : 1));
+
+      if (filteredSnippets.length > 0) {
+        const matchingSnippet = filteredSnippets.find(
+          (s) => s._id.toString() === snippetId
+        );
+
+        if (matchingSnippet) {
+          setActiveSnippetId(matchingSnippet._id.toString());
+          return { valid: true };
+        }
+      } else {
+        setActiveSnippetId("");
+        return { valid: false };
+      }
+    }
+  };
+
+  const checkSearch = (value: string) => {
+    if (isSuccess) {
+      setActiveBarMode("search");
+
+      if (!value.trim()) {
+        return { valid: false };
+      }
+
+      const filteredSnippets = filterMatchingSnippets({
+        snippets: data.snippets,
+        searchValue: value,
+      }).sort((a, b) => (a.title > b.title ? -1 : 1));
+      if (filteredSnippets.length > 0) {
+        const defaultSnippet = filteredSnippets[0];
+        setActiveSnippetId(defaultSnippet._id.toString());
+        return {
+          path: `search/${defaultSnippet._id.toString()}`,
+          hasMatches: true,
+          valid: true,
+        };
+      } else {
+        setActiveSnippetId("");
+        return { hasMatches: false, valid: true };
+      }
+    }
+  };
+
   const checkList = (listId: string) => {
     if (isSuccess) {
       setActiveBarMode("list");
@@ -295,6 +377,9 @@ export const useDataProvider = () => {
     checkListSnippet,
     checktTag,
     checkTagSnippet,
+    checkSearch,
+    checkSearchSnippet,
+    updateSearchValue,
   } as UserDataProviderReturnValue;
 };
 

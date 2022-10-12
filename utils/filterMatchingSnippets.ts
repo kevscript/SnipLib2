@@ -10,13 +10,15 @@ export const filterMatchingSnippets = ({
   searchValue,
 }: FilterMatchingSnippetsParams) => {
   const matchingSnippets: Snippet[] = [];
-  const pattern = new RegExp(searchValue.trim().toLowerCase(), "i");
+  const pattern = searchValue.trim().toLowerCase();
 
   snippets.forEach((snippet) => {
     const { title, tags, description, content, language } = snippet;
-    const sourceText = [title, tags, description, content, language].join(" ");
+    const sourceText = [title, tags, description, content, language]
+      .join(" ")
+      .toLowerCase();
 
-    const matches = pattern.test(sourceText);
+    const matches = sourceText.includes(pattern);
     matches && matchingSnippets.push(snippet);
   });
 
