@@ -3,13 +3,12 @@ import CreateSnippetForm, {
   CreateSnippetFormState,
 } from "@/components/forms/CreateSnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
-import { useData } from "@/hooks/useData";
+import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React from "react";
 
 const initFormValues: CreateSnippetFormState = {
   title: "",
@@ -31,7 +30,7 @@ const initFormErrors: CreateSnippetFormErrors = {
 
 const CreateSnippetPage = () => {
   const router = useRouter();
-  const { lists, activeListId, activateSnippet } = useData();
+  const { activeListId, lists, activateSnippet } = useData();
 
   const queryClient = useQueryClient();
   const { mutate: createSnippet } = useMutation(
@@ -75,11 +74,15 @@ const CreateSnippetPage = () => {
         queryClient.invalidateQueries(["userData"]);
 
         if (!error) {
-          console.log("no Error wit snippet creation");
+          console.log("no Error with snippet creation");
+
           activateSnippet(newSnippet._id.toString());
           router.push({
-            pathname: "/snippets/[snippetId]",
-            query: { snippetId: newSnippet._id.toString() },
+            pathname: "/lists/[listId]/[snippetId]",
+            query: {
+              listId: newSnippet.listId.toString(),
+              snippetId: newSnippet._id.toString(),
+            },
           });
         }
       },
@@ -104,7 +107,7 @@ const CreateSnippetPage = () => {
 
 CreateSnippetPage.authRequired = true;
 CreateSnippetPage.getLayout = (page: React.ReactElement) => {
-  return <BarsWrapper>{page}</BarsWrapper>;
+  return <BarsWrapper mode="list">{page}</BarsWrapper>;
 };
 
 export default CreateSnippetPage;

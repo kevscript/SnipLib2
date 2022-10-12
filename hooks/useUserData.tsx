@@ -65,6 +65,7 @@ export type UserDataProviderReturnValue = {
   checkTagSnippet: (p: CheckTagSnippetParams) => { valid: boolean };
   checkSearchSnippet: (p: CheckSearchSnippetParams) => { valid: boolean };
   updateSearchValue: (searchValue: string) => void;
+  activateSnippet: (snippetId: string) => void;
 };
 
 export const useDataProvider = () => {
@@ -361,6 +362,17 @@ export const useDataProvider = () => {
     }
   };
 
+  const activateSnippet = (snippetId: string) => {
+    if (snippetId !== activeSnippetId) {
+      const exists = data?.snippets.find((s) => s._id.toString() === snippetId);
+      if (exists) {
+        setActiveSnippetId(snippetId);
+        setActiveListId(exists.listId.toString());
+        setActiveBarMode("list");
+      }
+    }
+  };
+
   return {
     lists: data?.lists,
     snippets: data?.snippets,
@@ -380,6 +392,7 @@ export const useDataProvider = () => {
     checkSearch,
     checkSearchSnippet,
     updateSearchValue,
+    activateSnippet,
   } as UserDataProviderReturnValue;
 };
 
