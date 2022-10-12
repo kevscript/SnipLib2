@@ -32,7 +32,7 @@ const SearchBar = ({
   }, [activeSearchValue, snippets]);
 
   return (
-    <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
+    <div className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500">
       <SearchBarHeader searchValue={activeSearchValue} />
 
       {matchingSnippets === null && (

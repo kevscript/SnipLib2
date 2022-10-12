@@ -36,34 +36,33 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           activeBarMode={activeBarMode}
           updateSearchValue={updateSearchValue}
         />
-        <div className="h-full w-96">
-          {mode === "list" && (
-            <ListBar
-              lists={lists}
-              snippets={snippets}
-              activeListId={activeListId}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-          {mode === "tag" && (
-            <TagBar
-              tags={tags}
-              snippets={snippets}
-              activeTagLabel={activeTagLabel}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-          {mode === "search" && (
-            <SearchBar
-              snippets={snippets}
-              activeSearchValue={activeSearchValue}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-        </div>
+
+        {mode === "list" && (
+          <ListBar
+            lists={lists}
+            snippets={snippets}
+            activeListId={activeListId}
+            activeSnippetId={activeSnippetId}
+          />
+        )}
+        {mode === "tag" && (
+          <TagBar
+            tags={tags}
+            snippets={snippets}
+            activeTagLabel={activeTagLabel}
+            activeSnippetId={activeSnippetId}
+          />
+        )}
+        {mode === "search" && (
+          <SearchBar
+            snippets={snippets}
+            activeSearchValue={activeSearchValue}
+            activeSnippetId={activeSnippetId}
+          />
+        )}
       </div>
 
-      <div className="flex-1 h-screen overflow-auto ">{children}</div>
+      <div className="flex-1 h-screen overflow-auto">{children}</div>
     </div>
   );
 };
