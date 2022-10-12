@@ -10,7 +10,7 @@ const SearchSnipItem = ({ snippet, isActive }: SearchSnipItemProps) => {
   return (
     <Link
       href={{
-        pathname: `/snippets/[snippetId]`,
+        pathname: `/search/[snippetId]`,
         query: { snippetId: snippet._id.toString() },
       }}
       passHref

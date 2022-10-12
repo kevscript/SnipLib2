@@ -1,14 +1,29 @@
 import SearchIcon from "@/components/icons/Search";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 export type SearchboxProps = {
-  activateSearch: (value: string) => void;
+  updateSearchValue: (val: string) => void;
 };
 
-const Searchbox = ({ activateSearch }: SearchboxProps) => {
+const Searchbox = ({ updateSearchValue }: SearchboxProps) => {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const handleSearchValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      updateSearchValue(searchValue);
+      if (!router.pathname.includes("/search")) {
+        router.push("/search");
+      }
+    }
+  };
+
+  const handleKeySearch = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSearch();
   };
 
   return (
@@ -20,12 +35,13 @@ const Searchbox = ({ activateSearch }: SearchboxProps) => {
         id="searchbox"
         className="w-full h-12 px-4 text-sm border rounded-sm outline-none bg-carbon-700 border-carbon-400 focus:border-carbon-300 peer"
         placeholder="Search"
+        onKeyDown={(e) => handleKeySearch(e)}
       />
 
       <button
         className={`absolute top-0 right-0 flex items-center justify-center w-12 h-full`}
         disabled={!searchValue}
-        onClick={() => activateSearch(searchValue)}
+        onClick={handleSearch}
       >
         <SearchIcon
           className={`w-4 h-4 right-4 top-4 ${

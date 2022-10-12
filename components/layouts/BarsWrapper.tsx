@@ -1,5 +1,4 @@
 import { useData } from "@/hooks/useUserData";
-import { useState } from "react";
 import SideBar from "@/components/SideBar";
 import ListBar from "@/components/ListBar";
 import TagBar from "@/components/TagBar";
@@ -22,9 +21,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
     activeTagLabel,
     activeSearchValue,
     activeBarMode,
-    // activateList,
-    // activateTag,
-    // activateSearch,
+    updateSearchValue,
   } = useData();
 
   return (
@@ -37,6 +34,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           activeListId={activeListId}
           activeTagLabel={activeTagLabel}
           activeBarMode={activeBarMode}
+          updateSearchValue={updateSearchValue}
         />
         <div className="h-full w-96">
           {mode === "list" && (

@@ -18,6 +18,7 @@ export type SideBarProps = {
   tags: Tag[] | undefined;
   activeListId: string;
   activeTagLabel: string;
+  updateSearchValue: (val: string) => void;
 };
 
 const SideBar = ({
@@ -27,6 +28,7 @@ const SideBar = ({
   lists,
   snippets,
   tags,
+  updateSearchValue,
 }: SideBarProps) => {
   return (
     <div className="flex flex-col h-full p-8 overflow-hidden w-80 bg-carbon-600">
@@ -35,7 +37,7 @@ const SideBar = ({
         <Switcher />
       </div>
 
-      {/* <Searchbox activateSearch={activateSearch} /> */}
+      <Searchbox updateSearchValue={updateSearchValue} />
 
       <div className="flex items-center justify-between mt-8 flex-nowrap">
         <div className="flex items-center flex-nowrap">
