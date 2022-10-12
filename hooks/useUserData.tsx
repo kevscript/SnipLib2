@@ -231,7 +231,7 @@ export const useDataProvider = () => {
           return { valid: false };
         }
 
-        setActiveTagLabel(tagExists.label);
+        setActiveTagLabel(tagLabel);
       }
 
       const tagSnippets = data.snippets

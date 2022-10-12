@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
 import { useRouter } from "next/router";
@@ -44,7 +45,11 @@ const ListPage = () => {
     return <div>You do not have a snippet yet in {activeList?.label}</div>;
   }
 
-  return <div>Loading...</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 ListPage.authRequired = true;

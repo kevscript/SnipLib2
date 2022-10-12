@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -16,7 +17,11 @@ const ListsPage = () => {
     }
   }, [initOriginalList, router, status, isSuccess]);
 
-  return <div>Lists Page</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 ListsPage.authRequired = true;

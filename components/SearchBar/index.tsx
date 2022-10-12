@@ -1,7 +1,7 @@
 import Snippet from "@/models/Snippet";
 import { filterMatchingSnippets } from "@/utils/filterMatchingSnippets";
-import { snippets } from "@codemirror/lang-javascript";
 import { useEffect, useState } from "react";
+import Loader from "../shared/Loader";
 import SearchBarHeader from "./SearchBarHeader";
 import SearchSnipItem from "./SearchSnipItem";
 
@@ -35,10 +35,19 @@ const SearchBar = ({
     <div className="flex flex-col flex-shrink-0 w-full h-screen pt-8 overflow-hidden bg-carbon-500">
       <SearchBarHeader searchValue={activeSearchValue} />
 
-      {matchingSnippets === null && <span>Loading snippets...</span>}
+      {matchingSnippets === null && (
+        <div className="flex items-center justify-start w-full h-16 px-8">
+          <Loader />
+        </div>
+      )}
 
       {matchingSnippets && matchingSnippets.length === 0 && (
-        <span>No snippet matching {activeSearchValue}</span>
+        <div className="w-full p-8 text-sm bg-carbon-400">
+          <span>
+            No snippet matching &apos;
+            <span className="font-bold">{activeSearchValue}</span>&apos;.
+          </span>
+        </div>
       )}
 
       {matchingSnippets && matchingSnippets.length > 0 && (

@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -49,7 +50,11 @@ const SearchPage = () => {
     );
   }
 
-  return <div>Search Page</div>;
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <Loader />
+    </div>
+  );
 };
 
 SearchPage.authRequired = true;
