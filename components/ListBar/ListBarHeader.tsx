@@ -16,8 +16,8 @@ const ListBarHeader = ({ list }: ListBarHeaderProps) => {
         <span className="font-bold">{list.label}</span>
         <ul className="flex items-center flex-nowrap gap-x-2">
           <Link href={{ pathname: "/snippet/create" }}>
-            <li className="flex items-center justify-center w-6 h-6 rounded cursor-pointer bg-carbon-400 group hover:bg-marine-500">
-              <PlusIcon className="w-4 h-4" />
+            <li className="flex items-center justify-center w-6 h-6 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:bg-marine-500 hover:scale-105">
+              <PlusIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
             </li>
           </Link>
           <EditListWidget list={list} />

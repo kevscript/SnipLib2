@@ -79,10 +79,10 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
   return (
     <>
       <li
-        className="flex items-center justify-center w-6 h-6 rounded cursor-pointer bg-carbon-400 group hover:bg-carbon-300"
+        className="flex items-center justify-center w-6 h-6 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:bg-carbon-300 hover:scale-105"
         onClick={() => setIsOpen(true)}
       >
-        <EditIcon className="w-3.5 h-3.5" />
+        <EditIcon className="w-3.5 h-3.5 transition-all ease-out group-hover:scale-105" />
       </li>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
