@@ -5,9 +5,15 @@ export type ListSnipItemProps = {
   snippet: Snippet;
   isActive: boolean;
   listId: string;
+  color: string;
 };
 
-const ListSnipItem = ({ snippet, isActive, listId }: ListSnipItemProps) => {
+const ListSnipItem = ({
+  snippet,
+  isActive,
+  listId,
+  color,
+}: ListSnipItemProps) => {
   return (
     <Link
       href={{
@@ -27,7 +33,7 @@ const ListSnipItem = ({ snippet, isActive, listId }: ListSnipItemProps) => {
       >
         <span className="font-semibold">{snippet.title}</span>
         <div className="flex mt-3 flex-nowrap">
-          <span className="text-xs capitalize text-marine">
+          <span className={`text-xs capitalize`} style={{ color: color }}>
             {snippet.language}
           </span>
           <ul className="flex items-baseline ml-4 flex-nowrap gap-x-2">
