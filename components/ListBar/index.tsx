@@ -4,6 +4,7 @@ import List from "@/models/List";
 import ListBarHeader from "./ListBarHeader";
 import ListSnipItem from "./ListSnipItem";
 import { UserData } from "@/models/UserData";
+import { langList } from "@/utils/langList";
 
 export type ListBarProps = {
   lists: UserData["lists"] | undefined;
@@ -51,6 +52,9 @@ const ListBar = ({
               snippet={snippet}
               listId={activeListId}
               isActive={activeSnippetId === snippet._id.toString()}
+              color={
+                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
+              }
             />
           ))}
         </ul>
