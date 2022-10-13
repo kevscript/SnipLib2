@@ -4,7 +4,7 @@ const FavoriteIcon = ({ className }: SvgIconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
+      fill="currentColor"
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"

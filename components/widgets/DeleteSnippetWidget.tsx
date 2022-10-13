@@ -78,12 +78,12 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
 
   return (
     <>
-      <button
-        className="px-4 py-1 text-sm rounded-sm bg-marine"
+      <li
+        className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:bg-red-500 hover:scale-105 "
         onClick={() => setIsOpen(true)}
       >
-        Delete
-      </button>
+        <CrossIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
+      </li>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <p>
