@@ -105,14 +105,15 @@ export const useDataProvider = () => {
   const initDefaultTag = () => {
     if (isSuccess && tags && tags.length > 0) {
       setActiveBarMode("tag");
-      const sortedTags = tags.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+      const sortedTags = [
+        ...tags.sort((a, b) => (a.amount > b.amount ? -1 : 1)),
+      ];
       const defaultTag = sortedTags[0];
-
       if (defaultTag) {
         setActiveTagLabel(defaultTag.label);
-        const sortedTagSnippets = data.snippets
+        const sortedTagSnippets = [...data.snippets]
           .filter((s) => s.tags.includes(defaultTag.label))
-          .sort((a, b) => (a.title > b.title ? -1 : 1));
+          .sort((a, b) => (a.title > b.title ? 1 : -1));
 
         if (sortedTagSnippets.length > 0) {
           const defaultSnippet = sortedTagSnippets[0];
@@ -136,9 +137,9 @@ export const useDataProvider = () => {
 
       if (originalList) {
         setActiveListId(originalList._id.toString());
-        const originalSnippets = data.snippets
+        const originalSnippets = [...data.snippets]
           .filter((s) => s.listId.toString() === originalList._id.toString())
-          .sort((a, b) => (a.title > b.title ? -1 : 1));
+          .sort((a, b) => (a.title > b.title ? 1 : -1));
 
         if (originalSnippets.length > 0) {
           const defaultSnippet = originalSnippets[0];
@@ -235,9 +236,9 @@ export const useDataProvider = () => {
         setActiveTagLabel(tagLabel);
       }
 
-      const tagSnippets = data.snippets
+      const tagSnippets = [...data.snippets]
         .filter((s) => s.tags.includes(tagLabel))
-        .sort((a, b) => (a.title > b.title ? -1 : 1));
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
 
       if (tagSnippets.length > 0) {
         const defaultSnippet = tagSnippets[0];
@@ -281,7 +282,7 @@ export const useDataProvider = () => {
       const filteredSnippets = filterMatchingSnippets({
         snippets: data.snippets,
         searchValue: searchValue,
-      }).sort((a, b) => (a.title > b.title ? -1 : 1));
+      });
 
       if (filteredSnippets.length > 0) {
         const matchingSnippet = filteredSnippets.find(
@@ -310,7 +311,7 @@ export const useDataProvider = () => {
       const filteredSnippets = filterMatchingSnippets({
         snippets: data.snippets,
         searchValue: value,
-      }).sort((a, b) => (a.title > b.title ? -1 : 1));
+      });
       if (filteredSnippets.length > 0) {
         const defaultSnippet = filteredSnippets[0];
         setActiveSnippetId(defaultSnippet._id.toString());
@@ -339,9 +340,9 @@ export const useDataProvider = () => {
         setActiveListId(listExists._id.toString());
       }
 
-      const listSnippets = data.snippets
+      const listSnippets = [...data.snippets]
         .filter((s) => s.listId.toString() === listId)
-        .sort((a, b) => (a.title > b.title ? -1 : 1));
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
 
       if (listSnippets.length > 0) {
         const defaultSnippet = listSnippets[0];

@@ -28,9 +28,9 @@ const ListBar = ({
   useEffect(() => {
     if (activeListId && snippets && lists) {
       const list = lists.find((l) => l._id.toString() === activeListId);
-      const listSnippets = snippets.filter(
-        (s) => s.listId.toString() === activeListId
-      );
+      const listSnippets = snippets
+        .filter((s) => s.listId.toString() === activeListId)
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
       list && setActiveList(list);
       listSnippets && setActiveListSnippets(listSnippets);
     }
