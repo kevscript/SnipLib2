@@ -1,28 +1,21 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import Loader from "@/components/shared/Loader";
-import SnippetBody from "@/components/Snippet/SnippetBody";
-import SnippetHeader from "@/components/Snippet/SnippetHeader";
-import DeleteSnippetWidget from "@/components/widgets/DeleteSnippetWidget";
-import { useCodeMirror } from "@/hooks/useCodeMirror";
+import SnippetEditer from "@/components/SnippetEditer";
+import SnippetReader from "@/components/SnippetReader";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
-import { langList, LanguageIds } from "@/utils/langList";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const TagSnippetPage = () => {
   const router = useRouter();
   const { tagLabel, snippetId } = router.query;
-  const { isSuccess, snippets, checkTagSnippet, tags } = useData();
+  const { isSuccess, snippets, checkTagSnippet, tags, lists } = useData();
 
   const [snippetError, setSnippetError] = useState<string | null>(null);
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
-  const { container } = useCodeMirror({
-    readOnly: true,
-    doc: activeSnippet?.content,
-    lang: (activeSnippet?.language as LanguageIds) || "javascript",
-  });
+  const [mode, setMode] = useState<"read" | "edit">("read");
 
   useEffect(() => {
     if (isSuccess && tags) {
@@ -57,13 +50,20 @@ const TagSnippetPage = () => {
   }
 
   return (
-    <div className="flex-1 p-16 min-w-[640px]">
-      <SnippetHeader snippet={activeSnippet} />
-      <SnippetBody
-        snippet={activeSnippet}
-        editorContainer={container}
-        language={langList.find((l) => l.id === activeSnippet.language)!}
-      />
+    <div>
+      {mode === "read" && (
+        <SnippetReader
+          snippet={activeSnippet}
+          triggerEditMode={() => setMode("edit")}
+        />
+      )}
+      {mode === "edit" && (
+        <SnippetEditer
+          snippet={activeSnippet}
+          lists={lists || []}
+          triggerReadMode={() => setMode("read")}
+        />
+      )}
     </div>
   );
 };
