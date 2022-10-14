@@ -22,5 +22,5 @@ export const filterMatchingSnippets = ({
     matches && matchingSnippets.push(snippet);
   });
 
-  return matchingSnippets;
+  return [...matchingSnippets.sort((a, b) => (a.title > b.title ? 1 : -1))];
 };

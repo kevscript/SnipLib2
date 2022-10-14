@@ -25,10 +25,10 @@ const TagBar = ({
 
   useEffect(() => {
     if (snippets && activeTagLabel && tags) {
-      const snippetsWithTag = snippets.filter((s) =>
-        s.tags?.includes(activeTagLabel)
-      );
-      setActiveTagSnippets(snippetsWithTag);
+      const snippetsWithTag = snippets
+        .filter((s) => s.tags?.includes(activeTagLabel))
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
+      snippetsWithTag && setActiveTagSnippets(snippetsWithTag);
     }
   }, [activeTagLabel, snippets, tags]);
 
@@ -42,7 +42,7 @@ const TagBar = ({
 
       {activeTagSnippets && activeTagSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">
-          {activeTagSnippets.map((snippet, i) => (
+          {activeTagSnippets.map((snippet) => (
             <TagSnipItem
               key={snippet._id.toString()}
               snippet={snippet}
