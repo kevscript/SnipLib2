@@ -7,9 +7,10 @@ import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
 
 type SnippetHeaderProps = {
   snippet: Snippet;
+  triggerEditMode: () => void;
 };
 
-const SnippetHeader = ({ snippet }: SnippetHeaderProps) => {
+const SnippetHeader = ({ snippet, triggerEditMode }: SnippetHeaderProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
@@ -38,7 +39,10 @@ const SnippetHeader = ({ snippet }: SnippetHeaderProps) => {
         <li className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105">
           <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-violet-500" />
         </li>
-        <li className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105">
+        <li
+          className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
+          onClick={triggerEditMode}
+        >
           <EditIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-yellow-500" />
         </li>
 
