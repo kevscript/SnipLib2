@@ -66,8 +66,8 @@ const SnippetReader = ({ snippet, triggerEditMode }: SnippetReaderProps) => {
           )}
 
           <span>
-            created the {new Date(snippet.updatedAt).toLocaleDateString()} at{" "}
-            {new Date(snippet.updatedAt).toLocaleTimeString()}
+            created the {new Date(snippet.createdAt).toLocaleDateString()} at{" "}
+            {new Date(snippet.createdAt).toLocaleTimeString()}
           </span>
         </div>
       </div>
