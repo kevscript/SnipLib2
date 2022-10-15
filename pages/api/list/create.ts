@@ -15,7 +15,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await clientPromise;
       const newList = {
         ...req.body,
-        _id: new ObjectID(req.body._id.toString()),
+        _id: new ObjectID(req.body._id),
       };
       const valid = List.parse(newList);
 

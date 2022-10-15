@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       },
       {
-        arrayFilters: [{ list: snippetToDelete.listId }],
+        arrayFilters: [{ "list._id": snippetToDelete.listId }],
         returnDocument: "after",
       }
     );

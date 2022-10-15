@@ -15,7 +15,7 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { initState, lists, resetActiveSnippetId } = useData();
+  const { lists } = useData();
 
   const queryClient = useQueryClient();
   const { mutate: deleteSnippet, isLoading } = useMutation(
@@ -69,8 +69,8 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
         setIsOpen(false);
 
         if (!error) {
-          resetActiveSnippetId();
-          router.replace({ pathname: "/snippets" });
+          // resetActiveSnippetId();
+          router.replace(`/lists/${snippetToDelete.listId.toString()}`);
         }
       },
     }

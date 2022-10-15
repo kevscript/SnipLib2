@@ -3,6 +3,7 @@ import Snippet from "@/models/Snippet";
 import { UserData } from "@/models/UserData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import List from "models/List";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
@@ -13,8 +14,7 @@ type DeleteListWidgetProps = {
 
 const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const { initState } = useData();
+  const router = useRouter();
 
   const queryClient = useQueryClient();
   const { mutate: deleteList, isLoading } = useMutation(
@@ -62,7 +62,7 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
         queryClient.invalidateQueries(["userData"]);
         setIsOpen(false);
         if (!err && ctx) {
-          ctx.newData && initState(ctx.newData);
+          ctx.newData && router.replace("/lists");
         }
       },
     }
