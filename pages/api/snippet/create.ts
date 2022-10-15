@@ -31,7 +31,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           },
           {
-            arrayFilters: [{ list: newSnippet.listId }],
+            arrayFilters: [{ "list._id": newSnippet.listId }],
           }
         );
 
