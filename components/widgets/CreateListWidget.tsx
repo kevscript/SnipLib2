@@ -1,7 +1,9 @@
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
+import { UserData } from "@/models/UserData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ObjectID } from "bson";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import PlusIcon from "../icons/Plus";
 import Modal from "../Modal";
@@ -12,7 +14,9 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newListLabel, setNewListLabel] = useState("");
 
-  const { forceActivateList } = useData();
+  const router = useRouter();
+
+  // const { forceActivateList } = useData();
 
   const queryClient = useQueryClient();
   const { mutate: createList, isLoading } = useMutation(
@@ -26,7 +30,22 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
       });
     },
     {
+      onMutate: async (newList) => {
+        await queryClient.cancelQueries(["userData"]);
+        const previousData: UserData | undefined = queryClient.getQueryData([
+          "userData",
+        ]);
+        let newData: UserData | null = null;
+        if (previousData) {
+          newData = { ...previousData };
+          newData.lists.push(newList);
+          queryClient.setQueryData(["userData"], newData);
+        }
+
+        return { previousData, newData };
+      },
       onError: (error, newList, ctx) => {
+        queryClient.setQueryData(["userData"], ctx?.previousData);
         console.error("error", error);
       },
       onSettled: (data, error, newList, ctx) => {
@@ -35,7 +54,7 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
         setNewListLabel("");
         if (!error) {
           console.log("no ERORRRR");
-          forceActivateList(newList._id.toString());
+          router.replace(`/lists/${newList._id.toString()}`);
         }
       },
     }

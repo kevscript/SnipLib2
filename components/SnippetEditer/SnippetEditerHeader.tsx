@@ -1,9 +1,5 @@
 import Snippet from "@/models/Snippet";
-import CameraIcon from "../icons/Camera";
-import CopyIcon from "../icons/Copy";
-import EditIcon from "../icons/Edit";
-import FavoriteIcon from "../icons/Favorite";
-import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
+import EditSnippetWidget from "../widgets/EditSnippetWIdget";
 
 type SnippetHeaderProps = {
   snippet: Snippet;
@@ -26,7 +22,7 @@ const SnippetHeader = ({
         <span>{snippet.title}</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
-        <button onClick={onSubmit}>Submit</button>
+        <EditSnippetWidget onConfirm={onSubmit} />
         <button onClick={onCancel}>Cancel</button>
         <button onClick={onReset}>Reset</button>
       </div>

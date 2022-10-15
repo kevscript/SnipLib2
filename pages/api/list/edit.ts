@@ -14,9 +14,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await clientPromise;
 
+      console.log("reqbody editlist", req.body);
+
       const listToEdit: List = {
         ...req.body,
-        _id: new ObjectID(req.body._id.toString()),
+        _id: new ObjectID(req.body._id),
+        snippetIds: req.body.snippetIds.map((id: string) => new ObjectID(id)),
       };
       const valid = List.parse(listToEdit);
 

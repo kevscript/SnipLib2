@@ -1,12 +1,17 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
+import useEditSnippet from "@/hooks/useEditSnippet";
 import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
+import { ObjectID } from "bson";
 import { useCallback, useState } from "react";
 import {
   CreateSnippetFormState,
   CreateSnippetSchema,
 } from "../forms/CreateSnippetForm";
+import FormArea from "../forms/FormArea";
+import FormInput from "../forms/FormInput";
+import FormSelect from "../forms/FormSelect";
 import CrossIcon from "../icons/Cross";
 import SnippetEditerHeader from "./SnippetEditerHeader";
 
@@ -43,7 +48,7 @@ const SnippetEditer = ({
 
   const [tagsList, setTagsList] = useState<string[]>([...snippet.tags]);
 
-  const { container, isFocused } = useCodeMirror({
+  const { container, isFocused, setDoc } = useCodeMirror({
     doc: snippet.content,
     lang: form.language,
     handleEditorContent: useCallback((value: string) => {
@@ -51,6 +56,27 @@ const SnippetEditer = ({
       setFormErrors((x) => ({ ...x, ["content"]: [] }));
     }, []),
   });
+
+  const { editSnippet } = useEditSnippet();
+
+  const handleEditSnippet = () => {
+    const editedSnippet: Snippet = {
+      _id: new ObjectID(snippet._id),
+      listId: new ObjectID(form.listId),
+      title: form.title,
+      description: form.description,
+      language: form.language,
+      favorite: snippet.favorite,
+      public: snippet.public,
+      tags: tagsList,
+      content: form.content,
+      createdAt: snippet.createdAt,
+      updatedAt: Date.now(),
+    };
+
+    editSnippet(editedSnippet);
+    triggerReadMode();
+  };
 
   const handleForm = (
     e: React.ChangeEvent<
@@ -80,92 +106,83 @@ const SnippetEditer = ({
     }
   };
 
+  const resetForm = () => {
+    const resettedValues: CreateSnippetFormState = {
+      title: snippet.title,
+      description: snippet.description,
+      language: snippet.language as LanguageIds,
+      listId: snippet.listId.toString(),
+      tag: "",
+      content: snippet.content,
+    };
+
+    setForm(resettedValues);
+    setTagsList([...snippet.tags]);
+    setFormErrors({
+      title: [],
+      content: [],
+      description: [],
+      language: [],
+      listId: [],
+      tags: [],
+    });
+
+    setDoc(snippet.content);
+  };
+
   return (
     <div className="flex-1 p-16 min-w-[640px]">
       <SnippetEditerHeader
         snippet={snippet}
-        onSubmit={() => console.log("submitted")}
+        onSubmit={handleEditSnippet}
         onCancel={triggerReadMode}
-        onReset={() => console.log("resetted")}
+        onReset={resetForm}
       />
       <form className="flex flex-col mt-12 gap-y-4">
         <div className="flex gap-x-4">
-          <label htmlFor="title" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Title</span>
-            <input
-              name="title"
-              type="text"
-              value={form.title}
-              onChange={(e) => handleForm(e, "title")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border  bg-carbon-400 ${
-                formErrors &&
-                formErrors["title"] &&
-                formErrors["title"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-              autoFocus
-            />
-            {formErrors && formErrors["title"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["title"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
-          <label htmlFor="listId" className="flex flex-col">
-            <span className="ml-2 text-sm font-bold">List</span>
-            <select
-              name="listId"
-              defaultValue={form.listId}
-              onChange={(e) => handleForm(e, "listId")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border min-w-[128px] bg-carbon-400 ${
-                formErrors &&
-                formErrors["listId"] &&
-                formErrors["listId"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            >
-              {lists &&
-                lists.map((list) => (
-                  <option key={list._id.toString()} value={list._id.toString()}>
-                    {list.label}
-                  </option>
-                ))}
-            </select>
-            {formErrors && formErrors["listId"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["listId"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormInput
+            label="Title"
+            name="title"
+            value={form.title}
+            handleValue={(e) => handleForm(e, "title")}
+            errors={
+              formErrors["title"] && formErrors["title"].length > 0
+                ? formErrors["title"]
+                : null
+            }
+            autoFocus
+          />
+          <FormSelect
+            label="List"
+            name="listId"
+            value={form.listId}
+            handleValue={(e) => handleForm(e, "listId")}
+            errors={
+              formErrors["listId"] && formErrors["listId"].length > 0
+                ? formErrors["listId"]
+                : null
+            }
+          >
+            {lists &&
+              lists.map((list) => (
+                <option key={list._id.toString()} value={list._id.toString()}>
+                  {list.label}
+                </option>
+              ))}
+          </FormSelect>
         </div>
         <div className="flex mt-4">
-          <label htmlFor="" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Description</span>
-            <textarea
-              value={form.description}
-              onChange={(e) => handleForm(e, "description")}
-              className={`min-h-[40px] h-24 p-2 mt-2 outline-none rounded-sm border  bg-carbon-400 ${
-                formErrors &&
-                formErrors["description"] &&
-                formErrors["description"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            />
-            {formErrors && formErrors["description"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["description"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormArea
+            name="description"
+            label="Description"
+            value={form.description}
+            handleValue={(e) => handleForm(e, "description")}
+            errors={
+              formErrors["description"] && formErrors["description"].length > 0
+                ? formErrors["description"]
+                : null
+            }
+          />
         </div>
         <div className="flex mt-4 gap-x-4">
           <label className="flex flex-col flex-1" htmlFor="tag">
@@ -212,35 +229,24 @@ const SnippetEditer = ({
               </div>
             )}
           </label>
-          <label className="flex flex-col" htmlFor="language">
-            <span className="ml-2 text-sm font-bold">Language</span>
-            <select
-              name="language"
-              defaultValue={form.language}
-              onChange={(e) => handleForm(e, "language")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border min-w-[128px] bg-carbon-400 ${
-                formErrors &&
-                formErrors["language"] &&
-                formErrors["language"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            >
-              {langList &&
-                langList.map((lang) => (
-                  <option key={lang.id} value={lang.id}>
-                    {lang.label}
-                  </option>
-                ))}
-            </select>
-            {formErrors && formErrors["language"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["language"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormSelect
+            label="Language"
+            name="language"
+            value={form.language}
+            handleValue={(e) => handleForm(e, "language")}
+            errors={
+              formErrors["language"] && formErrors["language"].length > 0
+                ? formErrors["language"]
+                : null
+            }
+          >
+            {langList &&
+              langList.map((lang) => (
+                <option key={lang.id} value={lang.id}>
+                  {lang.label}
+                </option>
+              ))}
+          </FormSelect>
         </div>
         <div className="mt-4">
           <div className="flex flex-col">

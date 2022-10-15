@@ -49,6 +49,7 @@ const CreateSnippetPage = () => {
         const previousData: UserData | undefined = queryClient.getQueryData([
           "userData",
         ]);
+        console.log("prevData", previousData);
         let newData: UserData | null = null;
         if (previousData) {
           newData = { ...previousData };
@@ -58,18 +59,21 @@ const CreateSnippetPage = () => {
           const newSnippetListIdIndex = newData.lists.findIndex(
             (l) => l._id.toString() === newSnippet.listId.toString()
           );
-          if (newSnippetListIdIndex) {
+          if (newSnippetListIdIndex >= 0) {
             newData.lists[newSnippetListIdIndex].snippetIds.push(
               newSnippet._id
             );
           }
-
+          console.log("newData", newData);
           queryClient.setQueryData(["userData"], newData);
         }
 
         return { previousData, newData };
       },
-      onError: (error, newSnippet, ctx) => console.log("error", error),
+      onError: (error, newSnippet, ctx) => {
+        queryClient.setQueryData(["userData"], ctx?.previousData);
+        console.log("error", error);
+      },
       onSettled: (data, error, newSnippet, ctx) => {
         queryClient.invalidateQueries(["userData"]);
 

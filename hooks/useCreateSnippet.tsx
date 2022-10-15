@@ -42,7 +42,9 @@ export const useCreateSnippet = () => {
     onError: (err, newSnippet, context) => {
       queryClient.setQueryData(["userData"], context?.previousData);
     },
-    onSettled: () => queryClient.invalidateQueries(["userData"]),
+    onSettled: () => {
+      queryClient.invalidateQueries(["userData"]);
+    },
   });
 
   return mutation;
