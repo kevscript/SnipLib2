@@ -24,6 +24,11 @@ export const useCodeMirror = ({
   const editor = useRef<null | EditorView>(null);
   const [isFocused, setisFocused] = useState(false);
 
+  const setDoc = (text: string) => {
+    editor.current?.dispatch({
+      changes: { from: 0, to: editor.current.state.doc.length, insert: text },
+    });
+  };
   useEffect(() => {
     if (container.current) {
       const langMode = langList.find((l) => l.id === lang)!.mode;
@@ -35,8 +40,6 @@ export const useCodeMirror = ({
           paddingBottom: "16px",
         },
       });
-
-      console.log("editor useEffect triggered", doc);
 
       if (!editor.current) {
         const initView = new EditorView({
@@ -104,5 +107,5 @@ export const useCodeMirror = ({
     };
   }, [doc, readOnly, lang, handleEditorContent]);
 
-  return { container, editor, isFocused };
+  return { container, editor, isFocused, setDoc };
 };
