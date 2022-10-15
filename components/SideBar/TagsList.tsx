@@ -1,4 +1,4 @@
-import { Tag } from "@/hooks/useData";
+import { Tag } from "@/hooks/useUserData";
 import TagItem from "./TagItem";
 
 export type TagsListProps = {
