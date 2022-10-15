@@ -1,4 +1,4 @@
-import { useData } from "@/hooks/useData";
+import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { UserData } from "@/models/UserData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

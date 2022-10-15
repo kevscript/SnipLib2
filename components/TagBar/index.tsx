@@ -3,7 +3,7 @@ import TagBarHeader from "./TagBarHeader";
 import TagSnipItem from "./TagSnipItem";
 import { useRouter } from "next/router";
 import Snippet from "@/models/Snippet";
-import { Tag } from "@/hooks/useData";
+import { Tag } from "@/hooks/useUserData";
 import { UserData } from "@/models/UserData";
 
 export type TagBarProps = {
