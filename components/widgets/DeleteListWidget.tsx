@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
+import Loader from "../shared/Loader";
 
 type DeleteListWidgetProps = {
   list: List;
@@ -82,19 +83,38 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
           Do you really want to delete{" "}
           <span className="font-bold text-marine-500">{list.label}</span> ?
         </p>
-        <button
-          className="px-2 py-1 bg-red-600"
-          onClick={() => deleteList(list)}
-        >
-          Delete
-        </button>
-        <button
-          className="px-2 py-1 bg-carbon-300"
-          onClick={() => setIsOpen(false)}
-        >
-          Cancel
-        </button>
-        {isLoading && <span>Loading...</span>}
+        <p>
+          It will also delete all the snippets it contains. This action is
+          irreversible.
+        </p>
+        <div className="flex mt-8 gap-x-2">
+          <button
+            className="h-10 px-3 py-1 rounded-sm bg-slate-700 min-w-[96px]"
+            onClick={() => setIsOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="h-10 px-3 py-1 bg-red-600 rounded-sm min-w-[96px]"
+            onClick={() => deleteList(list)}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-x-2">
+                <span>Deleting...</span>
+                <Loader
+                  color="#fff"
+                  height={6}
+                  margin={-9}
+                  width={3}
+                  speedMultiplier={2}
+                  className="translate-x-2.5 translate-y-2.5"
+                />
+              </div>
+            ) : (
+              <span>Delete</span>
+            )}
+          </button>
+        </div>
       </Modal>
     </>
   );
