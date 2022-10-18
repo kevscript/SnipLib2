@@ -144,7 +144,7 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
             </div>
             <div className="mt-8">
               <label className="flex flex-col">
-                <span>Label</span>
+                <span className="text-sm">Label</span>
                 <input
                   value={newListLabel}
                   onChange={handleLabelChange}
