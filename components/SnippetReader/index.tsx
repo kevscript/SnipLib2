@@ -1,6 +1,7 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
+import timeSince from "@/utils/timeSince";
 import SnippetReaderHeader from "./SnippetReaderHeader";
 
 type SnippetReaderProps = {
@@ -58,17 +59,10 @@ const SnippetReader = ({ snippet, triggerEditMode }: SnippetReaderProps) => {
         </div>
 
         <div className="flex justify-between mt-2 text-sm text-carbon-300">
+          <span>created {timeSince(new Date(snippet.createdAt))}</span>
           {snippet.updatedAt !== snippet.createdAt && (
-            <span>
-              edited the {new Date(snippet.updatedAt).toLocaleDateString()} at{" "}
-              {new Date(snippet.updatedAt).toLocaleTimeString()}
-            </span>
+            <span>edited {timeSince(new Date(snippet.updatedAt))}</span>
           )}
-
-          <span>
-            created the {new Date(snippet.createdAt).toLocaleDateString()} at{" "}
-            {new Date(snippet.createdAt).toLocaleTimeString()}
-          </span>
         </div>
       </div>
     </div>

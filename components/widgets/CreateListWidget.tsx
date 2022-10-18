@@ -100,7 +100,7 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
             </div>
             <div className="mt-8">
               <label className="flex flex-col">
-                <span>Label</span>
+                <span className="text-sm">Label</span>
                 <input
                   type="text"
                   className="h-10 px-2 mt-2 bg-black border-none rounded-sm outline outline-1 outline-carbon-300 focus:outline-marine-500"
