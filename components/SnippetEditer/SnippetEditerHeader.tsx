@@ -1,5 +1,5 @@
 import Snippet from "@/models/Snippet";
-import EditSnippetWidget from "../widgets/EditSnippetWIdget";
+import EditSnippetWidget from "../widgets/EditSnipWidget";
 
 type SnippetHeaderProps = {
   snippet: Snippet;
@@ -22,7 +22,7 @@ const SnippetHeader = ({
         <span>{snippet.title}</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
-        <EditSnippetWidget onConfirm={onSubmit} />
+        <EditSnippetWidget onConfirm={onSubmit} snippet={snippet} />
         <button onClick={onCancel}>Cancel</button>
         <button onClick={onReset}>Reset</button>
       </div>

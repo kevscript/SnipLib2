@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import CrossIcon from "@/components/icons/Cross";
 
 export type ModalProps = {
   children: ReactNode;
@@ -24,23 +23,14 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <>
-      <div
-        className="fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center w-screen h-screen bg-black/80"
-        onClick={(e) => handleClose(e, false)}
-      >
-        <div className="relative  w-10/12 max-w-[768px] h-fit max-h-[calc(100%-80px)] overflow-y-auto overflow-x-hidden rounded bg-carbon-500">
-          <div
-            className="absolute flex items-center justify-center w-6 h-6 cursor-pointer right-2 top-2 group"
-            onClick={(e) => handleClose(e, true)}
-          >
-            <CrossIcon className="w-5 h-5 group-hover:stroke-red-600" />
-          </div>
-
-          <div className="w-full p-8">{children}</div>
-        </div>
+    <div
+      className="fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center w-screen h-screen bg-black/80"
+      onClick={(e) => handleClose(e, false)}
+    >
+      <div className="relative w-10/12 max-w-[560px] h-fit max-h-[calc(100%-96px)] overflow-y-auto overflow-x-hidden rounded bg-carbon-700 drop-shadow">
+        {children}
       </div>
-    </>,
+    </div>,
     document.getElementById("modal-root")!
   );
 };

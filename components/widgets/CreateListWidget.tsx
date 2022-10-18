@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ObjectID } from "bson";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import CrossIcon from "../icons/Cross";
 import PlusIcon from "../icons/Plus";
 import Modal from "../Modal";
 import Loader from "../shared/Loader";
@@ -87,45 +88,52 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">
-          <div className="flex flex-col">
-            <h3 className="text-sm font-semibold uppercase">
-              New List creation
-            </h3>
-            <p className="mt-8">Name your new list:</p>
-          </div>
-          <div className="flex mt-2 gap-x-2">
-            <input
-              value={newListLabel}
-              onChange={handleLabelChange}
-              className={`flex-1 h-10 px-2 rounded-sm bg-carbon-700 border-none focus:outline focus:outline-marine-500`}
-              placeholder="List name"
-            />
-            <div className="flex items-center gap-x-2">
-              <button
-                onClick={handleCreateList}
-                className="h-10 px-3 py-1 border-none rounded-sm bg-marine-500 drop-shadow min-w-[96px]"
+          <div className="w-full p-8">
+            <div className="flex items-center justify-between w-full">
+              <h3 className="font-bold">Creating List</h3>
+              <div
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center p-1 cursor-pointer group"
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center gap-x-2">
-                    <span>Creating...</span>
-                    <Loader
-                      color="#fff"
-                      height={6}
-                      margin={-9}
-                      width={3}
-                      speedMultiplier={2}
-                      className="translate-x-2.5 translate-y-2.5"
-                    />
-                  </div>
-                ) : (
-                  <span>Create</span>
-                )}
-              </button>
+                <CrossIcon className="w-5 h-5 stroke-gray-200 group-hover:stroke-white" />
+              </div>
+            </div>
+            <div className="mt-8">
+              <label className="flex flex-col">
+                <span>Label</span>
+                <input
+                  type="text"
+                  className="h-10 px-2 mt-2 bg-black border-none rounded-sm outline outline-1 outline-carbon-300 focus:outline-marine-500"
+                  autoFocus
+                />
+              </label>
+            </div>
+          </div>
+          <div className="flex justify-between w-full p-8 pt-4 bg-carbon-600 gap-x-4">
+            <div>
+              {isLoading && (
+                <Loader
+                  color="#fff"
+                  height={6}
+                  margin={-9}
+                  width={3}
+                  speedMultiplier={2}
+                  className="translate-x-2.5 translate-y-5"
+                />
+              )}
+            </div>
+            <div className="flex gap-x-4">
               <button
-                className="h-10 px-3 py-1 rounded-sm bg-slate-700 min-w-[96px]"
+                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
+              </button>
+              <button
+                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90"
+                onClick={handleCreateList}
+              >
+                Create
               </button>
             </div>
           </div>
