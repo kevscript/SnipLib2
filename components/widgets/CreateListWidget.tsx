@@ -16,6 +16,7 @@ type CreateListWidgetProps = {};
 const CreateListWidget = ({}: CreateListWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newListLabel, setNewListLabel] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -32,6 +33,12 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
   });
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 32 && !error) {
+      setError("Label can't be longer than 32 characters");
+    }
+    if (e.target.value.length <= 32 && error) {
+      setError(null);
+    }
     setNewListLabel(e.target.value);
   };
 
@@ -77,6 +84,7 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
                   autoFocus
                 />
               </label>
+              {error && <span className="text-sm text-red-600">{error}</span>}
             </div>
           </div>
           <div className="flex justify-between w-full p-8 pt-4 bg-carbon-600 gap-x-4">
@@ -100,7 +108,8 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
                 Cancel
               </button>
               <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90"
+                disabled={error ? true : false}
+                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90 disabled:bg-carbon-300"
                 onClick={handleCreateList}
               >
                 Create
