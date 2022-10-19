@@ -1,5 +1,6 @@
 import Snippet from "@/models/Snippet";
 import { filterMatchingSnippets } from "@/utils/filterMatchingSnippets";
+import { langList } from "@/utils/langList";
 import { useEffect, useState } from "react";
 import Loader from "../shared/Loader";
 import SearchBarHeader from "./SearchBarHeader";
@@ -57,6 +58,9 @@ const SearchBar = ({
               key={snippet._id.toString()}
               snippet={snippet}
               isActive={activeSnippetId === snippet._id.toString()}
+              color={
+                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
+              }
             />
           ))}
         </ul>
