@@ -3,7 +3,7 @@ import { keymap } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { useEffect, useRef, useState } from "react";
 import { indentWithTab } from "@codemirror/commands";
-import { dracula } from "@uiw/codemirror-theme-dracula";
+import { dracula } from "@uiw/codemirror-themes-all";
 import { StreamLanguage } from "@codemirror/language";
 import { langList, LanguageIds } from "@/utils/langList";
 
