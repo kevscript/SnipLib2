@@ -4,9 +4,10 @@ import Link from "next/link";
 export type SearchSnipItemProps = {
   snippet: Snippet;
   isActive: boolean;
+  color: string;
 };
 
-const SearchSnipItem = ({ snippet, isActive }: SearchSnipItemProps) => {
+const SearchSnipItem = ({ snippet, isActive, color }: SearchSnipItemProps) => {
   return (
     <Link
       href={{
@@ -23,14 +24,13 @@ const SearchSnipItem = ({ snippet, isActive }: SearchSnipItemProps) => {
       >
         <span className="font-semibold">{snippet.title}</span>
         <div className="flex mt-3 flex-nowrap">
-          <span className="text-xs text-marine">{snippet.language}</span>
-          <ul className="flex items-baseline ml-4 flex-nowrap gap-x-2">
-            {snippet.tags &&
-              snippet.tags.map((tag, i) => (
-                <li className="text-xs text-carbon-300" key={i + tag}>
-                  #{tag}
-                </li>
-              ))}
+          <span className={`text-xs capitalize`} style={{ color: color }}>
+            {snippet.language}
+          </span>
+          <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
+            <span className="text-xs text-carbon-300">
+              {snippet.tags && snippet.tags.map((tag, i) => `#${tag} `)}
+            </span>
           </ul>
         </div>
       </li>
