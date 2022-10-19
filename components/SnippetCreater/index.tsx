@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import { LanguageIds, LanguageListItem } from "@/utils/langList";
 import { useCallback, useState } from "react";
 import List from "@/models/List";
@@ -6,24 +5,11 @@ import CrossIcon from "../icons/Cross";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import Snippet from "@/models/Snippet";
 import { ObjectID } from "bson";
-import Link from "next/link";
-
-const yupTag = yup
-  .string()
-  .min(2, "Min tag length : 2 chars")
-  .max(32, "Max tag length : 32 chars")
-  .required();
-
-const createSnippetSchema = yup.object({
-  title: yup.string().required("Title is required").max(80),
-  listId: yup.string().required(),
-  description: yup.string(),
-  tags: yup.array().of(yupTag).max(5),
-  language: yup.string().required(),
-  content: yup.string().max(1028).required("Snippet is empty"),
-});
-
-export type CreateSnippetSchema = yup.InferType<typeof createSnippetSchema>;
+import { createSnippetSchema, CreateSnippetSchema } from "@/lib/validation";
+import FormInput from "../forms/FormInput";
+import FormArea from "../forms/FormArea";
+import FormSelect from "../forms/FormSelect";
+import SnippetCreaterHeader from "./SnippetCreaterHeader";
 
 export type CreateSnippetFormState = {
   title: string;
@@ -53,7 +39,7 @@ export type CreateSnippetFormProps = {
   createSnippet: (newSnippet: Snippet) => void;
 };
 
-const CreateSnippetForm = ({
+const SnippetCreater = ({
   initFormValues,
   initFormErrors,
   activeListId,
@@ -63,7 +49,7 @@ const CreateSnippetForm = ({
 }: CreateSnippetFormProps) => {
   const [form, setForm] = useState({
     ...initFormValues,
-    listId: activeListId || "",
+    listId: activeListId,
   });
 
   const [formErrors, setFormErrors] = useState<{
@@ -177,106 +163,54 @@ const CreateSnippetForm = ({
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between flex-1">
-        <div className="flex text-xs font-bold gap-x-2">
-          <span className="uppercase text-carbon-300">Create</span>
-          <span>/</span>
-          <span>New Snippet</span>
-        </div>
-        <div className="flex flex-nowrap gap-x-4">
-          <button
-            className="px-4 py-1 rounded-sm bg-marine-500 drop-shadow-sm"
-            onClick={handleCreate}
-          >
-            Create
-          </button>
-          <Link href={"/snippets/"}>
-            <button className="px-4 py-1 rounded-sm bg-carbon-400 drop-shadow-sm">
-              Cancel
-            </button>
-          </Link>
-        </div>
-      </div>
+    <>
+      <SnippetCreaterHeader onSubmit={handleCreate} />
 
       <form className="flex flex-col mt-12 gap-y-4">
         <div className="flex gap-x-4">
-          <label htmlFor="title" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Title</span>
-            <input
-              name="title"
-              type="text"
-              value={form.title}
-              onChange={(e) => handleForm(e, "title")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border  bg-carbon-400 ${
-                formErrors &&
-                formErrors["title"] &&
-                formErrors["title"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-              autoFocus
-            />
-            {formErrors && formErrors["title"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["title"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
-          <label htmlFor="listId" className="flex flex-col">
-            <span className="ml-2 text-sm font-bold">List</span>
-            <select
-              name="listId"
-              defaultValue={form.listId}
-              onChange={(e) => handleForm(e, "listId")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border min-w-[128px] bg-carbon-400 ${
-                formErrors &&
-                formErrors["listId"] &&
-                formErrors["listId"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            >
-              {lists &&
-                lists.map((list) => (
-                  <option key={list._id.toString()} value={list._id.toString()}>
-                    {list.label}
-                  </option>
-                ))}
-            </select>
-            {formErrors && formErrors["listId"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["listId"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormInput
+            label="Title"
+            name="title"
+            value={form.title}
+            handleValue={(e) => handleForm(e, "title")}
+            errors={
+              formErrors["title"] && formErrors["title"].length > 0
+                ? formErrors["title"]
+                : null
+            }
+            autoFocus
+          />
+          <FormSelect
+            label="List"
+            name="listId"
+            value={form.listId}
+            handleValue={(e) => handleForm(e, "listId")}
+            errors={
+              formErrors["listId"] && formErrors["listId"].length > 0
+                ? formErrors["listId"]
+                : null
+            }
+          >
+            {lists &&
+              lists.map((list) => (
+                <option key={list._id.toString()} value={list._id.toString()}>
+                  {list.label}
+                </option>
+              ))}
+          </FormSelect>
         </div>
         <div className="flex mt-4">
-          <label htmlFor="" className="flex flex-col flex-1">
-            <span className="ml-2 text-sm font-bold">Description</span>
-            <textarea
-              value={form.description}
-              onChange={(e) => handleForm(e, "description")}
-              className={`min-h-[40px] h-24 p-2 mt-2 outline-none rounded-sm border  bg-carbon-400 ${
-                formErrors &&
-                formErrors["description"] &&
-                formErrors["description"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            />
-            {formErrors && formErrors["description"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["description"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormArea
+            name="description"
+            label="Description"
+            value={form.description}
+            handleValue={(e) => handleForm(e, "description")}
+            errors={
+              formErrors["description"] && formErrors["description"].length > 0
+                ? formErrors["description"]
+                : null
+            }
+          />
         </div>
         <div className="flex mt-4 gap-x-4">
           <label className="flex flex-col flex-1" htmlFor="tag">
@@ -330,35 +264,24 @@ const CreateSnippetForm = ({
               </div>
             )}
           </label>
-          <label className="flex flex-col" htmlFor="language">
-            <span className="ml-2 text-sm font-bold">Language</span>
-            <select
-              name="language"
-              defaultValue={form.language}
-              onChange={(e) => handleForm(e, "language")}
-              className={`h-10 px-2 mt-2 outline-none rounded-sm border min-w-[128px] bg-carbon-400 ${
-                formErrors &&
-                formErrors["language"] &&
-                formErrors["language"].length > 0
-                  ? "border-red-500 focus:border-red-500"
-                  : "border-transparent focus:border-marine-500"
-              }`}
-            >
-              {langList &&
-                langList.map((lang) => (
-                  <option key={lang.id} value={lang.id}>
-                    {lang.label}
-                  </option>
-                ))}
-            </select>
-            {formErrors && formErrors["language"] && (
-              <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["language"].map((err, i) => (
-                  <p key={i}>{err}</p>
-                ))}
-              </div>
-            )}
-          </label>
+          <FormSelect
+            label="Language"
+            name="language"
+            value={form.language}
+            handleValue={(e) => handleForm(e, "language")}
+            errors={
+              formErrors["language"] && formErrors["language"].length > 0
+                ? formErrors["language"]
+                : null
+            }
+          >
+            {langList &&
+              langList.map((lang) => (
+                <option key={lang.id} value={lang.id}>
+                  {lang.label}
+                </option>
+              ))}
+          </FormSelect>
         </div>
         {editor && (
           <div className="mt-4">
@@ -396,8 +319,8 @@ const CreateSnippetForm = ({
           </div>
         )}
       </form>
-    </div>
+    </>
   );
 };
 
-export default CreateSnippetForm;
+export default SnippetCreater;
