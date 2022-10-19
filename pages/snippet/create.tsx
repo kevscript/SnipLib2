@@ -1,13 +1,13 @@
-import CreateSnippetForm, {
-  CreateSnippetFormErrors,
-  CreateSnippetFormState,
-} from "@/components/forms/CreateSnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useCreateSnippet } from "@/hooks/useCreateSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { langList } from "@/utils/langList";
 import { useRouter } from "next/router";
+import SnippetCreater, {
+  CreateSnippetFormErrors,
+  CreateSnippetFormState,
+} from "@/components/SnippetCreater";
 
 const initFormValues: CreateSnippetFormState = {
   title: "",
@@ -52,7 +52,7 @@ const CreateSnippetPage = () => {
   return (
     <div className="w-full p-16 min-w-[640px]">
       {lists && langList && (
-        <CreateSnippetForm
+        <SnippetCreater
           activeListId={activeListId}
           initFormValues={initFormValues}
           initFormErrors={initFormErrors}

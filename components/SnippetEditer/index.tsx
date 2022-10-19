@@ -5,16 +5,30 @@ import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import { ObjectID } from "bson";
 import { useCallback, useState } from "react";
-import {
-  CreateSnippetFormErrors,
-  CreateSnippetFormState,
-  CreateSnippetSchema,
-} from "../forms/CreateSnippetForm";
 import FormArea from "../forms/FormArea";
 import FormInput from "../forms/FormInput";
 import FormSelect from "../forms/FormSelect";
 import CrossIcon from "../icons/Cross";
 import SnippetEditerHeader from "./SnippetEditerHeader";
+
+type EditSnippetFormState = {
+  title: string;
+  description: string;
+  listId: string;
+  tag: string;
+  language: LanguageIds;
+  content: string;
+};
+
+type EditSnippetFormErrors = {
+  title: string[];
+  listId: string[];
+  description: string[];
+  tag: string[];
+  tags: string[];
+  language: string[];
+  content: string[];
+};
 
 type SnippetEditerProps = {
   snippet: Snippet;
@@ -27,7 +41,7 @@ const SnippetEditer = ({
   lists,
   triggerReadMode,
 }: SnippetEditerProps) => {
-  const [form, setForm] = useState<CreateSnippetFormState>({
+  const [form, setForm] = useState<EditSnippetFormState>({
     title: snippet.title,
     description: snippet.description,
     language: snippet.language as LanguageIds,
@@ -37,7 +51,7 @@ const SnippetEditer = ({
   });
 
   const [formErrors, setFormErrors] = useState<{
-    [key in keyof CreateSnippetFormErrors]: string[];
+    [key in keyof EditSnippetFormErrors]: string[];
   }>({
     title: [],
     content: [],
@@ -84,7 +98,7 @@ const SnippetEditer = ({
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-    key: keyof CreateSnippetFormState
+    key: keyof EditSnippetFormState
   ) => {
     setForm((x) => ({ ...x, [key]: e.target.value }));
     setFormErrors((x) => ({ ...x, [key]: [] }));
@@ -116,7 +130,7 @@ const SnippetEditer = ({
       const tagValue = form.tag.trim();
       if (tagValue && !tagsList.includes(tagValue) && tagsList.length < 5) {
         tagsList.push(tagValue);
-        setForm((x) => ({ ...x, tag: "" } as CreateSnippetFormState));
+        setForm((x) => ({ ...x, tag: "" } as EditSnippetFormState));
         setFormErrors((x) => ({ ...x, ["tags"]: [] }));
       }
     }
@@ -130,7 +144,7 @@ const SnippetEditer = ({
   };
 
   const resetForm = () => {
-    const resettedValues: CreateSnippetFormState = {
+    const resettedValues: EditSnippetFormState = {
       title: snippet.title,
       description: snippet.description,
       language: snippet.language as LanguageIds,
