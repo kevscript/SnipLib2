@@ -2,11 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useEditSnippet = () => {
   const queryClient = useQueryClient();
-  const {
-    mutate: editSnippet,
-    isLoading,
-    isSuccess,
-  } = useMutation(
+  const useEditSnippet = useMutation(
     (editedSnippet: any) => {
       return fetch("/api/snippet/edit", {
         method: "POST",
@@ -66,7 +62,7 @@ const useEditSnippet = () => {
     }
   );
 
-  return { editSnippet, isLoading, isSuccess };
+  return useEditSnippet;
 };
 
 export default useEditSnippet;
