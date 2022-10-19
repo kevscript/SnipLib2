@@ -11,7 +11,7 @@ const TagsList = ({ tags, activeTagLabel }: TagsListProps) => {
     <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {tags &&
         tags
-          .sort((a, b) => (a.amount > b.amount ? -1 : 1))
+          .sort((a, b) => (a.label > b.label ? 1 : -1))
           .map((tag, i) => {
             return (
               <TagItem

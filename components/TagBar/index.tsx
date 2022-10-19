@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Snippet from "@/models/Snippet";
 import { Tag } from "@/hooks/useUserData";
 import { UserData } from "@/models/UserData";
+import { langList } from "@/utils/langList";
 
 export type TagBarProps = {
   tags: Tag[] | undefined;
@@ -48,6 +49,9 @@ const TagBar = ({
               snippet={snippet}
               activeTagLabel={activeTagLabel}
               isActive={activeSnippetId === snippet._id.toString()}
+              color={
+                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
+              }
             />
           ))}
         </ul>
