@@ -57,7 +57,7 @@ const SnippetEditer = ({
     }, []),
   });
 
-  const { editSnippet } = useEditSnippet();
+  const { mutate: editSnippet, isLoading, isSuccess } = useEditSnippet();
 
   const handleEditSnippet = () => {
     const editedSnippet: Snippet = {
