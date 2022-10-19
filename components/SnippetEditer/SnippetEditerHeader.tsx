@@ -1,5 +1,5 @@
 import Snippet from "@/models/Snippet";
-import EditSnippetWidget from "../widgets/EditSnipWidget";
+import EditSnippetWidget from "../widgets/EditSnippetWidget";
 
 type SnippetHeaderProps = {
   snippet: Snippet;

@@ -1,3 +1,4 @@
+import { useCreateList } from "@/hooks/useCreateList";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
 import { UserData } from "@/models/UserData";
@@ -18,49 +19,17 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
 
   const router = useRouter();
 
-  // const { forceActivateList } = useData();
-
-  const queryClient = useQueryClient();
-  const { mutate: createList, isLoading } = useMutation(
-    (newList: List) => {
-      return fetch("/api/list/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newList),
-      });
-    },
-    {
-      onMutate: async (newList) => {
-        await queryClient.cancelQueries(["userData"]);
-        const previousData: UserData | undefined = queryClient.getQueryData([
-          "userData",
-        ]);
-        let newData: UserData | null = null;
-        if (previousData) {
-          newData = { ...previousData };
-          newData.lists.push(newList);
-          queryClient.setQueryData(["userData"], newData);
-        }
-
-        return { previousData, newData };
-      },
-      onError: (error, newList, ctx) => {
-        queryClient.setQueryData(["userData"], ctx?.previousData);
-        console.error("error", error);
-      },
-      onSettled: (data, error, newList, ctx) => {
-        queryClient.invalidateQueries(["userData"]);
-        setIsOpen(false);
-        setNewListLabel("");
-        if (!error) {
-          console.log("no ERORRRR");
-          router.replace(`/lists/${newList._id.toString()}`);
-        }
-      },
+  const onListCreation = (newList: List, err: any) => {
+    setIsOpen(false);
+    setNewListLabel("");
+    if (!err) {
+      router.replace(`/lists/${newList._id.toString()}`);
     }
-  );
+  };
+
+  const { mutate: createList, isLoading } = useCreateList({
+    onQuerySettled: onListCreation,
+  });
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewListLabel(e.target.value);
@@ -103,6 +72,7 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
                 <span className="text-sm">Label</span>
                 <input
                   type="text"
+                  onChange={handleLabelChange}
                   className="h-10 px-2 mt-2 bg-black border-none rounded-sm outline outline-1 outline-carbon-300 focus:outline-marine-500"
                   autoFocus
                 />

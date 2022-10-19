@@ -1,51 +1,62 @@
+import Snippet from "@/models/Snippet";
+import { UserData } from "@/models/UserData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useCreateSnippet = () => {
-  const creatSnippet = async (newSnippet: any) => {
-    fetch("/api/snippet/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newSnippet),
-    });
-  };
+type UseCreateSnippetParams = {
+  onQuerySettled?: (newSnippet: Snippet, err: any) => void;
+};
 
+export const useCreateSnippet = ({
+  onQuerySettled,
+}: UseCreateSnippetParams) => {
   const queryClient = useQueryClient();
-  const mutation = useMutation((newSnippet: any) => creatSnippet(newSnippet), {
-    onMutate: async (newSnippet) => {
-      // cancel the refetch of query
-      await queryClient.cancelQueries(["userData"]);
-
-      // make copy of previous data state to reuse it if error
-      const previousData = queryClient.getQueryData(["userData"]);
-
-      // update the query with new data
-      queryClient.setQueryData(["userData"], (old: any) => {
-        const prevData = { ...old };
-        const collectionIndex = prevData.collections.findIndex(
-          (c: any) => c._id === newSnippet.collectionId
-        );
-        collectionIndex &&
-          prevData.collections[collectionIndex].snippetIds.push(newSnippet._id);
-
-        return {
-          ...prevData,
-          snippets: [...prevData.snippets, newSnippet],
-          collections: [...prevData.collections],
-        };
+  const useCreateSnippet = useMutation(
+    (newSnippet: Snippet) => {
+      return fetch("/api/snippet/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newSnippet),
       });
+    },
+    {
+      onMutate: async (newSnippet) => {
+        await queryClient.cancelQueries(["userData"]);
+        const previousData: UserData | undefined = queryClient.getQueryData([
+          "userData",
+        ]);
+        let newData: UserData | null = null;
+        if (previousData) {
+          newData = { ...previousData };
+          // add new snippet
+          newData.snippets.push(newSnippet);
+          // add snippet id to list
+          const newSnippetListIdIndex = newData.lists.findIndex(
+            (l) => l._id.toString() === newSnippet.listId.toString()
+          );
+          if (newSnippetListIdIndex >= 0) {
+            newData.lists[newSnippetListIdIndex].snippetIds.push(
+              newSnippet._id
+            );
+          }
 
-      // return the copy of previous data, will be used in onError if needed
-      return { previousData };
-    },
-    onError: (err, newSnippet, context) => {
-      queryClient.setQueryData(["userData"], context?.previousData);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(["userData"]);
-    },
-  });
+          queryClient.setQueryData(["userData"], newData);
+        }
 
-  return mutation;
+        return { previousData, newData };
+      },
+      onError: (error, newSnippet, ctx) => {
+        queryClient.setQueryData(["userData"], ctx?.previousData);
+        console.log("error", error);
+      },
+      onSettled: (data, error, newSnippet, ctx) => {
+        queryClient.invalidateQueries(["userData"]);
+
+        onQuerySettled && onQuerySettled(newSnippet, error);
+      },
+    }
+  );
+
+  return useCreateSnippet;
 };
