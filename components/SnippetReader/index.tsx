@@ -2,6 +2,7 @@ import { useCodeMirror } from "@/hooks/useCodeMirror";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import timeSince from "@/utils/timeSince";
+import Link from "next/link";
 import SnippetReaderHeader from "./SnippetReaderHeader";
 
 type SnippetReaderProps = {
@@ -33,15 +34,17 @@ const SnippetReader = ({ snippet, triggerEditMode }: SnippetReaderProps) => {
             </span>
           </div>
 
-          <ul className="flex flex-nowrap gap-x-2">
+          <ul className="flex truncate flex-nowrap gap-x-2">
             {snippet.tags &&
               snippet.tags.map((tag, i) => (
-                <li
-                  key={tag + i}
-                  className="flex items-center justify-center px-2 py-1 text-sm transition-all rounded-sm cursor-pointer bg-carbon-600 hover:bg-carbon-400"
-                >
-                  #{tag}
-                </li>
+                <Link href={`/tags/${tag}`} key={tag + i}>
+                  <li
+                    key={tag + i}
+                    className="flex items-center justify-center px-2 py-1 text-sm transition-all rounded-sm cursor-pointer bg-carbon-600 hover:bg-carbon-400"
+                  >
+                    #{tag}
+                  </li>
+                </Link>
               ))}
           </ul>
         </div>
