@@ -22,6 +22,7 @@ const initFormErrors: CreateSnippetFormErrors = {
   title: [],
   listId: [],
   description: [],
+  tag: [],
   tags: [],
   language: [],
   content: [],

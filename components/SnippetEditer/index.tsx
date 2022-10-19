@@ -6,6 +6,7 @@ import { langList, LanguageIds } from "@/utils/langList";
 import { ObjectID } from "bson";
 import { useCallback, useState } from "react";
 import {
+  CreateSnippetFormErrors,
   CreateSnippetFormState,
   CreateSnippetSchema,
 } from "../forms/CreateSnippetForm";
@@ -36,7 +37,7 @@ const SnippetEditer = ({
   });
 
   const [formErrors, setFormErrors] = useState<{
-    [key in keyof CreateSnippetSchema]: string[];
+    [key in keyof CreateSnippetFormErrors]: string[];
   }>({
     title: [],
     content: [],
@@ -44,6 +45,7 @@ const SnippetEditer = ({
     language: [],
     listId: [],
     tags: [],
+    tag: [],
   });
 
   const [tagsList, setTagsList] = useState<string[]>([...snippet.tags]);
@@ -88,8 +90,29 @@ const SnippetEditer = ({
     setFormErrors((x) => ({ ...x, [key]: [] }));
   };
 
+  const handleTagValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      e.target.value.length > 16 &&
+      formErrors["tag"] &&
+      formErrors["tag"].length === 0
+    ) {
+      setFormErrors((errors) => ({
+        ...errors,
+        tag: ["Tag can't be longer than 16 characters"],
+      }));
+    }
+    if (
+      e.target.value.length <= 16 &&
+      formErrors["tag"] &&
+      formErrors["tag"].length > 0
+    ) {
+      setFormErrors((errors) => ({ ...errors, tag: [] }));
+    }
+    setForm((x) => ({ ...x, tag: e.target.value }));
+  };
+
   const handleTagAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && formErrors["tag"].length === 0) {
       const tagValue = form.tag.trim();
       if (tagValue && !tagsList.includes(tagValue) && tagsList.length < 5) {
         tagsList.push(tagValue);
@@ -125,6 +148,7 @@ const SnippetEditer = ({
       language: [],
       listId: [],
       tags: [],
+      tag: [],
     });
 
     setDoc(snippet.content);
@@ -215,12 +239,19 @@ const SnippetEditer = ({
                 name="tag"
                 type="text"
                 value={form.tag}
-                onChange={(e) => handleForm(e, "tag")}
+                onChange={handleTagValueChange}
                 onKeyDown={(e) => handleTagAdd(e)}
                 className="w-full h-10 px-2 bg-transparent border-none outline-none"
                 disabled={tagsList.length >= 5}
               />
             </div>
+            {formErrors && formErrors["tag"] && (
+              <div className="flex flex-col mt-2 text-sm text-red-500">
+                {formErrors["tag"].map((err, i) => (
+                  <p key={i}>{err}</p>
+                ))}
+              </div>
+            )}
             {formErrors && formErrors["tags"] && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["tags"].map((err, i) => (
