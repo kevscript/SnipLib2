@@ -10,6 +10,7 @@ import FormInput from "../forms/FormInput";
 import FormArea from "../forms/FormArea";
 import FormSelect from "../forms/FormSelect";
 import SnippetCreaterHeader from "./SnippetCreaterHeader";
+import { useRouter } from "next/router";
 
 export type CreateSnippetFormState = {
   title: string;
@@ -47,6 +48,8 @@ const SnippetCreater = ({
   langList,
   createSnippet,
 }: CreateSnippetFormProps) => {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     ...initFormValues,
     listId: activeListId,
@@ -162,9 +165,13 @@ const SnippetCreater = ({
     }
   };
 
+  const handleCancel = () => {
+    router.back();
+  };
+
   return (
     <>
-      <SnippetCreaterHeader onSubmit={handleCreate} />
+      <SnippetCreaterHeader onSubmit={handleCreate} onCancel={handleCancel} />
 
       <form className="flex flex-col mt-12 gap-y-4">
         <div className="flex gap-x-4">
