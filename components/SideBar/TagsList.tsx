@@ -8,7 +8,7 @@ export type TagsListProps = {
 
 const TagsList = ({ tags, activeTagLabel }: TagsListProps) => {
   return (
-    <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
+    <ul className="flex flex-col justify-start flex-shrink-0 w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {tags &&
         tags
           .sort((a, b) => (a.label > b.label ? 1 : -1))

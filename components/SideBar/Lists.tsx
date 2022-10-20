@@ -10,7 +10,7 @@ export type ListsProps = {
 
 const Lists = ({ lists, activeListId, snippets }: ListsProps) => {
   return (
-    <ul className="flex flex-col justify-start w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
+    <ul className="flex flex-col justify-start flex-shrink-0 w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
       {lists.map((list, i) => (
         <ListItem
           key={list._id.toString()}

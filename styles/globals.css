@@ -8,7 +8,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  @apply text-white bg-carbon-700 h-screen w-screen overflow-hidden;
+  @apply text-white bg-carbon-700 h-screen w-screen overflow-x-auto;
 }
 
 a {

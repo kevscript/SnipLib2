@@ -26,7 +26,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
 
   return (
     <div className="flex">
-      <div className="flex flex-shrink-0 h-screen overflow-hidden flex-nowrap">
+      <div className="flex flex-shrink-0 h-screen flex-nowrap">
         <SideBar
           lists={lists}
           snippets={snippets}
