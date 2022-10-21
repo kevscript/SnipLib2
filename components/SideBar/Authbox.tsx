@@ -51,7 +51,7 @@ const Authbox = () => {
         {menuIsOpen && (
           <div className="absolute w-40 overflow-hidden rounded drop-shadow-[0_1px_4px_#0e0e0e] bottom-8 left-[300px] bg-carbon-700 border border-carbon-400">
             <ul className="flex flex-col w-full text-sm">
-              <Link href="/settings">
+              <Link href="/preferences">
                 <li className="flex items-center w-full h-10 px-4 transition-all border-b cursor-pointer hover:bg-carbon-600 gap-x-2 border-carbon-400">
                   <SettingsIcon className="w-3.5 h-3.5" />
                   <span>Preferences</span>
