@@ -31,7 +31,7 @@ const SideBar = ({
   updateSearchValue,
 }: SideBarProps) => {
   return (
-    <div className="flex flex-col h-full p-8 overflow-auto w-80 bg-carbon-600">
+    <div className="flex flex-col h-full p-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
         <h1 className="text-2xl font-bold uppercase">Sniplib</h1>
         <Switcher />
@@ -39,7 +39,7 @@ const SideBar = ({
 
       <Searchbox updateSearchValue={updateSearchValue} />
 
-      <div className="flex-1 mt-8 overflow-y-auto">
+      <div className="flex-1 my-8 overflow-y-auto">
         <div className="flex items-center justify-between flex-nowrap">
           <div className="flex items-center flex-nowrap">
             <FavoriteIcon className="w-4 h-4 stroke-marine" />
