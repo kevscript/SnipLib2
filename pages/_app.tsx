@@ -6,6 +6,7 @@ import { NextPage } from "next";
 import AuthGuard from "@/components/AuthGuard";
 import { ReactElement, ReactNode } from "react";
 import { DataProvider } from "@/hooks/useUserData";
+import { PreferencesProvider } from "@/hooks/usePreferences";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
@@ -22,16 +23,18 @@ function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
 
   return (
     <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-        <DataProvider>
-          {Component.authRequired ? (
-            <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
-          ) : (
-            <>{getLayout(<Component {...pageProps} />)}</>
-          )}
-        </DataProvider>
-      </QueryClientProvider>
+      <PreferencesProvider>
+        <QueryClientProvider client={queryClient}>
+          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+          <DataProvider>
+            {Component.authRequired ? (
+              <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
+            ) : (
+              <>{getLayout(<Component {...pageProps} />)}</>
+            )}
+          </DataProvider>
+        </QueryClientProvider>
+      </PreferencesProvider>
     </SessionProvider>
   );
 }

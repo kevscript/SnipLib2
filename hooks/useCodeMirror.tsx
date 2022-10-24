@@ -2,16 +2,18 @@ import { EditorView, basicSetup } from "codemirror";
 import { keymap } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { useEffect, useRef, useState } from "react";
-import { indentWithTab } from "@codemirror/commands";
-import { dracula } from "@uiw/codemirror-themes-all";
-import { StreamLanguage } from "@codemirror/language";
+import { indentWithTab, indentMore } from "@codemirror/commands";
+import { StreamLanguage, indentUnit } from "@codemirror/language";
 import { langList, LanguageIds } from "@/utils/langList";
+import { defaultPreferences, EditorPreferences } from "./usePreferences";
+import { getThemes } from "@/utils/getThemes";
 
 type UseCodeMirrorParams = {
   doc?: string;
   readOnly?: boolean;
   lang?: LanguageIds;
   handleEditorContent?: (value: string) => void;
+  preferences: EditorPreferences;
 };
 
 export const useCodeMirror = ({
@@ -19,6 +21,7 @@ export const useCodeMirror = ({
   readOnly = false,
   lang = "javascript",
   handleEditorContent,
+  preferences = defaultPreferences,
 }: UseCodeMirrorParams) => {
   const container = useRef<null | HTMLDivElement>(null);
   const editor = useRef<null | EditorView>(null);
@@ -30,41 +33,48 @@ export const useCodeMirror = ({
     });
   };
   useEffect(() => {
-    if (container.current) {
+    if (container.current && preferences) {
       const langMode = langList.find((l) => l.id === lang)!.mode;
       const customStyles = EditorView.theme({
         "&": {
-          fontSize: "14px",
+          fontFamily: preferences.font,
+          fontSize: `${preferences.fontSize}px`,
           height: "320px",
           paddingTop: "16px",
           paddingBottom: "16px",
         },
       });
 
+      const customTheme = getThemes().find(
+        (t) => t.name === preferences.theme
+      )!.theme;
+
+      const customExtensions = [
+        basicSetup,
+        customStyles,
+        customTheme,
+        keymap.of([indentWithTab]),
+        indentUnit.of(" ".repeat(preferences.tabSpacing)),
+        EditorState.readOnly.of(readOnly),
+        StreamLanguage.define(langMode),
+        EditorView.updateListener.of((x) => {
+          if (x.focusChanged) {
+            editor.current?.hasFocus ? setisFocused(true) : setisFocused(false);
+          }
+
+          if (x.docChanged) {
+            const currDoc = x.state.doc.toString() as string;
+            console.log(currDoc);
+            handleEditorContent && handleEditorContent(currDoc);
+          }
+        }),
+      ];
+
       if (!editor.current) {
         const initView = new EditorView({
           state: EditorState.create({
             doc: doc,
-            extensions: [
-              basicSetup,
-              dracula,
-              customStyles,
-              keymap.of([indentWithTab]),
-              EditorState.readOnly.of(readOnly),
-              StreamLanguage.define(langMode),
-              EditorView.updateListener.of((x) => {
-                if (x.focusChanged) {
-                  editor.current?.hasFocus
-                    ? setisFocused(true)
-                    : setisFocused(false);
-                }
-
-                if (x.docChanged) {
-                  const currDoc = x.state.doc.toString() as string;
-                  handleEditorContent && handleEditorContent(currDoc);
-                }
-              }),
-            ],
+            extensions: customExtensions,
           }),
           parent: container.current,
         });
@@ -75,26 +85,7 @@ export const useCodeMirror = ({
         const newView = new EditorView({
           state: EditorState.create({
             doc: doc,
-            extensions: [
-              basicSetup,
-              dracula,
-              customStyles,
-              keymap.of([indentWithTab]),
-              EditorState.readOnly.of(readOnly),
-              StreamLanguage.define(langMode),
-              EditorView.updateListener.of((x) => {
-                if (x.focusChanged) {
-                  editor.current?.hasFocus
-                    ? setisFocused(true)
-                    : setisFocused(false);
-                }
-
-                if (x.docChanged) {
-                  const currDoc = x.state.doc.toString() as string;
-                  handleEditorContent && handleEditorContent(currDoc);
-                }
-              }),
-            ],
+            extensions: customExtensions,
           }),
           parent: container.current,
         });
@@ -105,7 +96,7 @@ export const useCodeMirror = ({
     return () => {
       editor.current?.destroy();
     };
-  }, [doc, readOnly, lang, handleEditorContent]);
+  }, [doc, readOnly, lang, handleEditorContent, preferences]);
 
   return { container, editor, isFocused, setDoc };
 };

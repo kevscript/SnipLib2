@@ -1,5 +1,6 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import useEditSnippet from "@/hooks/useEditSnippet";
+import { usePreferences } from "@/hooks/usePreferences";
 import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
@@ -64,9 +65,12 @@ const SnippetEditer = ({
 
   const [tagsList, setTagsList] = useState<string[]>([...snippet.tags]);
 
+  const { preferences } = usePreferences();
+
   const { container, isFocused, setDoc } = useCodeMirror({
     doc: snippet.content,
     lang: form.language,
+    preferences: preferences,
     handleEditorContent: useCallback((value: string) => {
       setForm((x) => ({ ...x, ["content"]: value }));
       setFormErrors((x) => ({ ...x, ["content"]: [] }));

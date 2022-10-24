@@ -1,4 +1,5 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
+import { usePreferences } from "@/hooks/usePreferences";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import timeSince from "@/utils/timeSince";
@@ -11,9 +12,11 @@ type SnippetReaderProps = {
 };
 
 const SnippetReader = ({ snippet, triggerEditMode }: SnippetReaderProps) => {
+  const { preferences } = usePreferences();
   const { container } = useCodeMirror({
     readOnly: true,
     doc: snippet.content,
+    preferences: preferences,
     lang: (snippet.language as LanguageIds) || "javascript",
   });
 

@@ -11,6 +11,7 @@ import FormArea from "../forms/FormArea";
 import FormSelect from "../forms/FormSelect";
 import SnippetCreaterHeader from "./SnippetCreaterHeader";
 import { useRouter } from "next/router";
+import { usePreferences } from "@/hooks/usePreferences";
 
 export type CreateSnippetFormState = {
   title: string;
@@ -50,6 +51,8 @@ const SnippetCreater = ({
 }: CreateSnippetFormProps) => {
   const router = useRouter();
 
+  const { preferences } = usePreferences();
+
   const [form, setForm] = useState({
     ...initFormValues,
     listId: activeListId,
@@ -63,6 +66,7 @@ const SnippetCreater = ({
 
   const { editor, container, isFocused } = useCodeMirror({
     lang: form.language,
+    preferences: preferences,
     handleEditorContent: useCallback((value: string) => {
       setForm((x) => ({ ...x, ["content"]: value }));
       setFormErrors((x) => ({ ...x, ["content"]: [] }));
