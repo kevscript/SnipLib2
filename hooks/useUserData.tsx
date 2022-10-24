@@ -11,7 +11,7 @@ export type Tag = {
   amount: number;
 };
 
-export type BarMode = "list" | "tag" | "search";
+export type BarMode = "list" | "tag" | "search" | "fav";
 
 type CheckListReturnValue = {
   valid: boolean;
@@ -46,6 +46,10 @@ type CheckSearchSnippetParams = {
   snippetId: string;
 };
 
+type CheckFavSnippetParams = {
+  snippetId: string;
+};
+
 export type UserDataProviderReturnValue = {
   lists: UserData["lists"] | undefined;
   snippets: UserData["snippets"] | undefined;
@@ -57,6 +61,7 @@ export type UserDataProviderReturnValue = {
   activeBarMode: BarMode;
   initOriginalList: () => { path: string };
   initDefaultTag: () => { path: string };
+  initDefaultFavorite: () => { path: string; isEmpty: boolean };
   isSuccess: boolean;
   checkList: (listId: string) => CheckListReturnValue;
   checktTag: (tagLabel: string) => CheckTagReturnValue;
@@ -64,6 +69,7 @@ export type UserDataProviderReturnValue = {
   checkListSnippet: (p: CheckListSnippetParams) => { valid: boolean };
   checkTagSnippet: (p: CheckTagSnippetParams) => { valid: boolean };
   checkSearchSnippet: (p: CheckSearchSnippetParams) => { valid: boolean };
+  checkFavSnippet: (p: CheckFavSnippetParams) => { valid: boolean };
   updateSearchValue: (searchValue: string) => void;
   activateSnippet: (snippetId: string) => void;
 };
@@ -100,6 +106,31 @@ export const useDataProvider = () => {
     }));
 
     setTags(initTags);
+  };
+
+  const initDefaultFavorite = () => {
+    if (isSuccess) {
+      setActiveBarMode("fav");
+      const favoriteSnippets = data.snippets
+        .filter((s) => s.favorite === true)
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
+
+      if (favoriteSnippets.length > 0) {
+        const defaultSnippet = favoriteSnippets[0];
+        setActiveSnippetId(defaultSnippet._id.toString());
+
+        return {
+          path: `/favorites/${defaultSnippet._id.toString()}`,
+          isEmpty: false,
+        };
+      } else {
+        setActiveSnippetId("");
+        return {
+          path: "",
+          isEmpty: true,
+        };
+      }
+    }
   };
 
   const initDefaultTag = () => {
@@ -153,6 +184,25 @@ export const useDataProvider = () => {
           return { path: `/lists/${originalList._id.toString()}` };
         }
       }
+    }
+  };
+
+  const checkFavSnippet = ({ snippetId }: CheckFavSnippetParams) => {
+    if (isSuccess) {
+      setActiveBarMode("fav");
+      const favSnippets = data.snippets.filter((s) => s.favorite === true);
+      if (favSnippets.length === 0) {
+        return { valid: false };
+      }
+      const snippetExists = favSnippets.find(
+        (s) => s._id.toString() === snippetId
+      );
+      if (!snippetExists) {
+        return { valid: false };
+      }
+
+      setActiveSnippetId(snippetId);
+      return { valid: true };
     }
   };
 
@@ -385,6 +435,7 @@ export const useDataProvider = () => {
     activeBarMode,
     initOriginalList,
     initDefaultTag,
+    initDefaultFavorite,
     isSuccess,
     checkList,
     checkListSnippet,
@@ -392,6 +443,7 @@ export const useDataProvider = () => {
     checkTagSnippet,
     checkSearch,
     checkSearchSnippet,
+    checkFavSnippet,
     updateSearchValue,
     activateSnippet,
   } as UserDataProviderReturnValue;
