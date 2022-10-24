@@ -2,6 +2,7 @@ import BarsWrapper from "@/components/layouts/BarsWrapper";
 import Loader from "@/components/shared/Loader";
 import SnippetEditer from "@/components/SnippetEditer";
 import SnippetReader from "@/components/SnippetReader";
+import useFavSnippet from "@/hooks/useFavSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -17,6 +18,19 @@ const FavSnippetPage = () => {
 
   const [mode, setMode] = useState<"read" | "edit">("read");
 
+  const { mutate: favSnippet } = useFavSnippet({
+    onQuerySettled: () => router.replace("/favorites"),
+  });
+
+  const toggleFavorite = () => {
+    if (activeSnippet) {
+      favSnippet({
+        snippetId: activeSnippet._id.toString(),
+        favorite: !activeSnippet.favorite,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       const { valid } = checkFavSnippet({ snippetId: snippetId as string });
@@ -25,6 +39,7 @@ const FavSnippetPage = () => {
         setSnippetError("Something went wrong");
       } else {
         const snippet = snippets?.find((s) => s._id.toString() === snippetId);
+        setSnippetError(null);
         snippet && setActiveSnippet(snippet);
       }
     }
@@ -48,6 +63,7 @@ const FavSnippetPage = () => {
         <SnippetReader
           snippet={activeSnippet}
           triggerEditMode={() => setMode("edit")}
+          toggleFavorite={toggleFavorite}
         />
       )}
       {mode === "edit" && (

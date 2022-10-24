@@ -9,6 +9,7 @@ import { LanguageIds } from "@/utils/langList";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SnippetReader from "@/components/SnippetReader";
+import useFavSnippet from "@/hooks/useFavSnippet";
 
 const ListSnippetPage = () => {
   const router = useRouter();
@@ -19,6 +20,18 @@ const ListSnippetPage = () => {
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   const [mode, setMode] = useState<"read" | "edit">("read");
+
+  const { mutate: favSnippet } = useFavSnippet({});
+
+  const toggleFavorite = () => {
+    if (activeSnippet) {
+      console.log("sfksdfkjsdmfll", activeSnippet);
+      favSnippet({
+        snippetId: activeSnippet._id.toString(),
+        favorite: !activeSnippet.favorite,
+      });
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,6 +70,7 @@ const ListSnippetPage = () => {
         <SnippetReader
           snippet={activeSnippet}
           triggerEditMode={() => setMode("edit")}
+          toggleFavorite={toggleFavorite}
         />
       )}
       {mode === "edit" && (

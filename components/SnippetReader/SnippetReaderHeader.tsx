@@ -1,3 +1,4 @@
+import useFavSnippet from "@/hooks/useFavSnippet";
 import Snippet from "@/models/Snippet";
 import CameraIcon from "../icons/Camera";
 import CopyIcon from "../icons/Copy";
@@ -8,9 +9,14 @@ import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
 type SnippetHeaderProps = {
   snippet: Snippet;
   triggerEditMode: () => void;
+  toggleFavorite: () => void;
 };
 
-const SnippetHeader = ({ snippet, triggerEditMode }: SnippetHeaderProps) => {
+const SnippetHeader = ({
+  snippet,
+  triggerEditMode,
+  toggleFavorite,
+}: SnippetHeaderProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
@@ -19,7 +25,10 @@ const SnippetHeader = ({ snippet, triggerEditMode }: SnippetHeaderProps) => {
         <span>{snippet.title}</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
-        <li className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105">
+        <li
+          className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
+          onClick={toggleFavorite}
+        >
           <FavoriteIcon
             className={`w-4 h-4 transition-all ease-out group-hover:scale-105 ${
               snippet.favorite

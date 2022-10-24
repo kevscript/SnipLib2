@@ -46,7 +46,7 @@ const useEditSnippet = () => {
           }
 
           newData.snippets[snippetToEditIdx] = { ...editedSnippet };
-          return { newData };
+          return newData;
         });
 
         return { previousData };
