@@ -2,6 +2,7 @@ import BarsWrapper from "@/components/layouts/BarsWrapper";
 import Loader from "@/components/shared/Loader";
 import SnippetEditer from "@/components/SnippetEditer";
 import SnippetReader from "@/components/SnippetReader";
+import useFavSnippet from "@/hooks/useFavSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
@@ -24,6 +25,17 @@ const SearchSnippetPage = () => {
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   const [mode, setMode] = useState<"read" | "edit">("read");
+
+  const { mutate: favSnippet } = useFavSnippet({});
+
+  const toggleFavorite = () => {
+    if (activeSnippet) {
+      favSnippet({
+        snippetId: activeSnippet._id.toString(),
+        favorite: !activeSnippet.favorite,
+      });
+    }
+  };
 
   useEffect(() => {
     if (isSuccess && !routerWasCalled) {
@@ -76,6 +88,7 @@ const SearchSnippetPage = () => {
         <SnippetReader
           snippet={activeSnippet}
           triggerEditMode={() => setMode("edit")}
+          toggleFavorite={toggleFavorite}
         />
       )}
       {mode === "edit" && (

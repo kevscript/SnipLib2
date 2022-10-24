@@ -9,17 +9,19 @@ const FavoritesPage = () => {
   const { isSuccess, initDefaultFavorite } = useData();
 
   const [favIsEmpty, setFavIsEmpty] = useState(false);
+  const [routerWasCalled, setRouterWasCalled] = useState(false);
 
   useEffect(() => {
-    if (isSuccess && router.isReady) {
+    if (isSuccess && router.isReady && !routerWasCalled) {
       const { path, isEmpty } = initDefaultFavorite();
       if (isEmpty) {
         setFavIsEmpty(true);
       } else {
+        setRouterWasCalled(true);
         router.replace({ pathname: path });
       }
     }
-  }, [initDefaultFavorite, isSuccess, router]);
+  }, [initDefaultFavorite, isSuccess, router, routerWasCalled]);
 
   if (favIsEmpty) {
     return <div>You do not have favorite snippets yet.</div>;
