@@ -10,6 +10,7 @@ import Authbox from "./Authbox";
 import Lists from "./Lists";
 import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
+import Link from "next/link";
 
 export type SideBarProps = {
   activeBarMode: BarMode;
@@ -40,15 +41,33 @@ const SideBar = ({
       <Searchbox updateSearchValue={updateSearchValue} />
 
       <div className="flex-1 my-8 overflow-y-auto">
-        <div className="flex items-center justify-between flex-nowrap">
-          <div className="flex items-center flex-nowrap">
-            <FavoriteIcon className="w-4 h-4 stroke-marine" />
-            <span className="ml-4 text-xs font-bold uppercase">Favorites</span>
+        <Link href="/favorites">
+          <div className="flex items-center justify-between cursor-pointer flex-nowrap group">
+            <div className="flex items-center flex-nowrap">
+              <FavoriteIcon className="w-4 h-4 stroke-marine fill-transparent" />
+              <span
+                className={`ml-4 text-xs font-bold uppercase ${
+                  activeBarMode === "fav"
+                    ? "text-white"
+                    : "text-carbon-300 group-hover:text-white"
+                }`}
+              >
+                Favorites
+              </span>
+            </div>
+            <div className="flex justify-center w-6">
+              <span
+                className={`text-sm ${
+                  activeBarMode === "fav"
+                    ? "text-white"
+                    : "text-carbon-300 group-hover:text-white"
+                }`}
+              >
+                {snippets?.filter((s) => s.favorite === true).length}
+              </span>
+            </div>
           </div>
-          <div className="flex justify-center w-6">
-            <span className="text-sm">18</span>
-          </div>
-        </div>
+        </Link>
 
         <div className="flex items-center justify-between mt-8 flex-nowrap">
           <div className="flex items-center flex-nowrap">

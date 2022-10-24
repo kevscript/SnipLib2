@@ -3,8 +3,9 @@ import SideBar from "@/components/SideBar";
 import ListBar from "@/components/ListBar";
 import TagBar from "@/components/TagBar";
 import SearchBar from "../SearchBar";
+import FavBar from "../FavBar";
 
-export type BarsFilter = "list" | "tag" | "search";
+export type BarsFilter = "list" | "tag" | "search" | "fav";
 
 export type BarsWrapperProps = {
   children: React.ReactNode;
@@ -57,6 +58,12 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           <SearchBar
             snippets={snippets}
             activeSearchValue={activeSearchValue}
+            activeSnippetId={activeSnippetId}
+          />
+        )}
+        {mode === "fav" && (
+          <FavBar
+            favSnippets={snippets?.filter((s) => s.favorite)}
             activeSnippetId={activeSnippetId}
           />
         )}
