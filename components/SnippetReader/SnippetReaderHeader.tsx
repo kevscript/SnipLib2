@@ -43,16 +43,16 @@ const SnippetHeader = ({
             navigator.clipboard.writeText(snippet.content);
           }}
         >
-          <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-cyan-500" />
+          <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
         </li>
         <li className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105">
-          <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-violet-500" />
+          <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
         </li>
         <li
           className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
           onClick={triggerEditMode}
         >
-          <EditIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-yellow-500" />
+          <EditIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
         </li>
 
         <DeleteSnippetWidget snippet={snippet} />

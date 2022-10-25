@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import PlusIcon from "../icons/Plus";
 import Modal from "../Modal";
+import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 
 type CreateListWidgetProps = {};
@@ -101,19 +102,17 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
               )}
             </div>
             <div className="flex gap-x-4">
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                disabled={error ? true : false}
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90 disabled:bg-carbon-300"
+              <Button
+                label="Create"
                 onClick={handleCreateList}
-              >
-                Create
-              </button>
+                variety="primary"
+                disabled={!newListLabel}
+              />
+              <Button
+                label="Cancel"
+                onClick={() => setIsOpen(false)}
+                variety="secondary"
+              />
             </div>
           </div>
         </div>

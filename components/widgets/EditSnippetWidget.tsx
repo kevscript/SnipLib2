@@ -2,6 +2,7 @@ import Snippet from "@/models/Snippet";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
+import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 
 type EditSnippetWidgetProps = {
@@ -24,7 +25,7 @@ const EditSnippetWidget = ({
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)}>Save</button>
+      <Button label="Save" onClick={() => setIsOpen(true)} variety="primary" />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">
           <div className="w-full p-8">
@@ -61,18 +62,12 @@ const EditSnippetWidget = ({
               )}
             </div>
             <div className="flex gap-x-4">
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
+              <Button label="Save" onClick={handleConfirm} variety="primary" />
+              <Button
+                label="Cancel"
                 onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90"
-                onClick={handleConfirm}
-              >
-                Save
-              </button>
+                variety="secondary"
+              />
             </div>
           </div>
         </div>

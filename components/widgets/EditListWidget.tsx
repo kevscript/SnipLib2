@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import CrossIcon from "../icons/Cross";
 import EditIcon from "../icons/Edit";
 import Modal from "../Modal";
+import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 
 type EditListWidgetProps = {
@@ -97,19 +98,17 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
               )}
             </div>
             <div className="flex gap-x-4">
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                disabled={error ? true : false}
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-marine-500 hover:bg-opacity-90 disabled:bg-carbon-300"
+              <Button
+                label="Save"
                 onClick={handleEditList}
-              >
-                Save
-              </button>
+                variety="primary"
+                disabled={error ? true : false}
+              />
+              <Button
+                label="Cancel"
+                onClick={() => setIsOpen(false)}
+                variety="secondary"
+              />
             </div>
           </div>
         </div>
