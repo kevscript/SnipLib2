@@ -1,10 +1,11 @@
-import useFavSnippet from "@/hooks/useFavSnippet";
 import Snippet from "@/models/Snippet";
 import CameraIcon from "../icons/Camera";
 import CopyIcon from "../icons/Copy";
 import EditIcon from "../icons/Edit";
 import FavoriteIcon from "../icons/Favorite";
 import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
+import ReactTooltip from "react-tooltip";
+import IconButton from "../shared/IconButton";
 
 type SnippetHeaderProps = {
   snippet: Snippet;
@@ -25,35 +26,47 @@ const SnippetHeader = ({
         <span>{snippet.title}</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
-        <li
-          className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
+        <IconButton
           onClick={toggleFavorite}
-        >
-          <FavoriteIcon
-            className={`w-4 h-4 transition-all ease-out group-hover:scale-105 ${
-              snippet.favorite
-                ? "fill-pink-500 stroke-transparent"
-                : "fill-carbon-400 group-hover:stroke-pink-500"
-            }`}
-          />
-        </li>
-        <li
-          className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
+          icon={
+            <FavoriteIcon
+              className={`w-4 h-4 transition-all ease-out group-hover:scale-105 ${
+                snippet.favorite
+                  ? "fill-pink-500 stroke-transparent"
+                  : "fill-carbon-400 group-hover:stroke-pink-500"
+              }`}
+            />
+          }
+          tooltipId="favorite"
+          tooltipText="Add to Favorites"
+        />
+        <IconButton
           onClick={() => {
             navigator.clipboard.writeText(snippet.content);
           }}
-        >
-          <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
-        </li>
-        <li className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105">
-          <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
-        </li>
-        <li
-          className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:scale-105"
+          icon={
+            <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-300" />
+          }
+          tooltipId="copy"
+          tooltipText="Copy snippet"
+        />
+        <IconButton
+          onClick={() => console.log("snap it")}
+          icon={
+            <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-300" />
+          }
+          tooltipId="snapit"
+          tooltipText="Take snap"
+        />
+
+        <IconButton
           onClick={triggerEditMode}
-        >
-          <EditIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-500" />
-        </li>
+          icon={
+            <EditIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-300" />
+          }
+          tooltipId="edit"
+          tooltipText="Edit snippet"
+        />
 
         <DeleteSnippetWidget snippet={snippet} />
       </div>

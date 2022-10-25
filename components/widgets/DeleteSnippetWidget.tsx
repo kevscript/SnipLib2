@@ -8,6 +8,7 @@ import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
 import Button from "../shared/Button";
+import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
 
 type DeleteSnippetWidgetProps = {
@@ -31,12 +32,15 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
 
   return (
     <>
-      <li
-        className="flex items-center justify-center w-8 h-8 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:bg-red-500 hover:scale-105 "
+      <IconButton
+        icon={
+          <CrossIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
+        }
         onClick={() => setIsOpen(true)}
-      >
-        <CrossIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
-      </li>
+        className="hover:bg-red-500"
+        tooltipId="delete-snippet"
+        tooltipText="Delete snippet"
+      />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">

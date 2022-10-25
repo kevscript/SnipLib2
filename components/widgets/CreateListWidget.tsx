@@ -10,6 +10,7 @@ import CrossIcon from "../icons/Cross";
 import PlusIcon from "../icons/Plus";
 import Modal from "../Modal";
 import Button from "../shared/Button";
+import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
 
 type CreateListWidgetProps = {};
@@ -56,12 +57,15 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
 
   return (
     <>
-      <div
-        className="flex items-center justify-center w-6 h-6 ml-4 rounded cursor-pointer group bg-carbon-400 hover:bg-marine-500"
+      <IconButton
         onClick={() => setIsOpen(true)}
-      >
-        <PlusIcon className="w-4 h-4" />
-      </div>
+        icon={<PlusIcon className="w-4 h-4" />}
+        scale="small"
+        className="ml-4 hover:bg-marine-500"
+        tooltipId="create-list"
+        tooltipText="New list"
+        place="top"
+      />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">

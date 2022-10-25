@@ -25,7 +25,6 @@ const SnippetHeader = ({
       <div className="flex flex-nowrap gap-x-4">
         <Button label="Reset" onClick={onReset} variety="ternary" />
         <EditSnippetWidget onConfirm={onSubmit} snippet={snippet} />
-
         <Button label="Cancel" onClick={onCancel} variety="secondary" />
       </div>
     </div>
