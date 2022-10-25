@@ -4,6 +4,7 @@ import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import timeSince from "@/utils/timeSince";
 import Link from "next/link";
+import Button from "../shared/Button";
 import SnippetReaderHeader from "./SnippetReaderHeader";
 
 type SnippetReaderProps = {

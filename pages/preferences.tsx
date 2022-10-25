@@ -6,6 +6,7 @@ import { getThemes } from "@/utils/getThemes";
 import { usePreferences } from "@/hooks/usePreferences";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { useRouter } from "next/router";
+import Button from "@/components/shared/Button";
 
 export type EditorFormState = {
   theme: string;
@@ -66,19 +67,20 @@ const PreferencesPage = () => {
           <span className="uppercase text-carbon-300">Preferences</span>
         </div>
         <div className="flex flex-nowrap gap-x-4">
-          <button
-            className="px-3 py-1 rounded-sm bg-marine-500 drop-shadow-sm min-w-[96px] disabled:bg-carbon-300"
+          <Button
+            label="Save"
+            variety="primary"
             onClick={handleUpdatePreferences}
             disabled={
               JSON.stringify(editorForm) === JSON.stringify(preferences)
             }
-          >
-            Save
-          </button>
+          />
 
-          <button className="px-3 py-1 rounded-sm bg-carbon-400 drop-shadow-sm min-w-[96px]">
-            Cancel
-          </button>
+          <Button
+            label="Cancel"
+            onClick={() => router.back()}
+            variety="secondary"
+          />
         </div>
       </div>
 

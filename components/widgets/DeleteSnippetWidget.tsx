@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
+import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 
 type DeleteSnippetWidgetProps = {
@@ -41,7 +42,7 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
         <div className="flex flex-col w-full">
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
-              <h3 className="font-bold">Deleting List</h3>
+              <h3 className="font-bold">Deleting Snippet</h3>
               <div
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-center p-1 cursor-pointer group"
@@ -74,18 +75,17 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
               )}
             </div>
             <div className="flex gap-x-4">
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-red-600 hover:bg-opacity-90"
+              <Button
+                label="Delete"
                 onClick={() => deleteSnippet(snippet)}
-              >
-                Delete
-              </button>
+                variety="primary"
+                className="bg-red-600 hover:bg-red-700"
+              />
+              <Button
+                label="Cancel"
+                onClick={() => setIsOpen(false)}
+                variety="secondary"
+              />
             </div>
           </div>
         </div>

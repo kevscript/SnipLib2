@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
+import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 
 type DeleteListWidgetProps = {
@@ -70,18 +71,17 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
               )}
             </div>
             <div className="flex gap-x-4">
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold text-gray-200 uppercase rounded hover:text-white"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="min-w-[96px] h-10 px-4 text-sm font-semibold uppercase rounded bg-red-600 hover:bg-opacity-90"
+              <Button
+                label="Delete"
                 onClick={() => deleteList(list)}
-              >
-                Delete
-              </button>
+                variety="primary"
+                className="bg-red-600 hover:bg-red-700"
+              />
+              <Button
+                label="Cancel"
+                onClick={() => setIsOpen(false)}
+                variety="secondary"
+              />
             </div>
           </div>
         </div>

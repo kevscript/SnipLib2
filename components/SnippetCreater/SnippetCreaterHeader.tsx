@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Button from "../shared/Button";
 
 type SnippetCreaterHeaderProps = {
   onSubmit: () => void;
@@ -16,19 +17,8 @@ const SnippetCreaterHeader = ({
         <span>New Snippet</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
-        <button
-          className="px-4 py-1 rounded-sm bg-marine-500 drop-shadow-sm"
-          onClick={onSubmit}
-        >
-          Create
-        </button>
-
-        <button
-          className="px-4 py-1 rounded-sm bg-carbon-400 drop-shadow-sm"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
+        <Button label="Create" variety="primary" onClick={onSubmit} />
+        <Button label="Cancel" variety="secondary" onClick={onCancel} />
       </div>
     </div>
   );
