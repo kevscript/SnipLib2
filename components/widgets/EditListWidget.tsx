@@ -7,6 +7,7 @@ import CrossIcon from "../icons/Cross";
 import EditIcon from "../icons/Edit";
 import Modal from "../Modal";
 import Button from "../shared/Button";
+import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
 
 type EditListWidgetProps = {
@@ -51,12 +52,16 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
 
   return (
     <>
-      <li
-        className="flex items-center justify-center w-6 h-6 transition-all ease-out rounded cursor-pointer bg-carbon-400 group hover:bg-carbon-300 hover:scale-105"
+      <IconButton
         onClick={() => setIsOpen(true)}
-      >
-        <EditIcon className="w-3.5 h-3.5 transition-all ease-out group-hover:scale-105" />
-      </li>
+        icon={
+          <EditIcon className="w-3.5 h-3.5 transition-all ease-out group-hover:scale-105" />
+        }
+        scale="small"
+        className="hover:bg-carbon-300"
+        tooltipId="edit-list"
+        tooltipText="Edit list"
+      />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">
