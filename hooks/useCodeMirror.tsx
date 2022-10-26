@@ -40,8 +40,11 @@ export const useCodeMirror = ({
           fontFamily: preferences.font,
           fontSize: `${preferences.fontSize}px`,
           height: "320px",
+        },
+        ".cm-content": {
           paddingTop: "16px",
           paddingBottom: "16px",
+          paddingRight: "16px",
         },
       });
 
