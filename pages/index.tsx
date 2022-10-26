@@ -1,3 +1,4 @@
+import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
@@ -16,13 +17,7 @@ const Home: NextPage = () => {
     }
   }, [initOriginalList, router, status, isSuccess]);
 
-  // useEffect(() => {
-  //   if (status === "authenticated" && router.isReady) {
-  //     router.replace(`/snippets`);
-  //   }
-  // }, [router, status]);
-
-  if (status === "unauthenticated") {
+  if (status !== "authenticated") {
     return (
       <div>
         <h1>Concieve, Believe, Achieve</h1>
@@ -33,7 +28,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-screen">
-      <h1>Loading...</h1>
+      <Loader />
     </div>
   );
 };
