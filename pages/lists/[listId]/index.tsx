@@ -1,7 +1,9 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import Button from "@/components/shared/Button";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -42,7 +44,23 @@ const ListPage = () => {
   }
 
   if (listIsEmpty) {
-    return <div>You do not have a snippet yet in {activeList?.label}</div>;
+    return (
+      <div className="flex items-center justify-center w-full h-screen p-16">
+        <div className="flex flex-col items-center justify-center gap-y-8">
+          <p>
+            The `
+            <span className="font-bold text-marine-100">
+              {activeList?.label}
+            </span>
+            ` list is empty.
+          </p>
+
+          <Link href={{ pathname: "/snippet/create" }}>
+            <Button label="Add a snippet" className="w-48 py-2 text-white" />
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
