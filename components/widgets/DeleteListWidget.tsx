@@ -5,6 +5,7 @@ import { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import Modal from "../Modal";
 import Button from "../shared/Button";
+import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
 
 type DeleteListWidgetProps = {
@@ -28,12 +29,15 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
 
   return (
     <>
-      <li
-        className="flex items-center justify-center w-6 h-6 rounded cursor-pointer bg-carbon-400 group hover:bg-red-600"
+      <IconButton
         onClick={() => setIsOpen(true)}
-      >
-        <CrossIcon className="w-4 h-4" />
-      </li>
+        icon={<CrossIcon className="w-4 h-4" />}
+        scale="small"
+        className="hover:bg-red-500"
+        tooltipId="delete-list"
+        tooltipText="Delete list"
+        place="bottom"
+      />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">
