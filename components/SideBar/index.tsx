@@ -69,7 +69,7 @@ const SideBar = ({
           </div>
         </Link>
 
-        <div className="flex items-center justify-between mt-8 flex-nowrap">
+        <div className="flex items-center justify-between w-full mt-8 overflow-hidden flex-nowrap">
           <div className="flex items-center flex-nowrap">
             <FolderIcon className="w-4 h-4 stroke-marine" />
             <span className="ml-4 text-xs font-bold uppercase">Lists</span>
