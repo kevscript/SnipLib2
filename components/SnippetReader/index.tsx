@@ -3,6 +3,7 @@ import { usePreferences } from "@/hooks/usePreferences";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import timeSince from "@/utils/timeSince";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Button from "../shared/Button";
 import SnippetReaderHeader from "./SnippetReaderHeader";
@@ -27,7 +28,11 @@ const SnippetReader = ({
   });
 
   return (
-    <div className="">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <SnippetReaderHeader
         snippet={snippet}
         triggerEditMode={triggerEditMode}
@@ -78,7 +83,7 @@ const SnippetReader = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -17,15 +17,17 @@ const ListBarHeader = ({ list }: ListBarHeaderProps) => {
         <span className="font-bold">{list.label}</span>
         <ul className="flex items-center flex-nowrap gap-x-2">
           <Link href={{ pathname: "/snippet/create" }}>
-            <IconButton
-              icon={
-                <PlusIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
-              }
-              scale="small"
-              className="hover:bg-marine-500"
-              tooltipId="new-snippet"
-              tooltipText="New snippet"
-            />
+            <div>
+              <IconButton
+                icon={
+                  <PlusIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
+                }
+                scale="small"
+                className="hover:bg-marine-500"
+                tooltipId="new-snippet"
+                tooltipText="New snippet"
+              />
+            </div>
           </Link>
           <EditListWidget list={list} />
           {!list.original && <DeleteListWidget list={list} />}

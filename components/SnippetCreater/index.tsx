@@ -12,6 +12,7 @@ import FormSelect from "../forms/FormSelect";
 import SnippetCreaterHeader from "./SnippetCreaterHeader";
 import { useRouter } from "next/router";
 import { usePreferences } from "@/hooks/usePreferences";
+import { motion } from "framer-motion";
 
 export type CreateSnippetFormState = {
   title: string;
@@ -174,7 +175,11 @@ const SnippetCreater = ({
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <SnippetCreaterHeader onSubmit={handleCreate} onCancel={handleCancel} />
 
       <form className="flex flex-col pb-16 mt-12 gap-y-4">
@@ -330,7 +335,7 @@ const SnippetCreater = ({
           </div>
         )}
       </form>
-    </>
+    </motion.div>
   );
 };
 

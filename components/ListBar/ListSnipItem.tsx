@@ -26,7 +26,7 @@ const ListSnipItem = ({
       passHref
     >
       <li
-        className={`flex overflow-hidden flex-shrink-0 text-ellipsis flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
+        className={`flex overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
           isActive ? "bg-carbon-400" : "bg-carbon-500"
         }`}
         key={snippet._id.toString()}
