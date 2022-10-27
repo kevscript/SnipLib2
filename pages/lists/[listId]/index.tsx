@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import ErrorMessage from "@/components/messages/ErrorMessage";
 import Button from "@/components/shared/Button";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
@@ -19,6 +20,7 @@ const ListPage = () => {
 
   useEffect(() => {
     if (isSuccess && router.isReady && !routerWasCalled) {
+      setListIsEmpty(false);
       const { valid, isEmpty, path } = checkList(listId as string);
 
       if (!valid) {
@@ -40,7 +42,11 @@ const ListPage = () => {
   }, [checkList, isSuccess, listId, lists, router, routerWasCalled]);
 
   if (listError) {
-    return <div>ERROR: {listError}</div>;
+    return (
+      <ErrorMessage>
+        <span className="text-red-600">{listError}</span>
+      </ErrorMessage>
+    );
   }
 
   if (listIsEmpty) {
@@ -56,7 +62,9 @@ const ListPage = () => {
           </p>
 
           <Link href={{ pathname: "/snippet/create" }}>
-            <Button label="Add a snippet" className="w-48 py-2 text-white" />
+            <div>
+              <Button label="Add a snippet" className="w-48 py-2 text-white" />
+            </div>
           </Link>
         </div>
       </div>

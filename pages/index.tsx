@@ -17,7 +17,7 @@ const Home: NextPage = () => {
     }
   }, [initOriginalList, router, status, isSuccess]);
 
-  if (status !== "authenticated") {
+  if (status === "unauthenticated") {
     return (
       <div>
         <h1>Concieve, Believe, Achieve</h1>
@@ -26,11 +26,7 @@ const Home: NextPage = () => {
     );
   }
 
-  return (
-    <div className="flex items-center justify-center w-full h-screen">
-      <Loader />
-    </div>
-  );
+  return null;
 };
 
 export default Home;

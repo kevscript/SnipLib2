@@ -5,6 +5,7 @@ import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import { ObjectID } from "bson";
+import { motion } from "framer-motion";
 import { useCallback, useState } from "react";
 import FormArea from "../forms/FormArea";
 import FormInput from "../forms/FormInput";
@@ -173,7 +174,11 @@ const SnippetEditer = ({
   };
 
   return (
-    <div className="">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <SnippetEditerHeader
         snippet={snippet}
         onSubmit={handleEditSnippet}
@@ -328,7 +333,7 @@ const SnippetEditer = ({
           </div>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 
