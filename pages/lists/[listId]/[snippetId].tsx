@@ -7,9 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SnippetReader from "@/components/SnippetReader";
 import useFavSnippet from "@/hooks/useFavSnippet";
-import DangerIcon from "@/components/icons/Danger";
-import Link from "next/link";
-import Button from "@/components/shared/Button";
+import ErrorMessage from "@/components/messages/ErrorMessage";
 
 const ListSnippetPage = () => {
   const router = useRouter();
@@ -54,24 +52,10 @@ const ListSnippetPage = () => {
 
   if (snippetError) {
     return (
-      <div className="flex items-center justify-center w-full h-screen p-16">
-        <div className="flex flex-col items-center justify-center w-full">
-          <div className="flex items-center p-8 w-[480px] border rounded border-red-900/50 bg-gradient-to-r from-red-600/10 to-carbon-700 gap-x-8 drop-shadow">
-            <DangerIcon className="w-8 h-8 fill-transparent stroke-red-600" />
-            <div className="flex flex-col gap-y-2">
-              <span className="text-red-600">Something went wrong</span>
-              <span>Couldn&apos;t find a snippet at this url</span>
-            </div>
-          </div>
-          <Link href={{ pathname: "/lists" }}>
-            <Button
-              label="Back to main page"
-              className="w-48 py-2 mt-8 text-white"
-              variety="secondary"
-            />
-          </Link>
-        </div>
-      </div>
+      <ErrorMessage>
+        <span className="text-red-600">Something went wrong</span>
+        <span>Couldn&apos;t find a snippet at this url</span>
+      </ErrorMessage>
     );
   }
 

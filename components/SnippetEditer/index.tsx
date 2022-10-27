@@ -173,7 +173,7 @@ const SnippetEditer = ({
   };
 
   return (
-    <div className="flex-1 p-16 min-w-[640px]">
+    <div className="">
       <SnippetEditerHeader
         snippet={snippet}
         onSubmit={handleEditSnippet}

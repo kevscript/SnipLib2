@@ -50,7 +50,7 @@ const CreateSnippetPage = () => {
   });
 
   return (
-    <div className="w-full p-16 min-w-[640px]">
+    <>
       {lists && langList && (
         <SnippetCreater
           activeListId={activeListId}
@@ -61,7 +61,7 @@ const CreateSnippetPage = () => {
           createSnippet={createSnippet}
         />
       )}
-    </div>
+    </>
   );
 };
 

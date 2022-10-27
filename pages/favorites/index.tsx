@@ -24,7 +24,13 @@ const FavoritesPage = () => {
   }, [initDefaultFavorite, isSuccess, router, routerWasCalled]);
 
   if (favIsEmpty) {
-    return <div>You do not have favorite snippets yet.</div>;
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <span className="text-gray-400">
+          You do not have a favorite snippet yet
+        </span>
+      </div>
+    );
   }
 
   <div className="flex items-center justify-center w-full h-full">
