@@ -177,7 +177,7 @@ const SnippetCreater = ({
     <>
       <SnippetCreaterHeader onSubmit={handleCreate} onCancel={handleCancel} />
 
-      <form className="flex flex-col mt-12 gap-y-4">
+      <form className="flex flex-col pb-16 mt-12 gap-y-4">
         <div className="flex gap-x-4">
           <FormInput
             label="Title"

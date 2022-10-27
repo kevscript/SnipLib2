@@ -45,7 +45,7 @@ const ListPage = () => {
 
   if (listIsEmpty) {
     return (
-      <div className="flex items-center justify-center w-full h-screen p-16">
+      <div className="flex items-center justify-center w-full h-full">
         <div className="flex flex-col items-center justify-center gap-y-8">
           <p>
             The `

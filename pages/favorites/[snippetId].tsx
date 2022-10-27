@@ -1,4 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
+import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
 import SnippetEditer from "@/components/SnippetEditer";
 import SnippetReader from "@/components/SnippetReader";
@@ -46,7 +47,12 @@ const FavSnippetPage = () => {
   }, [checkFavSnippet, isSuccess, snippetId, snippets]);
 
   if (snippetError) {
-    return <div>ERROR: {snippetError}</div>;
+    return (
+      <ErrorMessage>
+        <span className="text-red-600">Something went wrong</span>
+        <span>Couldn&apos;t find a favorite snippet at this url</span>
+      </ErrorMessage>
+    );
   }
 
   if (!activeSnippet) {

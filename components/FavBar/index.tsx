@@ -15,6 +15,7 @@ const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
           Favorites
         </span>
       </div>
+
       {favSnippets && favSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">
           {favSnippets.map((snippet) => (
@@ -59,9 +60,10 @@ const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
           ))}
         </ul>
       )}
-
       {favSnippets && favSnippets.length === 0 && (
-        <h1>No favorite snippets yet</h1>
+        <div className="w-full p-8 text-sm bg-carbon-400">
+          <span>No favorite snippets yet.</span>
+        </div>
       )}
     </div>
   );
