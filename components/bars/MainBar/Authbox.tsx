@@ -5,8 +5,8 @@ import GithubIcon from "@/components/icons/Github";
 import { useRef, useState } from "react";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import Link from "next/link";
-import SettingsIcon from "../icons/Settings";
-import LogoutIcon from "../icons/Logout";
+import SettingsIcon from "../../icons/Settings";
+import LogoutIcon from "../../icons/Logout";
 
 const Authbox = () => {
   const { data, status } = useSession();

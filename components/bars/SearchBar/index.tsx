@@ -1,8 +1,9 @@
 import Snippet from "@/models/Snippet";
 import { filterMatchingSnippets } from "@/utils/filterMatchingSnippets";
 import { langList } from "@/utils/langList";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import Loader from "../shared/Loader";
+import Loader from "../../shared/Loader";
 import SearchBarHeader from "./SearchBarHeader";
 import SearchSnipItem from "./SearchSnipItem";
 
@@ -33,7 +34,12 @@ const SearchBar = ({
   }, [activeSearchValue, snippets]);
 
   return (
-    <div className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500">
+    <motion.div
+      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <SearchBarHeader searchValue={activeSearchValue} />
 
       {matchingSnippets === null && (
@@ -65,7 +71,7 @@ const SearchBar = ({
           ))}
         </ul>
       )}
-    </div>
+    </motion.div>
   );
 };
 

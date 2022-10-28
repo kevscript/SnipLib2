@@ -3,7 +3,7 @@ import DeleteListWidget from "@/components/widgets/DeleteListWidget";
 import EditListWidget from "@/components/widgets/EditListWidget";
 import List from "@/models/List";
 import Link from "next/link";
-import IconButton from "../shared/IconButton";
+import IconButton from "../../shared/IconButton";
 
 export type ListBarHeaderProps = {
   list: List;
