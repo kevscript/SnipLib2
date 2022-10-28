@@ -12,7 +12,7 @@ import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
 import Link from "next/link";
 
-export type SideBarProps = {
+export type MainBarProps = {
   activeBarMode: BarMode;
   lists: UserData["lists"] | undefined;
   snippets: UserData["snippets"] | undefined;
@@ -22,7 +22,7 @@ export type SideBarProps = {
   updateSearchValue: (val: string) => void;
 };
 
-const SideBar = ({
+const MainBar = ({
   activeBarMode,
   activeListId,
   activeTagLabel,
@@ -30,7 +30,7 @@ const SideBar = ({
   snippets,
   tags,
   updateSearchValue,
-}: SideBarProps) => {
+}: MainBarProps) => {
   return (
     <div className="flex flex-col h-full p-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
@@ -111,4 +111,4 @@ const SideBar = ({
   );
 };
 
-export default SideBar;
+export default MainBar;

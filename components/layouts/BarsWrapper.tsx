@@ -1,9 +1,10 @@
 import { useData } from "@/hooks/useUserData";
-import SideBar from "@/components/SideBar";
-import ListBar from "@/components/ListBar";
-import TagBar from "@/components/TagBar";
-import SearchBar from "../SearchBar";
-import FavBar from "../FavBar";
+import MainBar from "@/components/bars/MainBar";
+import ListBar from "@/components/bars/ListBar";
+import TagBar from "@/components/bars/TagBar";
+import SearchBar from "../bars/SearchBar";
+import FavBar from "../bars/FavBar";
+import { AnimatePresence } from "framer-motion";
 
 export type BarsFilter = "list" | "tag" | "search" | "fav";
 
@@ -28,7 +29,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
   return (
     <div className="flex">
       <div className="flex flex-shrink-0 h-screen flex-nowrap">
-        <SideBar
+        <MainBar
           lists={lists}
           snippets={snippets}
           tags={tags}
@@ -38,36 +39,38 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           updateSearchValue={updateSearchValue}
         />
 
-        <div className="bg-carbon-400">
-          {mode === "list" && (
-            <ListBar
-              lists={lists}
-              snippets={snippets}
-              activeListId={activeListId}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-          {mode === "tag" && (
-            <TagBar
-              tags={tags}
-              snippets={snippets}
-              activeTagLabel={activeTagLabel}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-          {mode === "search" && (
-            <SearchBar
-              snippets={snippets}
-              activeSearchValue={activeSearchValue}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
-          {mode === "fav" && (
-            <FavBar
-              favSnippets={snippets?.filter((s) => s.favorite)}
-              activeSnippetId={activeSnippetId}
-            />
-          )}
+        <div className="bg-carbon-500 w-96">
+          <AnimatePresence>
+            {mode === "list" && (
+              <ListBar
+                lists={lists}
+                snippets={snippets}
+                activeListId={activeListId}
+                activeSnippetId={activeSnippetId}
+              />
+            )}
+            {mode === "tag" && (
+              <TagBar
+                tags={tags}
+                snippets={snippets}
+                activeTagLabel={activeTagLabel}
+                activeSnippetId={activeSnippetId}
+              />
+            )}
+            {mode === "search" && (
+              <SearchBar
+                snippets={snippets}
+                activeSearchValue={activeSearchValue}
+                activeSnippetId={activeSnippetId}
+              />
+            )}
+            {mode === "fav" && (
+              <FavBar
+                favSnippets={snippets?.filter((s) => s.favorite)}
+                activeSnippetId={activeSnippetId}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

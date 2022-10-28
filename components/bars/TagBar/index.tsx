@@ -6,6 +6,7 @@ import Snippet from "@/models/Snippet";
 import { Tag } from "@/hooks/useUserData";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
+import { motion } from "framer-motion";
 
 export type TagBarProps = {
   tags: Tag[] | undefined;
@@ -38,7 +39,12 @@ const TagBar = ({
   }
 
   return (
-    <div className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500">
+    <motion.div
+      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <TagBarHeader label={activeTagLabel} />
 
       {activeTagSnippets && activeTagSnippets.length > 0 && (
@@ -60,7 +66,7 @@ const TagBar = ({
       {activeTagSnippets && activeTagSnippets.length === 0 && (
         <h1>No snippet yet with this Tag</h1>
       )}
-    </div>
+    </motion.div>
   );
 };
 

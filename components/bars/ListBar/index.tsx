@@ -5,6 +5,7 @@ import ListBarHeader from "./ListBarHeader";
 import ListSnipItem from "./ListSnipItem";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
+import { motion } from "framer-motion";
 
 export type ListBarProps = {
   lists: UserData["lists"] | undefined;
@@ -41,7 +42,12 @@ const ListBar = ({
   }
 
   return (
-    <div className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500">
+    <motion.div
+      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+    >
       <ListBarHeader list={activeList} />
 
       {activeListSnippets && activeListSnippets.length > 0 && (
@@ -65,7 +71,7 @@ const ListBar = ({
           <span>No snippet yet in this list.</span>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
