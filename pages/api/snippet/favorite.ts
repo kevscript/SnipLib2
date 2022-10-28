@@ -9,7 +9,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getToken({ req, secret });
 
   if (!user) {
-    throw new Error("Something went wrong with user authentication");
+    throw res
+      .status(500)
+      .json({ message: "User JWT token authentication failed" });
   }
 
   try {
@@ -28,11 +30,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     );
 
-    if (updatedUserData) {
-      return res.status(200).json(req.body);
-    } else {
-      throw new Error("Something went wrong with snippet favorite edition");
+    if (!updatedUserData) {
+      throw res.status(500).json({
+        message: "Something went wrong with snippet favorite edition",
+      });
     }
+
+    return res.status(200).json(req.body);
   } catch (err: any) {
     throw res.status(500).json(err);
   }

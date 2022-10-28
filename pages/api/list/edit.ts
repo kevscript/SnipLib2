@@ -10,44 +10,47 @@ const secret = process.env.NEXTAUTH_SECRET;
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getToken({ req, secret });
 
-  if (user) {
-    try {
-      await clientPromise;
-
-      console.log("reqbody editlist", req.body);
-
-      const listToEdit: List = {
-        ...req.body,
-        _id: new ObjectID(req.body._id),
-        snippetIds: req.body.snippetIds.map((id: string) => new ObjectID(id)),
-      };
-      const valid = List.parse(listToEdit);
-
-      if (valid) {
-        const editedList = await UsersData.findOneAndUpdate(
-          { userId: new ObjectID(user.id) },
-          { $set: { "lists.$[list].label": listToEdit.label } },
-          {
-            arrayFilters: [{ "list._id": listToEdit._id }],
-            returnDocument: "after",
-          }
-        );
-
-        if (editedList) {
-          return res.status(200).json(listToEdit);
-        } else {
-          throw new Error("Somethin went wrong with list edit");
-        }
-      } else {
-        throw new Error("listToEdit is not a valid List");
-      }
-    } catch (err) {
-      throw res.status(500).json(err);
-    }
-  } else {
+  if (!user) {
     throw res
       .status(500)
-      .json({ error: { message: "User authenticating JWT Token was falsy" } });
+      .json({ message: "User JWT token authentication failed" });
+  }
+
+  try {
+    await clientPromise;
+
+    const listToEdit: List = {
+      ...req.body,
+      _id: new ObjectID(req.body._id),
+      snippetIds: req.body.snippetIds.map((id: string) => new ObjectID(id)),
+    };
+
+    const valid = List.parse(listToEdit);
+
+    if (!valid) {
+      throw res
+        .status(500)
+        .json({ message: "req.body is not a valid List object" });
+    }
+
+    const editedList = await UsersData.findOneAndUpdate(
+      { userId: new ObjectID(user.id) },
+      { $set: { "lists.$[list].label": listToEdit.label } },
+      {
+        arrayFilters: [{ "list._id": listToEdit._id }],
+        returnDocument: "after",
+      }
+    );
+
+    if (!editedList) {
+      throw res
+        .status(500)
+        .json({ message: "Something went wrong with list edit" });
+    }
+
+    return res.status(200).json(listToEdit);
+  } catch (err) {
+    throw res.status(500).json(err);
   }
 };
 
