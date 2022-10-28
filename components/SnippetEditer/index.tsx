@@ -1,6 +1,7 @@
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import useEditSnippet from "@/hooks/useEditSnippet";
 import { usePreferences } from "@/hooks/usePreferences";
+import { SnippetSchema, snippetSchema } from "@/lib/validation";
 import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
@@ -78,7 +79,7 @@ const SnippetEditer = ({
     }, []),
   });
 
-  const { mutate: editSnippet, isLoading, isSuccess } = useEditSnippet();
+  const { mutate: editSnippet } = useEditSnippet();
 
   const handleEditSnippet = () => {
     const editedSnippet: Snippet = {
@@ -95,8 +96,26 @@ const SnippetEditer = ({
       updatedAt: Date.now(),
     };
 
-    editSnippet(editedSnippet);
-    triggerReadMode();
+    snippetSchema
+      .validate(editedSnippet, { abortEarly: false })
+      .then((validSnippet) => {
+        editSnippet(validSnippet);
+        triggerReadMode();
+      })
+      .catch((errors) => {
+        if (errors.inner.length > 0) {
+          const formErr = {} as {
+            [key in keyof EditSnippetFormErrors]: string[];
+          };
+
+          errors.inner.forEach((error: any) => {
+            const field: keyof SnippetSchema = error.path;
+            formErr[field] = error.errors;
+          });
+
+          setFormErrors(formErr);
+        }
+      });
   };
 
   const handleForm = (
@@ -110,21 +129,13 @@ const SnippetEditer = ({
   };
 
   const handleTagValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      e.target.value.length > 16 &&
-      formErrors["tag"] &&
-      formErrors["tag"].length === 0
-    ) {
+    if (e.target.value.length > 16 && formErrors["tag"]?.length === 0) {
       setFormErrors((errors) => ({
         ...errors,
         tag: ["Tag can't be longer than 16 characters"],
       }));
     }
-    if (
-      e.target.value.length <= 16 &&
-      formErrors["tag"] &&
-      formErrors["tag"].length > 0
-    ) {
+    if (e.target.value.length <= 16 && formErrors["tag"]?.length > 0) {
       setFormErrors((errors) => ({ ...errors, tag: [] }));
     }
     setForm((x) => ({ ...x, tag: e.target.value }));
@@ -193,9 +204,7 @@ const SnippetEditer = ({
             value={form.title}
             handleValue={(e) => handleForm(e, "title")}
             errors={
-              formErrors["title"] && formErrors["title"].length > 0
-                ? formErrors["title"]
-                : null
+              formErrors["title"]?.length > 0 ? formErrors["title"] : null
             }
             autoFocus
           />
@@ -205,9 +214,7 @@ const SnippetEditer = ({
             value={form.listId}
             handleValue={(e) => handleForm(e, "listId")}
             errors={
-              formErrors["listId"] && formErrors["listId"].length > 0
-                ? formErrors["listId"]
-                : null
+              formErrors["listId"]?.length > 0 ? formErrors["listId"] : null
             }
           >
             {lists &&
@@ -225,7 +232,7 @@ const SnippetEditer = ({
             value={form.description}
             handleValue={(e) => handleForm(e, "description")}
             errors={
-              formErrors["description"] && formErrors["description"].length > 0
+              formErrors["description"]?.length > 0
                 ? formErrors["description"]
                 : null
             }
@@ -236,9 +243,7 @@ const SnippetEditer = ({
             <span className="ml-2 text-sm font-bold">Tags</span>
             <div
               className={`flex flex-nowrap gap-x-2 mt-2 outline-none overflow-hidden rounded-sm border bg-carbon-400 ${
-                formErrors &&
-                formErrors["tags"] &&
-                formErrors["tags"].length > 0
+                formErrors["tags"]?.length > 0
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-transparent focus-within:border-marine-500"
               }`}
@@ -268,14 +273,14 @@ const SnippetEditer = ({
                 disabled={tagsList.length >= 5}
               />
             </div>
-            {formErrors && formErrors["tag"] && (
+            {formErrors["tag"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["tag"].map((err, i) => (
                   <p key={i}>{err}</p>
                 ))}
               </div>
             )}
-            {formErrors && formErrors["tags"] && (
+            {formErrors["tags"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["tags"].map((err, i) => (
                   <p key={i}>{err}</p>
@@ -289,9 +294,7 @@ const SnippetEditer = ({
             value={form.language}
             handleValue={(e) => handleForm(e, "language")}
             errors={
-              formErrors["language"] && formErrors["language"].length > 0
-                ? formErrors["language"]
-                : null
+              formErrors["language"]?.length > 0 ? formErrors["language"] : null
             }
           >
             {langList &&
@@ -308,9 +311,7 @@ const SnippetEditer = ({
 
             <div
               className={`mt-2 border w-full overflow-auto rounded bg-carbon-600 ${
-                formErrors &&
-                formErrors["content"] &&
-                formErrors["content"].length > 0
+                formErrors["content"]?.length > 0
                   ? "border-red-500 focus:border-red-500"
                   : `${isFocused ? "border-marine-500" : "border-transparent"}`
               }`}
@@ -323,7 +324,7 @@ const SnippetEditer = ({
               </p>
               <div ref={container}></div>
             </div>
-            {formErrors && formErrors["content"] && (
+            {formErrors["content"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["content"].map((err, i) => (
                   <p key={i}>{err}</p>
