@@ -26,7 +26,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         if (isNewUser) {
-          console.log("oh! a new user");
           try {
             // wait for mongoDB
             await clientPromise;
@@ -46,7 +45,6 @@ export const authOptions: NextAuthOptions = {
             };
 
             const created = await UsersData.insertOne(initUserData);
-            created && console.log("initialized user data", initUserData);
           } catch (err: any) {
             console.log(err.message);
           }

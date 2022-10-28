@@ -67,7 +67,6 @@ export const useCodeMirror = ({
 
           if (x.docChanged) {
             const currDoc = x.state.doc.toString() as string;
-            console.log(currDoc);
             handleEditorContent && handleEditorContent(currDoc);
           }
         }),
