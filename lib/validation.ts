@@ -6,7 +6,7 @@ const yupTag = yup
   .max(32, "Max tag length : 32 chars")
   .required();
 
-export const createSnippetSchema = yup.object({
+export const snippetSchema = yup.object({
   title: yup.string().required("Title is required").max(80),
   listId: yup.string().required(),
   description: yup.string(),
@@ -15,4 +15,4 @@ export const createSnippetSchema = yup.object({
   content: yup.string().max(1028).required("Snippet is empty"),
 });
 
-export type CreateSnippetSchema = yup.InferType<typeof createSnippetSchema>;
+export type SnippetSchema = yup.InferType<typeof snippetSchema>;

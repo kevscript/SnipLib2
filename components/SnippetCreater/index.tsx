@@ -5,7 +5,7 @@ import CrossIcon from "../icons/Cross";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import Snippet from "@/models/Snippet";
 import { ObjectID } from "bson";
-import { createSnippetSchema, CreateSnippetSchema } from "@/lib/validation";
+import { snippetSchema, SnippetSchema } from "@/lib/validation";
 import FormInput from "../forms/FormInput";
 import FormArea from "../forms/FormArea";
 import FormSelect from "../forms/FormSelect";
@@ -85,21 +85,13 @@ const SnippetCreater = ({
   };
 
   const handleTagValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (
-      e.target.value.length > 16 &&
-      formErrors["tag"] &&
-      formErrors["tag"].length === 0
-    ) {
+    if (e.target.value.length > 16 && formErrors["tag"]?.length === 0) {
       setFormErrors((errors) => ({
         ...errors,
         tag: ["Tag can't be longer than 16 characters"],
       }));
     }
-    if (
-      e.target.value.length <= 16 &&
-      formErrors["tag"] &&
-      formErrors["tag"].length > 0
-    ) {
+    if (e.target.value.length <= 16 && formErrors["tag"]?.length > 0) {
       setFormErrors((errors) => ({ ...errors, tag: [] }));
     }
     setForm((x) => ({ ...x, tag: e.target.value }));
@@ -125,7 +117,7 @@ const SnippetCreater = ({
 
   const handleCreate = () => {
     if (editor.current) {
-      const newSnippet: CreateSnippetSchema = {
+      const newSnippet: SnippetSchema = {
         title: form.title,
         description: form.description,
         listId: form.listId,
@@ -134,7 +126,7 @@ const SnippetCreater = ({
         content: editor.current.state.doc.toString(),
       };
 
-      createSnippetSchema
+      snippetSchema
         .validate(newSnippet, { abortEarly: false })
         .then((validSnippet) => {
           const now = Date.now();
@@ -160,7 +152,7 @@ const SnippetCreater = ({
             };
 
             errors.inner.forEach((error: any) => {
-              const field: keyof CreateSnippetSchema = error.path;
+              const field: keyof SnippetSchema = error.path;
               formErr[field] = error.errors;
             });
 
@@ -202,9 +194,7 @@ const SnippetCreater = ({
             value={form.listId}
             handleValue={(e) => handleForm(e, "listId")}
             errors={
-              formErrors["listId"] && formErrors["listId"].length > 0
-                ? formErrors["listId"]
-                : null
+              formErrors["listId"]?.length > 0 ? formErrors["listId"] : null
             }
           >
             {lists &&
@@ -222,7 +212,7 @@ const SnippetCreater = ({
             value={form.description}
             handleValue={(e) => handleForm(e, "description")}
             errors={
-              formErrors["description"] && formErrors["description"].length > 0
+              formErrors["description"]?.length > 0
                 ? formErrors["description"]
                 : null
             }
@@ -233,9 +223,7 @@ const SnippetCreater = ({
             <span className="ml-2 text-sm font-bold">Tags</span>
             <div
               className={`flex flex-nowrap gap-x-2 mt-2 outline-none overflow-hidden rounded-sm border bg-carbon-400 ${
-                formErrors &&
-                formErrors["tags"] &&
-                formErrors["tags"].length > 0
+                formErrors["tags"]?.length > 0
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-transparent focus-within:border-marine-500"
               }`}
@@ -265,14 +253,14 @@ const SnippetCreater = ({
                 disabled={tagsList.length >= 5}
               />
             </div>
-            {formErrors && formErrors["tag"] && (
+            {formErrors["tag"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["tag"].map((err, i) => (
                   <p key={i}>{err}</p>
                 ))}
               </div>
             )}
-            {formErrors && formErrors["tags"] && (
+            {formErrors["tags"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
                 {formErrors["tags"].map((err, i) => (
                   <p key={i}>{err}</p>
@@ -286,9 +274,7 @@ const SnippetCreater = ({
             value={form.language}
             handleValue={(e) => handleForm(e, "language")}
             errors={
-              formErrors["language"] && formErrors["language"].length > 0
-                ? formErrors["language"]
-                : null
+              formErrors["language"]?.length > 0 ? formErrors["language"] : null
             }
           >
             {langList &&
@@ -306,9 +292,7 @@ const SnippetCreater = ({
 
               <div
                 className={`mt-2 border w-full overflow-auto rounded bg-carbon-600 ${
-                  formErrors &&
-                  formErrors["content"] &&
-                  formErrors["content"].length > 0
+                  formErrors["content"]?.length > 0
                     ? "border-red-500 focus:border-red-500"
                     : `${
                         isFocused ? "border-marine-500" : "border-transparent"
