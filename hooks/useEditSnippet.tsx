@@ -25,6 +25,7 @@ const useEditSnippet = () => {
 
           if (snippetToEditIdx < 0) {
             console.log("error snippetToEditIdx is < 0");
+            return { previousData };
           }
 
           if (
