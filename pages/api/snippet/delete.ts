@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!user) {
     throw res
       .status(500)
-      .json({ error: { message: "User authenticating JWT Token was falsy" } });
+      .json({ message: "User JWT token authentication failed" });
   }
 
   try {
@@ -41,11 +41,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     );
 
-    if (deletedSnippet) {
-      return res.status(200).json(snippetToDelete);
-    } else {
-      throw new Error("Something went wrong with snippet deletion");
+    if (!deletedSnippet) {
+      throw res
+        .status(500)
+        .json({ message: "Something went wrong with snippet deletion" });
     }
+
+    return res.status(200).json(snippetToDelete);
   } catch (err: any) {
     throw res.status(500).json(err);
   }

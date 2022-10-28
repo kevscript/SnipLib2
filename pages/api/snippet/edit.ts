@@ -10,7 +10,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getToken({ req, secret });
 
   if (!user) {
-    throw new Error("Something went wrong with user authentication");
+    throw res
+      .status(500)
+      .json({ message: "User JWT token authentication failed" });
   }
 
   const editSnippet: Snippet = {
@@ -22,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // check if body is valid snippet
   const valid = Snippet.parse(editSnippet);
   if (!valid) {
-    throw new Error("The Edited snippet is not Valid");
+    throw res.status(500).json({ message: "The Edited snippet is not Valid" });
   }
 
   try {
@@ -32,7 +34,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (!prevUserData) {
-      throw new Error("No data found for user with id" + user.id);
+      throw res
+        .status(500)
+        .json({ message: "No data found for user with id" + user.id });
     }
 
     const newUserData = { ...prevUserData };
@@ -43,7 +47,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     if (prevSnippetIndex < 0) {
-      throw new Error("updating process - no corresponding prevSnippet found");
+      throw res.status(500).json({
+        message: "updating process - no corresponding prevSnippet found",
+      });
     }
 
     // check if listId of snippet was changed
@@ -66,9 +72,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
         newList.snippetIds.push(editSnippet._id);
       } else {
-        throw new Error(
-          "ListId of edited snippet changed - could not find the old/new list"
-        );
+        throw res.status(500).json({
+          message:
+            "ListId of edited snippet changed - could not find the old/new list",
+        });
       }
     }
 
@@ -81,11 +88,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
       { $set: newUserData }
     );
-    if (editedData) {
-      return res.status(200).json(editSnippet);
-    } else {
-      throw new Error("Something went wrong with snippet edition");
+
+    if (!editedData) {
+      throw res
+        .status(500)
+        .json({ message: "Something went wrong with snippet edition" });
     }
+
+    return res.status(200).json(editSnippet);
   } catch (err) {
     throw res.status(500).json(err);
   }
