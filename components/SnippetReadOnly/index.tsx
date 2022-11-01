@@ -5,8 +5,7 @@ import { langList, LanguageIds } from "@/utils/langList";
 import timeSince from "@/utils/timeSince";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Button from "../shared/Button";
-import SnippetReaderHeader from "./SnippetReaderHeader";
+import SnippetReadOnlyHeader from "./SnippetReadOnlyHeader";
 
 type SnippetReaderProps = {
   snippet: Snippet;
@@ -33,7 +32,7 @@ const SnippetReader = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
     >
-      <SnippetReaderHeader
+      <SnippetReadOnlyHeader
         snippet={snippet}
         triggerEditMode={triggerEditMode}
         toggleFavorite={toggleFavorite}

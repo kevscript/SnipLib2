@@ -4,20 +4,19 @@ import CopyIcon from "../icons/Copy";
 import EditIcon from "../icons/Edit";
 import FavoriteIcon from "../icons/Favorite";
 import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
-import ReactTooltip from "react-tooltip";
 import IconButton from "../shared/IconButton";
 
-type SnippetHeaderProps = {
+type SnippetReadOnlyHeaderProps = {
   snippet: Snippet;
   triggerEditMode: () => void;
   toggleFavorite: () => void;
 };
 
-const SnippetHeader = ({
+const SnippetReadOnlyHeader = ({
   snippet,
   triggerEditMode,
   toggleFavorite,
-}: SnippetHeaderProps) => {
+}: SnippetReadOnlyHeaderProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
@@ -74,4 +73,4 @@ const SnippetHeader = ({
   );
 };
 
-export default SnippetHeader;
+export default SnippetReadOnlyHeader;

@@ -2,19 +2,19 @@ import Snippet from "@/models/Snippet";
 import Button from "../shared/Button";
 import EditSnippetWidget from "../widgets/EditSnippetWidget";
 
-type SnippetHeaderProps = {
+type SnippetFormEditHeaderProps = {
   snippet: Snippet;
   onSubmit: () => void;
   onCancel: () => void;
   onReset: () => void;
 };
 
-const SnippetHeader = ({
+const SnippetFormEditHeader = ({
   snippet,
   onSubmit,
   onCancel,
   onReset,
-}: SnippetHeaderProps) => {
+}: SnippetFormEditHeaderProps) => {
   return (
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
@@ -31,4 +31,4 @@ const SnippetHeader = ({
   );
 };
 
-export default SnippetHeader;
+export default SnippetFormEditHeader;

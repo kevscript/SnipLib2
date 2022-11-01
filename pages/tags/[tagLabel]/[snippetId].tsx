@@ -1,8 +1,9 @@
+import SnippetForm from "@/components/forms/SnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
-import SnippetEditer from "@/components/SnippetEditer";
-import SnippetReader from "@/components/SnippetReader";
+import SnippetReader from "@/components/SnippetReadOnly";
+import useEditSnippet from "@/hooks/useEditSnippet";
 import useFavSnippet from "@/hooks/useFavSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
@@ -12,7 +13,8 @@ import { useEffect, useState } from "react";
 const TagSnippetPage = () => {
   const router = useRouter();
   const { tagLabel, snippetId } = router.query;
-  const { isSuccess, snippets, checkTagSnippet, tags, lists } = useData();
+  const { isSuccess, snippets, checkTagSnippet, tags, lists, activeListId } =
+    useData();
 
   const [snippetError, setSnippetError] = useState<string | null>(null);
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
@@ -20,6 +22,7 @@ const TagSnippetPage = () => {
   const [mode, setMode] = useState<"read" | "edit">("read");
 
   const { mutate: favSnippet } = useFavSnippet({});
+  const { mutate: editSnippet } = useEditSnippet();
 
   const toggleFavorite = () => {
     if (activeSnippet) {
@@ -28,6 +31,11 @@ const TagSnippetPage = () => {
         favorite: !activeSnippet.favorite,
       });
     }
+  };
+
+  const handleSnippetEdit = (s: Snippet) => {
+    editSnippet(s);
+    setMode("read");
   };
 
   useEffect(() => {
@@ -78,10 +86,12 @@ const TagSnippetPage = () => {
         />
       )}
       {mode === "edit" && (
-        <SnippetEditer
+        <SnippetForm
           snippet={activeSnippet}
+          activeListId={activeListId}
           lists={lists || []}
-          triggerReadMode={() => setMode("read")}
+          onCancel={() => setMode("read")}
+          onSubmit={handleSnippetEdit}
         />
       )}
     </div>

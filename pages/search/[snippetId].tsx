@@ -1,8 +1,9 @@
+import SnippetForm from "@/components/forms/SnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
-import SnippetEditer from "@/components/SnippetEditer";
-import SnippetReader from "@/components/SnippetReader";
+import SnippetReader from "@/components/SnippetReadOnly";
+import useEditSnippet from "@/hooks/useEditSnippet";
 import useFavSnippet from "@/hooks/useFavSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
@@ -18,6 +19,7 @@ const SearchSnippetPage = () => {
     activeSearchValue,
     initOriginalList,
     checkSearchSnippet,
+    activeListId,
     lists,
   } = useData();
 
@@ -28,6 +30,7 @@ const SearchSnippetPage = () => {
   const [mode, setMode] = useState<"read" | "edit">("read");
 
   const { mutate: favSnippet } = useFavSnippet({});
+  const { mutate: editSnippet } = useEditSnippet();
 
   const toggleFavorite = () => {
     if (activeSnippet) {
@@ -36,6 +39,11 @@ const SearchSnippetPage = () => {
         favorite: !activeSnippet.favorite,
       });
     }
+  };
+
+  const handleSnippetEdit = (s: Snippet) => {
+    editSnippet(s);
+    setMode("read");
   };
 
   useEffect(() => {
@@ -96,10 +104,12 @@ const SearchSnippetPage = () => {
         />
       )}
       {mode === "edit" && (
-        <SnippetEditer
+        <SnippetForm
           snippet={activeSnippet}
+          activeListId={activeListId}
           lists={lists || []}
-          triggerReadMode={() => setMode("read")}
+          onCancel={() => setMode("read")}
+          onSubmit={handleSnippetEdit}
         />
       )}
     </div>

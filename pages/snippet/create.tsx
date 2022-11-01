@@ -2,31 +2,8 @@ import BarsWrapper from "@/components/layouts/BarsWrapper";
 import { useCreateSnippet } from "@/hooks/useCreateSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
-import { langList } from "@/utils/langList";
 import { useRouter } from "next/router";
-import SnippetCreater, {
-  CreateSnippetFormErrors,
-  CreateSnippetFormState,
-} from "@/components/SnippetCreater";
-
-const initFormValues: CreateSnippetFormState = {
-  title: "",
-  description: "",
-  listId: "",
-  tag: "",
-  language: "javascript",
-  content: "",
-};
-
-const initFormErrors: CreateSnippetFormErrors = {
-  title: [],
-  listId: [],
-  description: [],
-  tag: [],
-  tags: [],
-  language: [],
-  content: [],
-};
+import SnippetForm from "@/components/forms/SnippetForm";
 
 const CreateSnippetPage = () => {
   const router = useRouter();
@@ -51,16 +28,33 @@ const CreateSnippetPage = () => {
 
   return (
     <>
-      {lists && langList && (
-        <SnippetCreater
-          activeListId={activeListId}
-          initFormValues={initFormValues}
-          initFormErrors={initFormErrors}
-          langList={langList}
-          lists={lists}
-          createSnippet={createSnippet}
-        />
-      )}
+      {/* <div className="flex items-center justify-between flex-1">
+        <div className="flex text-xs font-bold gap-x-2">
+          <span className="uppercase text-carbon-300">Create</span>
+          <span>/</span>
+          <span>New Snippet</span>
+        </div>
+        <div className="flex flex-nowrap gap-x-4">
+          <Button
+            label="Create"
+            variety="primary"
+            form="create-snippet"
+            type="submit"
+          />
+          <Button
+            label="Cancel"
+            variety="secondary"
+            onClick={() => router.back()}
+          />
+        </div>
+      </div> */}
+
+      <SnippetForm
+        activeListId={activeListId}
+        lists={lists || []}
+        onSubmit={createSnippet}
+        onCancel={() => router.back()}
+      />
     </>
   );
 };

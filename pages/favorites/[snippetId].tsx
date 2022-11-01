@@ -1,8 +1,9 @@
+import SnippetForm from "@/components/forms/SnippetForm";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
-import SnippetEditer from "@/components/SnippetEditer";
-import SnippetReader from "@/components/SnippetReader";
+import SnippetReader from "@/components/SnippetReadOnly";
+import useEditSnippet from "@/hooks/useEditSnippet";
 import useFavSnippet from "@/hooks/useFavSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
@@ -12,7 +13,8 @@ import { useEffect, useState } from "react";
 const FavSnippetPage = () => {
   const router = useRouter();
   const { snippetId } = router.query;
-  const { isSuccess, snippets, lists, checkFavSnippet } = useData();
+  const { isSuccess, snippets, lists, checkFavSnippet, activeListId } =
+    useData();
 
   const [snippetError, setSnippetError] = useState<string | null>(null);
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
@@ -22,6 +24,12 @@ const FavSnippetPage = () => {
   const { mutate: favSnippet } = useFavSnippet({
     onQuerySettled: () => router.replace("/favorites"),
   });
+  const { mutate: editSnippet } = useEditSnippet();
+
+  const handleSnippetEdit = (s: Snippet) => {
+    editSnippet(s);
+    setMode("read");
+  };
 
   const toggleFavorite = () => {
     if (activeSnippet) {
@@ -73,10 +81,12 @@ const FavSnippetPage = () => {
         />
       )}
       {mode === "edit" && (
-        <SnippetEditer
+        <SnippetForm
           snippet={activeSnippet}
+          activeListId={activeListId}
           lists={lists || []}
-          triggerReadMode={() => setMode("read")}
+          onCancel={() => setMode("read")}
+          onSubmit={handleSnippetEdit}
         />
       )}
     </div>

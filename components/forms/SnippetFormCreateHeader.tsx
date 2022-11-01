@@ -1,14 +1,14 @@
 import Link from "next/link";
 import Button from "../shared/Button";
 
-type SnippetCreaterHeaderProps = {
+type SnippetFormCreateHeaderProps = {
   onSubmit: () => void;
   onCancel: () => void;
 };
-const SnippetCreaterHeader = ({
+const SnippetFormCreateHeader = ({
   onSubmit,
   onCancel,
-}: SnippetCreaterHeaderProps) => {
+}: SnippetFormCreateHeaderProps) => {
   return (
     <div className="flex items-center justify-between flex-1">
       <div className="flex text-xs font-bold gap-x-2">
@@ -24,4 +24,4 @@ const SnippetCreaterHeader = ({
   );
 };
 
-export default SnippetCreaterHeader;
+export default SnippetFormCreateHeader;
