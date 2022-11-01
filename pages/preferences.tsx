@@ -61,7 +61,7 @@ const PreferencesPage = () => {
   };
 
   return (
-    <div className="w-full p-16">
+    <>
       <div className="flex items-center justify-between flex-1">
         <div className="flex text-xs font-bold gap-x-2">
           <span className="uppercase text-carbon-300">Preferences</span>
@@ -86,7 +86,7 @@ const PreferencesPage = () => {
 
       <section className="w-full mt-12">
         <h3 className="font-bold">Editor Settings</h3>
-        <div className="w-full h-[1px] bg-carbon-300 mt-2" />
+        <div className="w-full h-[1px] bg-carbon-400 mt-2" />
         {editorForm && editorFormErrors && (
           <div className="flex flex-wrap gap-4 mt-8">
             <FormSelect
@@ -138,13 +138,13 @@ const PreferencesPage = () => {
       </section>
 
       <div ref={container} className="mt-8"></div>
-    </div>
+    </>
   );
 };
 
 PreferencesPage.authRequired = true;
 PreferencesPage.getLayout = (page: React.ReactElement) => {
-  return <BarsWrapper mode="list">{page}</BarsWrapper>;
+  return <BarsWrapper>{page}</BarsWrapper>;
 };
 
 export default PreferencesPage;
