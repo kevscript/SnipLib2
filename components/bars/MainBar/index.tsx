@@ -1,16 +1,14 @@
 import { BarMode, Tag } from "@/hooks/useUserData";
 import { UserData } from "models/UserData";
-import React from "react";
-import FavoriteIcon from "@/components/icons/Favorite";
 import FolderIcon from "@/components/icons/Folder";
 import TagIcon from "@/components/icons/Tag";
 import Switcher from "@/components/shared/Switcher";
 import CreateListWidget from "@/components/widgets/CreateListWidget";
 import Authbox from "./Authbox";
-import Lists from "./Lists";
 import Searchbox from "./Searchbox";
 import TagsList from "./TagsList";
-import Link from "next/link";
+import FavLink from "./FavLink";
+import ListItem from "./ListItem";
 
 export type MainBarProps = {
   activeBarMode: BarMode;
@@ -41,33 +39,12 @@ const MainBar = ({
       <Searchbox updateSearchValue={updateSearchValue} />
 
       <div className="flex-1 my-8 overflow-y-auto">
-        <Link href="/favorites">
-          <div className="flex items-center justify-between cursor-pointer flex-nowrap group">
-            <div className="flex items-center flex-nowrap">
-              <FavoriteIcon className="w-4 h-4 stroke-marine fill-transparent" />
-              <span
-                className={`ml-4 text-xs font-bold uppercase ${
-                  activeBarMode === "fav"
-                    ? "text-white"
-                    : "text-carbon-300 group-hover:text-white"
-                }`}
-              >
-                Favorites
-              </span>
-            </div>
-            <div className="flex justify-center w-6">
-              <span
-                className={`text-sm ${
-                  activeBarMode === "fav"
-                    ? "text-white"
-                    : "text-carbon-300 group-hover:text-white"
-                }`}
-              >
-                {snippets?.filter((s) => s.favorite === true).length}
-              </span>
-            </div>
-          </div>
-        </Link>
+        <FavLink
+          isActive={activeBarMode === "fav"}
+          snippetsAmount={
+            snippets?.filter((s) => s.favorite === true).length || 0
+          }
+        />
 
         <div className="flex items-center justify-between w-full mt-8 overflow-hidden flex-nowrap">
           <div className="flex items-center flex-nowrap">
@@ -84,11 +61,22 @@ const MainBar = ({
         </div>
 
         {lists && snippets && (
-          <Lists
-            lists={lists}
-            snippets={snippets}
-            activeListId={activeBarMode === "list" ? activeListId : ""}
-          />
+          <ul className="flex flex-col justify-start flex-shrink-0 w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
+            {lists.map((list, i) => (
+              <ListItem
+                key={list._id.toString()}
+                first={i === 0}
+                label={list.label}
+                amount={
+                  snippets.filter(
+                    (s) => s.listId.toString() === list._id.toString()
+                  ).length
+                }
+                active={list._id.toString() === activeListId}
+                path={`lists/${list._id.toString()}`}
+              />
+            ))}
+          </ul>
         )}
 
         <div className="flex items-center justify-between mt-8 flex-nowrap">

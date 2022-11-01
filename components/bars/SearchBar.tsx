@@ -3,9 +3,9 @@ import { filterMatchingSnippets } from "@/utils/filterMatchingSnippets";
 import { langList } from "@/utils/langList";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import Loader from "../../shared/Loader";
-import SearchBarHeader from "./SearchBarHeader";
-import SearchSnipItem from "./SearchSnipItem";
+import Loader from "../shared/Loader";
+import BarHeaderWrapper from "./BarHeaderWrapper";
+import SnipItem from "./SnipItem";
 
 export type SearchBarProps = {
   activeSearchValue: string;
@@ -35,12 +35,12 @@ const SearchBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
     >
-      <SearchBarHeader searchValue={activeSearchValue} />
+      <BarHeaderWrapper title="search" label={activeSearchValue} />
 
       {matchingSnippets === null && (
         <div className="flex items-center justify-start w-full h-16 px-8">
@@ -60,13 +60,12 @@ const SearchBar = ({
       {matchingSnippets && matchingSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">
           {matchingSnippets.map((snippet, i) => (
-            <SearchSnipItem
+            <SnipItem
               key={snippet._id.toString()}
               snippet={snippet}
               isActive={activeSnippetId === snippet._id.toString()}
-              color={
-                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
-              }
+              path={`/search/${snippet._id.toString()}`}
+              color={langList.find((l) => l.id === snippet.language)?.color}
             />
           ))}
         </ul>
