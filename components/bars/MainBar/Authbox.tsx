@@ -26,7 +26,8 @@ const Authbox = () => {
   if (data && data.user && status === "authenticated") {
     return (
       <div
-        className="flex items-center justify-between flex-shrink-0 w-full mt-auto flex-nowrap"
+        className="flex items-center justify-between flex-shrink-0 w-full mt-auto cursor-pointer flex-nowrap group"
+        onClick={() => setMenuIsOpen((x) => !x)}
         ref={clickContainerRef}
       >
         <div className="flex flex-nowrap">
@@ -35,13 +36,10 @@ const Authbox = () => {
           </div>
           <div className="flex flex-col justify-center ml-4">
             <span className="font-bold">{data.user.name}</span>
-            <span className="text-xs">{data.user.email}</span>
+            <span className="text-xs text-carbon-300">{data.user.email}</span>
           </div>
         </div>
-        <div
-          className="flex items-center justify-center w-6 h-full cursor-pointer group"
-          onClick={() => setMenuIsOpen((x) => !x)}
-        >
+        <div className="flex items-center justify-center w-6 h-full cursor-pointer">
           <MoreIcon
             className={`w-4 ${
               menuIsOpen ? "stroke-white" : "stroke-carbon-300"
@@ -54,7 +52,10 @@ const Authbox = () => {
               <Link href="/preferences">
                 <li
                   className="flex items-center w-full h-10 px-4 transition-all border-b cursor-pointer hover:bg-carbon-600 gap-x-2 border-carbon-400"
-                  onClick={() => setMenuIsOpen(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuIsOpen((x) => !x);
+                  }}
                 >
                   <SettingsIcon className="w-3.5 h-3.5" />
                   <span>Preferences</span>
