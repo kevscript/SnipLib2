@@ -1,76 +1,108 @@
-import { LanguageIds, LanguageListItem } from "@/utils/langList";
-import { useCallback, useState } from "react";
-import List from "@/models/List";
-import CrossIcon from "../icons/Cross";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
-import Snippet from "@/models/Snippet";
-import { ObjectID } from "bson";
-import { snippetSchema, SnippetSchema } from "@/lib/validation";
-import FormInput from "../forms/FormInput";
-import FormArea from "../forms/FormArea";
-import FormSelect from "../forms/FormSelect";
-import SnippetCreaterHeader from "./SnippetCreaterHeader";
-import { useRouter } from "next/router";
 import { usePreferences } from "@/hooks/usePreferences";
-import { motion } from "framer-motion";
+import { snippetFormSchema, SnippetFormSchema } from "@/lib/validation";
+import List from "@/models/List";
+import Snippet from "@/models/Snippet";
+import { langList, LanguageIds } from "@/utils/langList";
+import { ObjectID } from "bson";
+import { useCallback, useState } from "react";
+import CrossIcon from "../icons/Cross";
+import SnippetFormCreateHeader from "./SnippetFormCreateHeader";
+import SnippetFormEditHeader from "./SnippetFormEditHeader";
+import FormArea from "./FormArea";
+import FormInput from "./FormInput";
+import FormSelect from "./FormSelect";
 
-export type CreateSnippetFormState = {
+export type SnippetFormState = {
   title: string;
   description: string;
   listId: string;
   tag: string;
+  tags: string[];
   language: LanguageIds;
   content: string;
 };
 
-export type CreateSnippetFormErrors = {
+export type Snippeterrors = {
+  _id: string[];
   title: string[];
-  listId: string[];
   description: string[];
+  listId: string[];
   tag: string[];
   tags: string[];
   language: string[];
   content: string[];
+  createdAt: string[];
+  updatedAt: string[];
+  favorite: string[];
+  public: string[];
 };
 
-export type CreateSnippetFormProps = {
-  initFormValues: CreateSnippetFormState;
-  initFormErrors: CreateSnippetFormErrors;
+export type SnippetFormProps = {
+  snippet?: Snippet;
   activeListId: string;
+  onSubmit: (s: Snippet) => unknown;
+  onCancel: () => unknown;
   lists: List[];
-  langList: readonly LanguageListItem[];
-  createSnippet: (newSnippet: Snippet) => void;
 };
 
-const SnippetCreater = ({
-  initFormValues,
-  initFormErrors,
+const initSnippetForm: SnippetFormState = {
+  title: "",
+  description: "",
+  listId: "",
+  tag: "",
+  tags: [],
+  language: "javascript",
+  content: "",
+};
+
+const initSnippetErrors: Snippeterrors = {
+  _id: [],
+  title: [],
+  description: [],
+  listId: [],
+  tag: [],
+  tags: [],
+  language: [],
+  content: [],
+  createdAt: [],
+  updatedAt: [],
+  favorite: [],
+  public: [],
+};
+
+const SnippetForm = ({
+  snippet,
   activeListId,
+  onSubmit,
+  onCancel,
   lists,
-  langList,
-  createSnippet,
-}: CreateSnippetFormProps) => {
-  const router = useRouter();
+}: SnippetFormProps) => {
+  const [form, setForm] = useState<SnippetFormState>(() =>
+    snippet
+      ? {
+          listId: snippet.listId.toString(),
+          content: snippet.content,
+          description: snippet.description,
+          language: snippet.language as LanguageIds,
+          tag: "",
+          tags: snippet.tags,
+          title: snippet.title,
+        }
+      : { ...initSnippetForm, listId: activeListId }
+  );
+
+  const [errors, setErrors] = useState<Snippeterrors>(initSnippetErrors);
 
   const { preferences } = usePreferences();
 
-  const [form, setForm] = useState({
-    ...initFormValues,
-    listId: activeListId,
-  });
-
-  const [formErrors, setFormErrors] = useState<{
-    [key in keyof CreateSnippetFormErrors]: string[];
-  }>(initFormErrors);
-
-  const [tagsList, setTagsList] = useState<string[]>([]);
-
-  const { editor, container, isFocused } = useCodeMirror({
+  const { editor, container, isFocused, setDoc } = useCodeMirror({
+    doc: snippet ? snippet.content : undefined,
     lang: form.language,
     preferences: preferences,
     handleEditorContent: useCallback((value: string) => {
       setForm((x) => ({ ...x, ["content"]: value }));
-      setFormErrors((x) => ({ ...x, ["content"]: [] }));
+      setErrors((x) => ({ ...x, ["content"]: [] }));
     }, []),
   });
 
@@ -78,102 +110,122 @@ const SnippetCreater = ({
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >,
-    key: keyof CreateSnippetFormState
+    key: keyof SnippetFormState
   ) => {
     setForm((x) => ({ ...x, [key]: e.target.value }));
-    setFormErrors((x) => ({ ...x, [key]: [] }));
+    setErrors((x) => ({ ...x, [key]: [] }));
   };
 
   const handleTagValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 16 && formErrors["tag"]?.length === 0) {
-      setFormErrors((errors) => ({
+    if (e.target.value.length > 16 && errors["tag"]?.length === 0) {
+      setErrors((errors) => ({
         ...errors,
         tag: ["Tag can't be longer than 16 characters"],
       }));
     }
-    if (e.target.value.length <= 16 && formErrors["tag"]?.length > 0) {
-      setFormErrors((errors) => ({ ...errors, tag: [] }));
+    if (e.target.value.length <= 16 && errors["tag"]?.length > 0) {
+      setErrors((errors) => ({ ...errors, tag: [] }));
     }
     setForm((x) => ({ ...x, tag: e.target.value }));
   };
 
   const handleTagAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && formErrors["tag"].length === 0) {
+    if (e.key === "Enter" && errors["tag"].length === 0) {
       const tagValue = form.tag.trim();
-      if (tagValue && !tagsList.includes(tagValue) && tagsList.length < 5) {
-        tagsList.push(tagValue);
-        setForm((x) => ({ ...x, tag: "" } as CreateSnippetFormState));
-        setFormErrors((x) => ({ ...x, ["tags"]: [] }));
+      if (tagValue && !form.tags.includes(tagValue) && form.tags.length < 5) {
+        setForm((x) => ({ ...x, tags: [...x.tags, tagValue], tag: "" }));
+        setErrors((x) => ({ ...x, tags: [] }));
       }
     }
   };
 
   const handleTagRemove = (tag: string) => {
-    if (tagsList.includes(tag)) {
-      const newTagList = tagsList.filter((t) => t !== tag);
-      setTagsList(newTagList);
+    if (form.tags.includes(tag)) {
+      setForm((x) => ({ ...x, tags: x.tags.filter((t) => t !== tag) }));
     }
   };
 
-  const handleCreate = () => {
+  const handleReset = () => {
+    if (snippet) {
+      const resettedValues: SnippetFormState = {
+        title: snippet.title,
+        description: snippet.description,
+        language: snippet.language as LanguageIds,
+        listId: snippet.listId.toString(),
+        tag: "",
+        tags: snippet.tags,
+        content: snippet.content,
+      };
+
+      setForm(resettedValues);
+      setErrors(initSnippetErrors);
+
+      setDoc(snippet.content);
+    }
+  };
+
+  const handleCancel = () => {
+    onCancel();
+  };
+
+  const handleSubmit = () => {
     if (editor.current) {
-      const newSnippet: SnippetSchema = {
+      const currentSnippet: SnippetFormSchema = {
+        listId: form.listId,
         title: form.title,
         description: form.description,
-        listId: form.listId,
         language: form.language,
-        tags: tagsList,
+        tags: form.tags,
         content: editor.current.state.doc.toString(),
       };
 
-      snippetSchema
-        .validate(newSnippet, { abortEarly: false })
+      snippetFormSchema
+        .validate(currentSnippet, { abortEarly: false })
         .then((validSnippet) => {
           const now = Date.now();
-          const newSnippet: Snippet = {
-            _id: new ObjectID(),
+          const formattedSnippet: Snippet = {
+            ...validSnippet,
+            _id: snippet ? new ObjectID(snippet._id) : new ObjectID(),
             listId: new ObjectID(validSnippet.listId),
-            title: validSnippet.title,
-            description: validSnippet.description || "",
-            language: validSnippet.language,
-            tags: validSnippet.tags || [],
-            content: validSnippet.content,
-            favorite: false,
-            public: false,
-            createdAt: now,
+            favorite: snippet ? snippet.favorite : false,
+            public: snippet ? snippet.public : false,
+            createdAt: snippet ? snippet.createdAt : now,
             updatedAt: now,
           };
-          createSnippet(newSnippet);
+          onSubmit(formattedSnippet);
         })
         .catch((errors) => {
           if (errors.inner.length > 0) {
             const formErr = {} as {
-              [key in keyof CreateSnippetFormErrors]: string[];
+              [key in keyof Snippeterrors]: string[];
             };
 
             errors.inner.forEach((error: any) => {
-              const field: keyof SnippetSchema = error.path;
+              const field: keyof SnippetFormSchema = error.path;
               formErr[field] = error.errors;
             });
 
-            setFormErrors(formErr);
+            setErrors(formErr);
           }
         });
     }
   };
 
-  const handleCancel = () => {
-    router.back();
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-    >
-      <SnippetCreaterHeader onSubmit={handleCreate} onCancel={handleCancel} />
-
+    <>
+      {snippet ? (
+        <SnippetFormEditHeader
+          snippet={snippet}
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+          onReset={handleReset}
+        />
+      ) : (
+        <SnippetFormCreateHeader
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+        />
+      )}
       <form className="flex flex-col pb-16 mt-12 gap-y-4">
         <div className="flex gap-x-4">
           <FormInput
@@ -182,8 +234,8 @@ const SnippetCreater = ({
             value={form.title}
             handleValue={(e) => handleForm(e, "title")}
             errors={
-              formErrors["title"] && formErrors["title"].length > 0
-                ? formErrors["title"]
+              errors["title"] && errors["title"].length > 0
+                ? errors["title"]
                 : null
             }
             autoFocus
@@ -193,9 +245,7 @@ const SnippetCreater = ({
             name="listId"
             value={form.listId}
             handleValue={(e) => handleForm(e, "listId")}
-            errors={
-              formErrors["listId"]?.length > 0 ? formErrors["listId"] : null
-            }
+            errors={errors["listId"]?.length > 0 ? errors["listId"] : null}
           >
             {lists &&
               lists.map((list) => (
@@ -212,9 +262,7 @@ const SnippetCreater = ({
             value={form.description}
             handleValue={(e) => handleForm(e, "description")}
             errors={
-              formErrors["description"]?.length > 0
-                ? formErrors["description"]
-                : null
+              errors["description"]?.length > 0 ? errors["description"] : null
             }
           />
         </div>
@@ -223,14 +271,14 @@ const SnippetCreater = ({
             <span className="ml-2 text-sm font-bold">Tags</span>
             <div
               className={`flex flex-nowrap gap-x-2 mt-2 outline-none overflow-hidden rounded-sm border bg-carbon-400 ${
-                formErrors["tags"]?.length > 0
+                errors["tags"]?.length > 0
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-transparent focus-within:border-marine-500"
               }`}
             >
-              {tagsList.length > 0 && (
+              {form.tags.length > 0 && (
                 <ul className="flex items-center">
-                  {tagsList.map((tag) => (
+                  {form.tags.map((tag) => (
                     <li
                       key={tag}
                       className="flex items-center justify-center h-8 px-1.5 ml-1 rounded-sm bg-marine-500 flex-nowrap gap-x-2 cursor-pointer"
@@ -250,19 +298,19 @@ const SnippetCreater = ({
                 onChange={handleTagValueChange}
                 onKeyDown={(e) => handleTagAdd(e)}
                 className="w-full h-10 px-2 bg-transparent border-none outline-none"
-                disabled={tagsList.length >= 5}
+                disabled={form.tags.length >= 5}
               />
             </div>
-            {formErrors["tag"]?.length > 0 && (
+            {errors["tag"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["tag"].map((err, i) => (
+                {errors["tag"].map((err, i) => (
                   <p key={i}>{err}</p>
                 ))}
               </div>
             )}
-            {formErrors["tags"]?.length > 0 && (
+            {errors["tags"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
-                {formErrors["tags"].map((err, i) => (
+                {errors["tags"].map((err, i) => (
                   <p key={i}>{err}</p>
                 ))}
               </div>
@@ -273,9 +321,7 @@ const SnippetCreater = ({
             name="language"
             value={form.language}
             handleValue={(e) => handleForm(e, "language")}
-            errors={
-              formErrors["language"]?.length > 0 ? formErrors["language"] : null
-            }
+            errors={errors["language"]?.length > 0 ? errors["language"] : null}
           >
             {langList &&
               langList.map((lang) => (
@@ -292,7 +338,7 @@ const SnippetCreater = ({
 
               <div
                 className={`mt-2 border w-full overflow-auto rounded bg-carbon-600 ${
-                  formErrors["content"]?.length > 0
+                  errors["content"]?.length > 0
                     ? "border-red-500 focus:border-red-500"
                     : `${
                         isFocused ? "border-marine-500" : "border-transparent"
@@ -308,9 +354,9 @@ const SnippetCreater = ({
                 </p>
                 <div ref={container}></div>
               </div>
-              {formErrors && formErrors["content"] && (
+              {errors && errors["content"] && (
                 <div className="flex flex-col mt-2 text-sm text-red-500">
-                  {formErrors["content"].map((err, i) => (
+                  {errors["content"].map((err, i) => (
                     <p key={i}>{err}</p>
                   ))}
                 </div>
@@ -319,8 +365,8 @@ const SnippetCreater = ({
           </div>
         )}
       </form>
-    </motion.div>
+    </>
   );
 };
 
-export default SnippetCreater;
+export default SnippetForm;
