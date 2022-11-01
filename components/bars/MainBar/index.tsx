@@ -6,7 +6,6 @@ import Switcher from "@/components/shared/Switcher";
 import CreateListWidget from "@/components/widgets/CreateListWidget";
 import Authbox from "./Authbox";
 import Searchbox from "./Searchbox";
-import TagsList from "./TagsList";
 import FavLink from "./FavLink";
 import ListItem from "./ListItem";
 
@@ -33,7 +32,7 @@ const MainBar = ({
     <div className="flex flex-col h-full p-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
       <div className="flex items-center justify-between flex-nowrap">
         <h1 className="text-2xl font-bold uppercase">Sniplib</h1>
-        <Switcher />
+        {/* <Switcher /> */}
       </div>
 
       <Searchbox updateSearchValue={updateSearchValue} />
@@ -72,8 +71,11 @@ const MainBar = ({
                     (s) => s.listId.toString() === list._id.toString()
                   ).length
                 }
-                active={list._id.toString() === activeListId}
-                path={`lists/${list._id.toString()}`}
+                active={
+                  list._id.toString() === activeListId &&
+                  activeBarMode === "list"
+                }
+                path={`/lists/${list._id.toString()}`}
               />
             ))}
           </ul>
@@ -87,10 +89,24 @@ const MainBar = ({
         </div>
 
         {tags && (
-          <TagsList
-            tags={tags}
-            activeTagLabel={activeBarMode === "tag" ? activeTagLabel : ""}
-          />
+          <ul className="flex flex-col justify-start flex-shrink-0 w-full pt-4 overflow-y-auto list-none flex-nowrap scroll-hide overscroll-contain">
+            {tags
+              .sort((a, b) => (a.label > b.label ? 1 : -1))
+              .map((tag, i) => {
+                return (
+                  <ListItem
+                    key={tag.label}
+                    first={i === 0}
+                    active={
+                      activeTagLabel === tag.label && activeBarMode === "tag"
+                    }
+                    label={`#${tag.label}`}
+                    amount={tag.amount}
+                    path={`/tags/${tag.label}`}
+                  />
+                );
+              })}
+          </ul>
         )}
       </div>
 

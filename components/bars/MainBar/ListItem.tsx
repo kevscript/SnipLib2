@@ -17,7 +17,7 @@ const ListItem = ({
   path,
 }: ListItemProps) => {
   return (
-    <Link href={{ pathname: path }}>
+    <Link href={`${path}`}>
       <li className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
         <div className="flex flex-nowrap">
           <Branch short={first} active={active} />
