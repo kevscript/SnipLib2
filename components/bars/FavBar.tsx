@@ -2,6 +2,7 @@ import Snippet from "@/models/Snippet";
 import { langList } from "@/utils/langList";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import BarHeaderWrapper from "./BarHeaderWrapper";
 
 type FavBarProps = {
   favSnippets: Snippet[] | undefined;
@@ -11,16 +12,12 @@ type FavBarProps = {
 const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
     >
-      <div className="flex flex-col px-8 pb-8 border-b-2 border-carbon-600">
-        <span className="text-xs font-bold text-white uppercase">
-          Favorites
-        </span>
-      </div>
+      <BarHeaderWrapper title="snippets" label="Favorites" />
 
       {favSnippets && favSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">

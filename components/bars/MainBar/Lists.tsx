@@ -21,7 +21,7 @@ const Lists = ({ lists, activeListId, snippets }: ListsProps) => {
               .length
           }
           active={list._id.toString() === activeListId}
-          listId={list._id.toString()}
+          path={`/lists/${list._id.toString()}`}
         />
       ))}
     </ul>

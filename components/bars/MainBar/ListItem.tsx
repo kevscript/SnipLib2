@@ -6,7 +6,7 @@ export type ListItemProps = {
   label: string;
   amount: number;
   active: boolean;
-  listId: string;
+  path: string;
 };
 
 const ListItem = ({
@@ -14,10 +14,10 @@ const ListItem = ({
   label,
   amount,
   active,
-  listId,
+  path,
 }: ListItemProps) => {
   return (
-    <Link href={{ pathname: "/lists/[listId]", query: { listId: listId } }}>
+    <Link href={{ pathname: path }}>
       <li className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
         <div className="flex flex-nowrap">
           <Branch short={first} active={active} />

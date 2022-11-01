@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import TagBarHeader from "./TagBarHeader";
-import TagSnipItem from "./TagSnipItem";
-import { useRouter } from "next/router";
 import Snippet from "@/models/Snippet";
 import { Tag } from "@/hooks/useUserData";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
 import { motion } from "framer-motion";
+import SnipItem from "./SnipItem";
+import BarHeaderWrapper from "./BarHeaderWrapper";
 
 export type TagBarProps = {
   tags: Tag[] | undefined;
@@ -40,24 +39,22 @@ const TagBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
     >
-      <TagBarHeader label={activeTagLabel} />
+      <BarHeaderWrapper title="tag" label={`#${activeTagLabel}`} />
 
       {activeTagSnippets && activeTagSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">
           {activeTagSnippets.map((snippet) => (
-            <TagSnipItem
+            <SnipItem
               key={snippet._id.toString()}
               snippet={snippet}
-              activeTagLabel={activeTagLabel}
               isActive={activeSnippetId === snippet._id.toString()}
-              color={
-                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
-              }
+              path={`/tags/${activeTagLabel}/${snippet._id.toString()}`}
+              color={langList.find((l) => l.id === snippet.language)?.color}
             />
           ))}
         </ul>

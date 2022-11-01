@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import Snippet from "@/models/Snippet";
 import List from "@/models/List";
-import ListBarHeader from "./ListBarHeader";
-import ListSnipItem from "./ListSnipItem";
 import { UserData } from "@/models/UserData";
 import { langList } from "@/utils/langList";
 import { motion } from "framer-motion";
+import SnipItem from "./SnipItem";
+import BarHeaderWrapper from "./BarHeaderWrapper";
+import Link from "next/link";
+import PlusIcon from "@/components/icons/Plus";
+import IconButton from "@/components/shared/IconButton";
+import EditListWidget from "@/components/widgets/EditListWidget";
+import DeleteListWidget from "@/components/widgets/DeleteListWidget";
 
 export type ListBarProps = {
   lists: UserData["lists"] | undefined;
@@ -43,24 +48,40 @@ const ListBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full pt-8 overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
     >
-      <ListBarHeader list={activeList} />
+      <BarHeaderWrapper title="list" label={activeList.label}>
+        <ul className="flex items-center flex-nowrap gap-x-2">
+          <Link href={{ pathname: "/snippet/create" }}>
+            <div>
+              <IconButton
+                icon={
+                  <PlusIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105" />
+                }
+                scale="small"
+                className="hover:bg-marine-500"
+                tooltipId="new-snippet"
+                tooltipText="New snippet"
+              />
+            </div>
+          </Link>
+          <EditListWidget list={activeList} />
+          {!activeList.original && <DeleteListWidget list={activeList} />}
+        </ul>
+      </BarHeaderWrapper>
 
       {activeListSnippets && activeListSnippets.length > 0 && (
         <ul className="flex flex-col flex-1 overflow-y-auto">
           {activeListSnippets.map((snippet, i) => (
-            <ListSnipItem
+            <SnipItem
               key={snippet._id.toString()}
               snippet={snippet}
-              listId={activeListId}
               isActive={activeSnippetId === snippet._id.toString()}
-              color={
-                langList.find((l) => l.id === snippet.language)?.color || "#FFF"
-              }
+              path={`/lists/${activeListId}/${snippet._id.toString()}`}
+              color={langList.find((l) => l.id === snippet.language)?.color}
             />
           ))}
         </ul>
