@@ -10,7 +10,7 @@ export type BarsFilter = "list" | "tag" | "search" | "fav";
 
 export type BarsWrapperProps = {
   children: React.ReactNode;
-  mode: BarsFilter;
+  mode?: BarsFilter;
 };
 
 const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
@@ -39,7 +39,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           updateSearchValue={updateSearchValue}
         />
 
-        <div className="bg-carbon-500 w-96">
+        <div className={`${mode && "bg-carbon-500 w-96"}`}>
           <AnimatePresence>
             {mode === "list" && (
               <ListBar
