@@ -3,7 +3,7 @@ import List from "models/List";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
-import Modal from "../Modal";
+import Modal from "../shared/Modal";
 import Button from "../shared/Button";
 import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";

@@ -1,7 +1,7 @@
 import Snippet from "@/models/Snippet";
 import { useState } from "react";
 import CrossIcon from "../icons/Cross";
-import Modal from "../Modal";
+import Modal from "../shared/Modal";
 import Button from "../shared/Button";
 import Loader from "../shared/Loader";
 

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import CrossIcon from "../icons/Cross";
 import PlusIcon from "../icons/Plus";
-import Modal from "../Modal";
+import Modal from "../shared/Modal";
 import Button from "../shared/Button";
 import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
