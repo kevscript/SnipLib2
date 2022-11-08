@@ -3,6 +3,7 @@ import ErrorMessage from "@/components/messages/ErrorMessage";
 import InfoMessage from "@/components/messages/InfoMessage";
 import Loader from "@/components/shared/Loader";
 import { Tag, useData } from "@/hooks/useUserData";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -42,26 +43,45 @@ const TagPage = () => {
 
   if (tagError) {
     return (
-      <ErrorMessage>
-        <span className="text-red-600">
-          The following tag doesn&apos;t exists :
-        </span>
-        <span>`{tagLabel}`</span>
-      </ErrorMessage>
+      <>
+        <Head>
+          <title>Tag: {tagLabel} - Sniplib</title>
+          <meta name="description" content="Current tag does not exist." />
+        </Head>
+        <ErrorMessage>
+          <span className="text-red-600">
+            The following tag doesn&apos;t exists :
+          </span>
+          <span>`{tagLabel}`</span>
+        </ErrorMessage>
+      </>
     );
   }
 
   if (tagIsEmpty) {
     return (
-      <InfoMessage>
-        <span className="text-marine-100">No snippet with the tag:</span>
-        <span>`{activeTag?.label}`</span>
-      </InfoMessage>
+      <>
+        <Head>
+          <title>Tag: {tagLabel} - Sniplib</title>
+          <meta
+            name="description"
+            content="There is no current tag to search by."
+          />
+        </Head>
+        <InfoMessage>
+          <span className="text-marine-100">No snippet with the tag:</span>
+          <span>`{activeTag?.label}`</span>
+        </InfoMessage>
+      </>
     );
   }
 
   return (
     <div className="flex items-center justify-center w-full h-full">
+      <Head>
+        <title>Tag: {tagLabel} - Sniplib</title>
+        <meta name="description" content="Search snippets by current tag" />
+      </Head>
       <Loader />
     </div>
   );

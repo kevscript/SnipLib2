@@ -9,6 +9,7 @@ import useFavSnippet from "@/hooks/useFavSnippet";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import SnippetForm from "@/components/forms/SnippetForm";
 import useEditSnippet from "@/hooks/useEditSnippet";
+import Head from "next/head";
 
 const ListSnippetPage = () => {
   const router = useRouter();
@@ -60,16 +61,35 @@ const ListSnippetPage = () => {
 
   if (snippetError) {
     return (
-      <ErrorMessage>
-        <span className="text-red-600">Something went wrong</span>
-        <span>Couldn&apos;t find a snippet at this url</span>
-      </ErrorMessage>
+      <>
+        <Head>
+          <title>
+            List: {lists?.find((l) => activeListId === l._id.toString())?.label}{" "}
+            - Sniplib
+          </title>
+          <meta
+            name="description"
+            content="Could not find a snippet at this url."
+          />
+        </Head>
+        <ErrorMessage>
+          <span className="text-red-600">Something went wrong</span>
+          <span>Couldn&apos;t find a snippet at this url</span>
+        </ErrorMessage>
+      </>
     );
   }
 
   if (!activeSnippet) {
     return (
       <div className="flex items-center justify-center w-full h-full">
+        <Head>
+          <title>
+            List: {lists?.find((l) => activeListId === l._id.toString())?.label}{" "}
+            - SnipLib
+          </title>
+          <meta name="description" content="Loading current active snippet." />
+        </Head>
         <Loader />
       </div>
     );
@@ -78,20 +98,38 @@ const ListSnippetPage = () => {
   return (
     <div>
       {mode === "read" && (
-        <SnippetReader
-          snippet={activeSnippet}
-          triggerEditMode={() => setMode("edit")}
-          toggleFavorite={toggleFavorite}
-        />
+        <>
+          <Head>
+            <title>{activeSnippet.title} - SnipLib</title>
+            <meta
+              name="description"
+              content="Displaying current active snippet."
+            />
+          </Head>
+          <SnippetReader
+            snippet={activeSnippet}
+            triggerEditMode={() => setMode("edit")}
+            toggleFavorite={toggleFavorite}
+          />
+        </>
       )}
       {mode === "edit" && (
-        <SnippetForm
-          snippet={activeSnippet}
-          activeListId={activeListId}
-          lists={lists || []}
-          onCancel={() => setMode("read")}
-          onSubmit={handleSnippetEdit}
-        />
+        <>
+          <Head>
+            <title>[Edit] {activeSnippet.title} - SnipLib</title>
+            <meta
+              name="description"
+              content="Editing current active snippet."
+            />
+          </Head>
+          <SnippetForm
+            snippet={activeSnippet}
+            activeListId={activeListId}
+            lists={lists || []}
+            onCancel={() => setMode("read")}
+            onSubmit={handleSnippetEdit}
+          />
+        </>
       )}
     </div>
   );

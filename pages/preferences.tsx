@@ -7,6 +7,7 @@ import { usePreferences } from "@/hooks/usePreferences";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { useRouter } from "next/router";
 import Button from "@/components/shared/Button";
+import Head from "next/head";
 
 export type EditorFormState = {
   theme: string;
@@ -62,6 +63,10 @@ const PreferencesPage = () => {
 
   return (
     <>
+      <Head>
+        <title>User Preferences - Sniplib</title>
+        <meta name="description" content="Change your editor & app settings" />
+      </Head>
       <div className="flex items-center justify-between flex-1">
         <div className="flex text-xs font-bold gap-x-2">
           <span className="uppercase text-carbon-300">Preferences</span>

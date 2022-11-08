@@ -4,6 +4,7 @@ import Button from "@/components/shared/Button";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -43,15 +44,25 @@ const ListPage = () => {
 
   if (listError) {
     return (
-      <ErrorMessage>
-        <span className="text-red-600">{listError}</span>
-      </ErrorMessage>
+      <>
+        <Head>
+          <title>List: {activeList?.label || ""} - Sniplib</title>
+          <meta name="description" content="Snippets by list." />
+        </Head>
+        <ErrorMessage>
+          <span className="text-red-600">{listError}</span>
+        </ErrorMessage>
+      </>
     );
   }
 
   if (listIsEmpty) {
     return (
       <div className="flex items-center justify-center w-full h-full">
+        <Head>
+          <title>List: {activeList?.label || ""} - Sniplib</title>
+          <meta name="description" content="Snippets by list." />
+        </Head>
         <div className="flex flex-col items-center justify-center gap-y-8">
           <p>
             The `
@@ -73,6 +84,10 @@ const ListPage = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
+      <Head>
+        <title>List {activeList?.label || ""} - Sniplib</title>
+        <meta name="description" content="Snippets by list." />
+      </Head>
       <Loader />
     </div>
   );
