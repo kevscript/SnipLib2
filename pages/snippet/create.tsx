@@ -4,6 +4,7 @@ import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
 import SnippetForm from "@/components/forms/SnippetForm";
+import Head from "next/head";
 
 const CreateSnippetPage = () => {
   const router = useRouter();
@@ -48,6 +49,11 @@ const CreateSnippetPage = () => {
           />
         </div>
       </div> */}
+
+      <Head>
+        <title>New Snippet - Sniplib</title>
+        <meta name="description" content="Creating a new snippet." />
+      </Head>
 
       <SnippetForm
         activeListId={activeListId}

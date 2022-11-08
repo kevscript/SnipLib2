@@ -1,6 +1,7 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -26,14 +27,22 @@ const FavoritesPage = () => {
   if (favIsEmpty) {
     return (
       <div className="flex items-center justify-center w-full h-full">
+        <Head>
+          <title>Favorites - SnipLib</title>
+          <meta name="description" content="Favorite snippets" />
+        </Head>
         <span className="text-gray-400">
-          You do not have a favorite snippet yet
+          You do not have a favorite snippet yet.
         </span>
       </div>
     );
   }
 
   <div className="flex items-center justify-center w-full h-full">
+    <Head>
+      <title>Favorites - SnipLib</title>
+      <meta name="description" content="Favorite snippets" />
+    </Head>
     <Loader />
   </div>;
 };

@@ -2,6 +2,7 @@ import BarsWrapper from "@/components/layouts/BarsWrapper";
 import InfoMessage from "@/components/messages/InfoMessage";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -44,17 +45,27 @@ const SearchPage = () => {
 
   if (hasNoMatch) {
     return (
-      <InfoMessage>
-        <span className="text-marine-100">
-          No snippet matching the search value:
-        </span>
-        <span>`{activeSearchValue}`</span>
-      </InfoMessage>
+      <>
+        <Head>
+          <title>Search: {activeSearchValue} - Sniplib</title>
+          <meta name="description" content="Snippets by search value." />
+        </Head>
+        <InfoMessage>
+          <span className="text-marine-100">
+            No snippet matching the search value:
+          </span>
+          <span>`{activeSearchValue}`</span>
+        </InfoMessage>
+      </>
     );
   }
 
   return (
     <div className="flex items-center justify-center w-full h-full">
+      <Head>
+        <title>Search: {activeSearchValue} - Sniplib</title>
+        <meta name="description" content="Snippet by search value." />
+      </Head>
       <Loader />
     </div>
   );

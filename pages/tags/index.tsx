@@ -1,6 +1,7 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -33,6 +34,10 @@ const TagsPage = () => {
 
   return (
     <div className="flex items-center justify-center w-full h-full">
+      <Head>
+        <title>Tags - Sniplib</title>
+        <meta name="description" content="Search snippets by tags" />
+      </Head>
       <Loader />
     </div>
   );
