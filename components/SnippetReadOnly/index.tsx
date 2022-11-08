@@ -75,7 +75,7 @@ const SnippetReader = ({
           </div>
         </div>
 
-        <div className="flex justify-between mt-2 text-sm text-carbon-300">
+        <div className="flex justify-between mt-2 text-xs text-carbon-300">
           <span>created {timeSince(new Date(snippet.createdAt))}</span>
           {snippet.updatedAt !== snippet.createdAt && (
             <span>edited {timeSince(new Date(snippet.updatedAt))}</span>
