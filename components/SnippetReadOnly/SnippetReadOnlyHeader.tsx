@@ -55,7 +55,7 @@ const SnippetReadOnlyHeader = ({
             <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:scale-105 group-hover:stroke-marine-300" />
           }
           tooltipId="snapit"
-          tooltipText="Take snap"
+          tooltipText="Take snapshot"
         />
 
         <IconButton
