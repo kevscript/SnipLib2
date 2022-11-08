@@ -5,7 +5,7 @@ import List from "models/List";
 import { useEffect, useState } from "react";
 import CrossIcon from "../icons/Cross";
 import EditIcon from "../icons/Edit";
-import Modal from "../Modal";
+import Modal from "../shared/Modal";
 import Button from "../shared/Button";
 import IconButton from "../shared/IconButton";
 import Loader from "../shared/Loader";
