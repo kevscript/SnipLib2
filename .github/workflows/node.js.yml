@@ -30,7 +30,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
+
+      - name: Run Component tests 🧪
         uses: cypress-io/github-action@v4
+        with:
+          # to run component tests we need to use "component: true"
+          component: true
