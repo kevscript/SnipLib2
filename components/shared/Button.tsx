@@ -26,7 +26,7 @@ const Button = ({
     <button
       {...restProps}
       onClick={onClick}
-      className={`px-3 py-1 rounded-sm min-w-[64px] transition-all ${customStyles} ${className}`}
+      className={`px-3 h-8 rounded-sm min-w-[64px] transition-all ${customStyles} ${className}`}
     >
       {label}
     </button>
