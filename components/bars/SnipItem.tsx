@@ -16,19 +16,24 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
           isActive ? "bg-carbon-400" : "bg-carbon-500"
         }`}
       >
-        <span className="font-semibold">{snippet.title}</span>
+        <p className="font-semibold">{snippet.title}</p>
         <div className="flex w-full mt-3 flex-nowrap">
           <span
             className={`text-xs capitalize`}
-            style={{ color: color || "fff" }}
+            style={{ color: color || "#fff" }}
           >
             {snippet.language}
           </span>
-          <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
-            <span className="text-xs text-carbon-300">
-              {snippet.tags && snippet.tags.map((tag) => `#${tag} `)}
-            </span>
-          </ul>
+          {snippet.tags && snippet.tags.length > 0 && (
+            <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
+              {snippet.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="text-xs text-carbon-300"
+                >{`#${tag}`}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </li>
     );
@@ -45,15 +50,20 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
         <div className="flex w-full mt-3 flex-nowrap">
           <span
             className={`text-xs capitalize`}
-            style={{ color: color || "fff" }}
+            style={{ color: color || "#fff" }}
           >
             {snippet.language}
           </span>
-          <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
-            <span className="text-xs text-carbon-300">
-              {snippet.tags && snippet.tags.map((tag) => `#${tag} `)}
-            </span>
-          </ul>
+          {snippet.tags && snippet.tags.length > 0 && (
+            <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
+              {snippet.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="text-xs text-carbon-300"
+                >{`#${tag}`}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </li>
     </Link>
