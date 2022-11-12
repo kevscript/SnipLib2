@@ -21,6 +21,10 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
     }
   };
 
+  const wrapper = document.getElementById("modal-root");
+
+  if (!wrapper) return null;
+
   return createPortal(
     <AnimatePresence>
       {isOpen && (
