@@ -30,7 +30,11 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
     if (e.target.value.length > 32 && !error) {
       setError("Label can't be longer than 32 characters");
     }
-    if (e.target.value.length <= 32 && error) {
+
+    if (e.target.value.length === 0 && !error) {
+      setError("Label can't be empty");
+    }
+    if (e.target.value.length <= 32 && e.target.value.length !== 0 && error) {
       setError(null);
     }
     setNewListLabel(e.target.value);
@@ -65,7 +69,7 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full" data-cy="edit-list-modal">
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
               <h3 className="font-bold">Editing List</h3>
