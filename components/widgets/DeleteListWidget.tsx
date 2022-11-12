@@ -37,6 +37,7 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
         tooltipId="delete-list"
         tooltipText="Delete list"
         place="bottom"
+        data-cy="delete-list"
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

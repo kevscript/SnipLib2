@@ -61,6 +61,7 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
         className="hover:bg-carbon-300"
         tooltipId="edit-list"
         tooltipText="Edit list"
+        data-cy="edit-list"
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

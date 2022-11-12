@@ -40,6 +40,7 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
         className="hover:bg-red-500"
         tooltipId="delete-snippet"
         tooltipText="Delete snippet"
+        data-cy="delete-snippet"
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>

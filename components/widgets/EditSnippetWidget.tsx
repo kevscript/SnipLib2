@@ -25,7 +25,12 @@ const EditSnippetWidget = ({
 
   return (
     <>
-      <Button label="Save" onClick={() => setIsOpen(true)} variety="primary" />
+      <Button
+        label="Save"
+        onClick={() => setIsOpen(true)}
+        variety="primary"
+        data-cy="edit-snippet"
+      />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <div className="flex flex-col w-full">
           <div className="w-full p-8">
