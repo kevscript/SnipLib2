@@ -65,6 +65,7 @@ const CreateListWidget = ({}: CreateListWidgetProps) => {
         tooltipId="create-list"
         tooltipText="New list"
         place="top"
+        data-cy="create-list"
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
