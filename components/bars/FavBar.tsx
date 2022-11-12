@@ -13,7 +13,7 @@ type FavBarProps = {
 const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-screen overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -22,7 +22,10 @@ const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
       <BarHeaderWrapper title="snippets" label="Favorites" />
 
       {favSnippets && favSnippets.length > 0 && (
-        <ul className="flex flex-col flex-1 overflow-y-auto">
+        <ul
+          className="flex flex-col flex-1 overflow-y-auto"
+          data-cy="active-list"
+        >
           {favSnippets.map((snippet) => (
             <SnipItem
               key={snippet._id.toString()}

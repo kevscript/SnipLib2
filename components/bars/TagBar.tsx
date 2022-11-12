@@ -39,7 +39,7 @@ const TagBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-screen overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -48,7 +48,10 @@ const TagBar = ({
       <BarHeaderWrapper title="tag" label={`#${activeTagLabel}`} />
 
       {activeTagSnippets && activeTagSnippets.length > 0 && (
-        <ul className="flex flex-col flex-1 overflow-y-auto">
+        <ul
+          className="flex flex-col flex-1 overflow-y-auto"
+          data-cy="active-list"
+        >
           {activeTagSnippets.map((snippet) => (
             <SnipItem
               key={snippet._id.toString()}
@@ -62,7 +65,9 @@ const TagBar = ({
       )}
 
       {activeTagSnippets && activeTagSnippets.length === 0 && (
-        <h1>No snippet yet with this Tag</h1>
+        <div className="w-full p-8 text-sm bg-carbon-400">
+          <span>No snippet yet with the tag &apos;{activeTagLabel}&apos;</span>
+        </div>
       )}
     </motion.div>
   );

@@ -48,7 +48,7 @@ const ListBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-screen overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -56,7 +56,7 @@ const ListBar = ({
     >
       <BarHeaderWrapper title="list" label={activeList.label}>
         <ul className="flex items-center flex-nowrap gap-x-2">
-          <Link href={{ pathname: "/snippet/create" }}>
+          <Link href={{ pathname: "/snippet/create" }} passHref>
             <div>
               <IconButton
                 icon={
@@ -66,6 +66,7 @@ const ListBar = ({
                 className="hover:bg-marine-500"
                 tooltipId="new-snippet"
                 tooltipText="New snippet"
+                data-cy="create-snippet"
               />
             </div>
           </Link>
@@ -75,7 +76,10 @@ const ListBar = ({
       </BarHeaderWrapper>
 
       {activeListSnippets && activeListSnippets.length > 0 && (
-        <ul className="flex flex-col flex-1 overflow-y-auto">
+        <ul
+          className="flex flex-col flex-1 overflow-y-auto"
+          data-cy="active-list"
+        >
           {activeListSnippets.map((snippet, i) => (
             <SnipItem
               key={snippet._id.toString()}
