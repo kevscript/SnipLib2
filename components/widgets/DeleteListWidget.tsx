@@ -41,7 +41,7 @@ const DeleteListWidget = ({ list }: DeleteListWidgetProps) => {
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full" data-cy="delete-list-modal">
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
               <h3 className="font-bold">Deleting List</h3>

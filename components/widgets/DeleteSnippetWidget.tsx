@@ -44,7 +44,7 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full" data-cy="delete-snippet-modal">
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
               <h3 className="font-bold">Deleting Snippet</h3>

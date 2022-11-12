@@ -32,7 +32,7 @@ const EditSnippetWidget = ({
         data-cy="edit-snippet"
       />
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full" data-cy="edit-snippet-modal">
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
               <h3 className="font-bold">Editing Snippet</h3>
@@ -67,7 +67,11 @@ const EditSnippetWidget = ({
               )}
             </div>
             <div className="flex gap-x-4">
-              <Button label="Save" onClick={handleConfirm} variety="primary" />
+              <Button
+                label="Confirm"
+                onClick={handleConfirm}
+                variety="primary"
+              />
               <Button
                 label="Cancel"
                 onClick={() => setIsOpen(false)}
