@@ -35,7 +35,7 @@ const SearchBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-full overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 h-screen overflow-hidden w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -59,7 +59,10 @@ const SearchBar = ({
       )}
 
       {matchingSnippets && matchingSnippets.length > 0 && (
-        <ul className="flex flex-col flex-1 overflow-y-auto">
+        <ul
+          className="flex flex-col flex-1 overflow-y-auto"
+          data-cy="active-list"
+        >
           {matchingSnippets.map((snippet, i) => (
             <SnipItem
               key={snippet._id.toString()}
