@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect } from "react";
+import Loader from "./shared/Loader";
 
 type AuthGuardProps = {
   children: ReactNode;
@@ -20,7 +21,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
 
   return (
     <div className="flex items-center justify-center w-full h-screen">
-      <h1>Loading...</h1>
+      <Loader />
     </div>
   );
 };

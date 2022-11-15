@@ -7,6 +7,7 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 import Link from "next/link";
 import SettingsIcon from "../../icons/Settings";
 import LogoutIcon from "../../icons/Logout";
+import Loader from "@/components/shared/Loader";
 
 const Authbox = () => {
   const { data, status } = useSession();
@@ -20,7 +21,7 @@ const Authbox = () => {
   });
 
   if (status === "loading") {
-    return <h3>Loading...</h3>;
+    return <Loader />;
   }
 
   if (data && data.user && status === "authenticated") {
