@@ -187,6 +187,7 @@ const SnippetForm = ({
             ...validSnippet,
             _id: snippet ? new ObjectID(snippet._id) : new ObjectID(),
             listId: new ObjectID(validSnippet.listId),
+            description: snippet?.description ? snippet.description : "",
             favorite: snippet ? snippet.favorite : false,
             public: snippet ? snippet.public : false,
             createdAt: snippet ? snippet.createdAt : now,
