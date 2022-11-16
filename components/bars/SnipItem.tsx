@@ -12,7 +12,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
   if (isActive) {
     return (
       <li
-        className={`flex overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
+        className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
           isActive ? "bg-carbon-400" : "bg-carbon-500"
         }`}
       >
@@ -42,7 +42,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
   return (
     <Link href={path} passHref>
       <li
-        className={`flex overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
+        className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
           isActive ? "bg-carbon-400" : "bg-carbon-500"
         }`}
       >
