@@ -6,13 +6,16 @@ declare global {
   var _mongoClientDb: Db;
 }
 
-const uri = process.env.MONGODB_URI as string;
+const uri =
+  process.env.NODE_ENV === "production"
+    ? (process.env.MONGODB_URI_PROD as string)
+    : (process.env.MONGODB_URI_DEV as string);
 
 let client;
 let clientPromise: Promise<MongoClient>;
 let db: Db;
 
-if (!process.env.MONGODB_URI) {
+if (!uri) {
   throw new Error("Please add your Mongo URI to .env.local");
 }
 
