@@ -17,7 +17,7 @@ type UseCodeMirrorParams = {
 };
 
 export const useCodeMirror = ({
-  doc = "",
+  doc,
   readOnly = false,
   lang = "javascript",
   handleEditorContent,
@@ -89,7 +89,7 @@ export const useCodeMirror = ({
         editor.current.destroy();
         const newView = new EditorView({
           state: EditorState.create({
-            doc: preservedDoc,
+            doc: readOnly ? doc : preservedDoc,
             extensions: customExtensions,
           }),
           parent: container.current,
