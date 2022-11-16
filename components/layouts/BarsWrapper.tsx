@@ -74,10 +74,11 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
         </div>
       </div>
 
-      <div className="flex-1 h-screen overflow-auto">
-        <div className="w-full h-full min-w-min md:p-16 sm:p-8 xs:p-4">
+      <div className="w-full h-screen overflow-y-hidden">
+        {children}
+        {/* <div className="h-full overflow-hidden border border-green-400 min-w-fit md:p-16 sm:p-8 xs:p-4">
           {children}
-        </div>
+        </div> */}
       </div>
     </div>
   );

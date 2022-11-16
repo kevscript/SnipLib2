@@ -38,7 +38,7 @@ const Home: NextPage = () => {
 
   if (status === "unauthenticated") {
     return (
-      <div>
+      <div className="w-full h-full bg-black">
         <div
           className={`fixed top-0 left-0 right-0 h-16 border-b-[1px] transition-all ${
             isBlured
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-[90%] mx-auto my-48">
+        <div className="flex flex-col items-center max-w-[90%] mx-auto py-48">
           <div className="flex flex-col items-center w-full text-center">
             <h1 className="text-3xl font-black lg:text-6xl">
               Your snippet library on the cloud.
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="w-[1280px] max-w-[90%] bg-carbon-600 mt-32 aspect-video shadow-xl"></div>
+          <div className="w-[1280px] max-w-[90%] bg-carbon-700 mt-32 aspect-video shadow-2xl rounded shadow-carbon-500 border border-carbon-500"></div>
         </div>
       </div>
     );

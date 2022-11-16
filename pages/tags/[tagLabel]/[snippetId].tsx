@@ -91,7 +91,7 @@ const TagSnippetPage = () => {
   }
 
   return (
-    <div>
+    <div className="page">
       {mode === "read" && (
         <>
           <Head>
