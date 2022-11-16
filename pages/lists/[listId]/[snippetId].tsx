@@ -96,7 +96,7 @@ const ListSnippetPage = () => {
   }
 
   return (
-    <div>
+    <div className="page">
       {mode === "read" && (
         <>
           <Head>

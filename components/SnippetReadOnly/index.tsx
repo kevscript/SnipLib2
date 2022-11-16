@@ -31,17 +31,18 @@ const SnippetReader = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
+      className="w-full min-w-[640px] flex flex-col h-full"
     >
       <SnippetReadOnlyHeader
         snippet={snippet}
         triggerEditMode={triggerEditMode}
         toggleFavorite={toggleFavorite}
       />
-      <div className="flex flex-col w-full mt-12">
+      <div className="flex flex-col flex-1 w-full my-8 min-h-[480px] flex-shrink-0">
         <h3 className="text-2xl font-bold">{snippet.title}</h3>
         <p className="mt-4">{snippet.description}</p>
 
-        <div className="flex items-center justify-between w-full mt-12">
+        <div className="flex items-center justify-between w-full mt-8">
           <div className="flex items-center justify-center px-4 py-1 text-sm rounded-sm bg-carbon-600">
             <span className="text-sm">
               {langList.find((l) => l.id === snippet.language)?.label}
@@ -63,16 +64,14 @@ const SnippetReader = ({
           </ul>
         </div>
 
-        <div className="mt-2">
-          <div className={`w-full overflow-auto rounded bg-carbon-600`}>
-            <p className="sr-only">
-              The Editor uses Tab key to indent code. If you are focused on the
-              editor and want to keep navigating instead of indenting code :
-              press Escape, then Tab to move to the field after the editor. Or
-              Escape, Shift-Tab to move to the field before the editor.
-            </p>
-            <div ref={container}></div>
-          </div>
+        <div className="h-full mt-2 overflow-y-auto rounded">
+          <p className="sr-only">
+            The Editor uses Tab key to indent code. If you are focused on the
+            editor and want to keep navigating instead of indenting code : press
+            Escape, then Tab to move to the field after the editor. Or Escape,
+            Shift-Tab to move to the field before the editor.
+          </p>
+          <div ref={container} className="w-full h-full"></div>
         </div>
 
         <div className="flex justify-between mt-2 text-xs text-carbon-300">

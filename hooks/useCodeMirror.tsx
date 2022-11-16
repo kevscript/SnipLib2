@@ -39,12 +39,13 @@ export const useCodeMirror = ({
         "&": {
           fontFamily: preferences.font,
           fontSize: `${preferences.fontSize}px`,
-          height: "320px",
+          height: "100%",
+          minHeight: "128px",
         },
         ".cm-content": {
           paddingTop: "16px",
           paddingBottom: "16px",
-          paddingRight: "16px",
+          "white-space": "pre-wrap",
         },
       });
 
@@ -70,6 +71,7 @@ export const useCodeMirror = ({
             handleEditorContent && handleEditorContent(currDoc);
           }
         }),
+        EditorView.lineWrapping,
       ];
 
       if (!editor.current) {
