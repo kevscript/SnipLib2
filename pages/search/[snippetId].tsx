@@ -107,7 +107,7 @@ const SearchSnippetPage = () => {
   }
 
   return (
-    <div className="page">
+    <>
       {mode === "read" && (
         <>
           <Head>
@@ -136,7 +136,7 @@ const SearchSnippetPage = () => {
           />
         </>
       )}
-    </div>
+    </>
   );
 };
 
