@@ -5,14 +5,15 @@ import { useScroll } from "framer-motion";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
   const { status } = useSession();
   const { isSuccess, initOriginalList } = useData();
 
-  const { scrollY } = useScroll();
+  const scrollRef = useRef(null);
+  const { scrollY } = useScroll({ container: scrollRef });
   const [isBlured, setIsBlured] = useState(false);
 
   useEffect(() => {
@@ -38,16 +39,16 @@ const Home: NextPage = () => {
 
   if (status === "unauthenticated") {
     return (
-      <div className="w-full h-full bg-black">
+      <div className="h-screen overflow-auto bg-black" ref={scrollRef}>
         <div
-          className={`fixed top-0 left-0 right-0 h-16 border-b-[1px] transition-all ${
+          className={`sticky top-0 left-0 right-0 h-16 border-b-[1px] transition-all ${
             isBlured
               ? "bg-carbon-500 bg-opacity-50 backdrop-blur border-carbon-400"
               : "bg-transparent border-transparent"
           }`}
         >
           <div
-            className={`flex justify-between items-center  h-full w-[1492px] max-w-[90%] mx-auto`}
+            className={`flex justify-between items-center h-full w-[1492px] max-w-[90%] mx-auto`}
           >
             <div className="flex items-center flex-nowrap gap-x-3">
               <div className="w-8 h-8 rounded bg-marine-500"></div>
