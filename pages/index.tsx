@@ -85,7 +85,11 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="w-[1280px] max-w-[90%] bg-carbon-700 mt-32 aspect-video shadow-2xl rounded shadow-carbon-500 border border-carbon-500"></div>
+          <div className="w-[1280px] max-w-[90%] bg-carbon-700 mt-32 aspect-video shadow-2xl rounded shadow-carbon-500 ">
+            <video autoPlay loop muted>
+              <source src="/welcome.mp4" />
+            </video>
+          </div>
         </div>
       </div>
     );
