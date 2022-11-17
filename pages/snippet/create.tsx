@@ -28,28 +28,7 @@ const CreateSnippetPage = () => {
   });
 
   return (
-    <div className="page">
-      {/* <div className="flex items-center justify-between flex-1">
-        <div className="flex text-xs font-bold gap-x-2">
-          <span className="uppercase text-carbon-300">Create</span>
-          <span>/</span>
-          <span>New Snippet</span>
-        </div>
-        <div className="flex flex-nowrap gap-x-4">
-          <Button
-            label="Create"
-            variety="primary"
-            form="create-snippet"
-            type="submit"
-          />
-          <Button
-            label="Cancel"
-            variety="secondary"
-            onClick={() => router.back()}
-          />
-        </div>
-      </div> */}
-
+    <>
       <Head>
         <title>New Snippet - Sniplib</title>
         <meta name="description" content="Creating a new snippet." />
@@ -61,7 +40,7 @@ const CreateSnippetPage = () => {
         onSubmit={createSnippet}
         onCancel={() => router.back()}
       />
-    </div>
+    </>
   );
 };
 

@@ -213,7 +213,7 @@ const SnippetForm = ({
   };
 
   return (
-    <>
+    <div className="min-w-[480px]">
       {snippet ? (
         <SnippetFormEditHeader
           snippet={snippet}
@@ -338,7 +338,7 @@ const SnippetForm = ({
               <span className="ml-2 text-sm font-bold">Snippet</span>
 
               <div
-                className={`mt-2 border w-full overflow-auto rounded bg-carbon-600 ${
+                className={`h-full mt-2 border w-full overflow-auto rounded bg-carbon-600 ${
                   errors["content"]?.length > 0
                     ? "border-red-500 focus:border-red-500"
                     : `${
@@ -353,7 +353,7 @@ const SnippetForm = ({
                   editor. Or Escape, Shift-Tab to move to the field before the
                   editor.
                 </p>
-                <div ref={container}></div>
+                <div ref={container} className="w-full h-full"></div>
               </div>
               {errors && errors["content"] && (
                 <div className="flex flex-col mt-2 text-sm text-red-500">
@@ -366,7 +366,7 @@ const SnippetForm = ({
           </div>
         )}
       </form>
-    </>
+    </div>
   );
 };
 

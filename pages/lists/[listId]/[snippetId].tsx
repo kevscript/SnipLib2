@@ -96,7 +96,7 @@ const ListSnippetPage = () => {
   }
 
   return (
-    <div className="page">
+    <>
       {mode === "read" && (
         <>
           <Head>
@@ -131,7 +131,7 @@ const ListSnippetPage = () => {
           />
         </>
       )}
-    </div>
+    </>
   );
 };
 

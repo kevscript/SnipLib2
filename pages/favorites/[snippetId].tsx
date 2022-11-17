@@ -86,7 +86,7 @@ const FavSnippetPage = () => {
   }
 
   return (
-    <div className="page">
+    <>
       {mode === "read" && (
         <>
           <Head>
@@ -118,7 +118,7 @@ const FavSnippetPage = () => {
           />
         </>
       )}
-    </div>
+    </>
   );
 };
 
