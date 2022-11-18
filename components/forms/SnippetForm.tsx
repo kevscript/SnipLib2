@@ -23,7 +23,7 @@ export type SnippetFormState = {
   content: string;
 };
 
-export type Snippeterrors = {
+export type SnippetErrors = {
   _id: string[];
   title: string[];
   description: string[];
@@ -56,7 +56,7 @@ const initSnippetForm: SnippetFormState = {
   content: "",
 };
 
-const initSnippetErrors: Snippeterrors = {
+const initSnippetErrors: SnippetErrors = {
   _id: [],
   title: [],
   description: [],
@@ -92,7 +92,7 @@ const SnippetForm = ({
       : { ...initSnippetForm, listId: activeListId }
   );
 
-  const [errors, setErrors] = useState<Snippeterrors>(initSnippetErrors);
+  const [errors, setErrors] = useState<SnippetErrors>(initSnippetErrors);
 
   const { preferences } = usePreferences();
 
@@ -169,7 +169,7 @@ const SnippetForm = ({
   };
 
   const handleSubmit = () => {
-    if (editor.current) {
+    if (editor.current && preferences) {
       const currentSnippet: SnippetFormSchema = {
         listId: form.listId,
         title: form.title,
@@ -189,16 +189,20 @@ const SnippetForm = ({
             listId: new ObjectID(validSnippet.listId),
             description: snippet?.description ? snippet.description : "",
             favorite: snippet ? snippet.favorite : false,
-            public: snippet ? snippet.public : false,
             createdAt: snippet ? snippet.createdAt : now,
             updatedAt: now,
+            public: snippet
+              ? snippet.public
+              : preferences.snippetVisibility === "public"
+              ? true
+              : false,
           };
           onSubmit(formattedSnippet);
         })
         .catch((errors) => {
           if (errors.inner.length > 0) {
             const formErr = {} as {
-              [key in keyof Snippeterrors]: string[];
+              [key in keyof SnippetErrors]: string[];
             };
 
             errors.inner.forEach((error: any) => {
