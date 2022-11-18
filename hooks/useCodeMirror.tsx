@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { indentWithTab, indentMore } from "@codemirror/commands";
 import { StreamLanguage, indentUnit } from "@codemirror/language";
 import { langList, LanguageIds } from "@/utils/langList";
-import { defaultPreferences, EditorPreferences } from "./usePreferences";
+import { defaultPreferences, Preferences } from "./usePreferences";
 import { getThemes } from "@/utils/getThemes";
 
 type UseCodeMirrorParams = {
@@ -13,7 +13,7 @@ type UseCodeMirrorParams = {
   readOnly?: boolean;
   lang?: LanguageIds;
   handleEditorContent?: (value: string) => void;
-  preferences: EditorPreferences;
+  preferences: Preferences;
 };
 
 export const useCodeMirror = ({
