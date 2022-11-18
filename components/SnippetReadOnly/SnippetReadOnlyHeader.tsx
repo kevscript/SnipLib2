@@ -21,8 +21,6 @@ const SnippetReadOnlyHeader = ({
   toggleFavorite,
   togglePublic,
 }: SnippetReadOnlyHeaderProps) => {
-  const [privacyHover, setPrivacyHover] = useState(() => snippet.public);
-
   return (
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
