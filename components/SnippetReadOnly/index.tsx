@@ -11,12 +11,14 @@ type SnippetReaderProps = {
   snippet: Snippet;
   triggerEditMode: () => void;
   toggleFavorite: () => void;
+  togglePublic: () => void;
 };
 
 const SnippetReader = ({
   snippet,
   triggerEditMode,
   toggleFavorite,
+  togglePublic,
 }: SnippetReaderProps) => {
   const { preferences } = usePreferences();
   const { container } = useCodeMirror({
@@ -37,6 +39,7 @@ const SnippetReader = ({
         snippet={snippet}
         triggerEditMode={triggerEditMode}
         toggleFavorite={toggleFavorite}
+        togglePublic={togglePublic}
       />
       <div className="flex flex-col flex-1 w-full my-8 min-h-[480px] flex-shrink-0">
         <h3 className="text-2xl font-bold">{snippet.title}</h3>
