@@ -30,7 +30,7 @@ const InfoMessage = ({ children }: InfoMessageProps) => {
           >
             <Button
               label="Back to main page"
-              className="!px-8 !py-4 mt-8 text-white"
+              className="mt-8 text-white"
               variety="secondary"
             />
           </motion.div>
