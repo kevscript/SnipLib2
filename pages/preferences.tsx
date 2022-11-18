@@ -3,61 +3,60 @@ import FormSelect from "@/components/forms/FormSelect";
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import React, { useEffect, useState } from "react";
 import { getThemes } from "@/utils/getThemes";
-import { usePreferences } from "@/hooks/usePreferences";
+import { Preferences, usePreferences } from "@/hooks/usePreferences";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { useRouter } from "next/router";
 import Button from "@/components/shared/Button";
 import Head from "next/head";
 
-export type EditorFormState = {
-  theme: string;
-  font: string;
-  fontSize: number;
-  tabSpacing: number;
-};
-
-export type EditorFormErrors = {
+export type PreferencesFormErrors = {
   theme: string[];
   font: string[];
   fontSize: string[];
   tabSpacing: string[];
+  snippetVisibility: string[];
 };
 
 const PreferencesPage = () => {
   const router = useRouter();
   const { preferences, updateLocalPreferences } = usePreferences();
-  const [editorForm, setEditorForm] = useState<EditorFormState | null>(null);
-  const [editorFormErrors, setEditorFormErrors] =
-    useState<EditorFormErrors | null>(null);
+  const [preferencesForm, setPreferencesForm] = useState<Preferences | null>(
+    null
+  );
+  const [formErrors, setFormErrors] = useState<PreferencesFormErrors | null>(
+    null
+  );
 
   const { container } = useCodeMirror({
-    preferences: editorForm || preferences,
+    preferences: preferencesForm || preferences,
     readOnly: false,
     doc: getThemes.toString(),
   });
 
   useEffect(() => {
-    if (!editorForm && !editorFormErrors && preferences) {
-      setEditorForm(preferences);
-      setEditorFormErrors({
+    if (!preferencesForm && !formErrors && preferences) {
+      setPreferencesForm(preferences);
+      setFormErrors({
         theme: [],
         font: [],
         fontSize: [],
         tabSpacing: [],
+        snippetVisibility: [],
       });
     }
-  }, [editorForm, editorFormErrors, preferences]);
+  }, [preferencesForm, formErrors, preferences]);
 
   const handleFormValue = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    key: keyof EditorFormState
+    key: keyof Preferences
   ) => {
-    editorForm && setEditorForm((x) => ({ ...x!, [key]: e.target.value }));
-    editorFormErrors && setEditorFormErrors((x) => ({ ...x!, [key]: [] }));
+    preferencesForm &&
+      setPreferencesForm((x) => ({ ...x!, [key]: e.target.value }));
+    formErrors && setFormErrors((x) => ({ ...x!, [key]: [] }));
   };
 
   const handleUpdatePreferences = () => {
-    editorForm && updateLocalPreferences(editorForm);
+    preferencesForm && updateLocalPreferences(preferencesForm);
     router.back();
   };
 
@@ -77,7 +76,7 @@ const PreferencesPage = () => {
             variety="primary"
             onClick={handleUpdatePreferences}
             disabled={
-              JSON.stringify(editorForm) === JSON.stringify(preferences)
+              JSON.stringify(preferencesForm) === JSON.stringify(preferences)
             }
           />
 
@@ -89,58 +88,83 @@ const PreferencesPage = () => {
         </div>
       </div>
 
-      <section className="w-full mt-12">
-        <h3 className="font-bold">Editor Settings</h3>
-        <div className="w-full h-[1px] bg-carbon-400 mt-2" />
-        {editorForm && editorFormErrors && (
-          <div className="flex flex-wrap gap-4 mt-8">
-            <FormSelect
-              label="Theme"
-              name="theme"
-              className="w-48"
-              value={editorForm.theme}
-              errors={editorFormErrors.theme}
-              handleValue={(e) => handleFormValue(e, "theme")}
-            >
-              {getThemes().map((theme) => (
-                <option key={theme.name} value={theme.name}>
-                  {theme.name}
+      {preferencesForm && formErrors && (
+        <>
+          <section className="w-full mt-12">
+            <h3 className="font-bold">User Settings</h3>
+            <div className="w-full h-[1px] bg-carbon-400 mt-2" />
+            <div className="flex flex-wrap gap-4 mt-8">
+              <FormSelect
+                label="Default snippet visibility"
+                name="snippetVisibility"
+                className="w-48"
+                value={preferencesForm.snippetVisibility}
+                errors={formErrors.snippetVisibility}
+                handleValue={(e) => handleFormValue(e, "snippetVisibility")}
+              >
+                <option key={"private"} value={"private"}>
+                  private
                 </option>
-              ))}
-            </FormSelect>
-            <FormSelect
-              label="Font"
-              name="font"
-              className="w-48"
-              value={editorForm.font}
-              errors={editorFormErrors.font}
-              handleValue={(e) => handleFormValue(e, "font")}
-            >
-              <option>Inter</option>
-            </FormSelect>
-            <FormInputNumber
-              label="Font size (px)"
-              name="fontSize"
-              value={editorForm.fontSize}
-              errors={editorFormErrors.fontSize}
-              className="w-32"
-              min={10}
-              max={32}
-              handleValue={(e) => handleFormValue(e, "fontSize")}
-            />
-            <FormSelect
-              label="Tab spacing"
-              name="tabSpacing"
-              value={editorForm.tabSpacing}
-              errors={editorFormErrors.tabSpacing}
-              handleValue={(e) => handleFormValue(e, "tabSpacing")}
-            >
-              <option>2</option>
-              <option>4</option>
-            </FormSelect>
-          </div>
-        )}
-      </section>
+                <option key={"public"} value={"public"}>
+                  public
+                </option>
+              </FormSelect>
+            </div>
+          </section>
+
+          <section className="w-full mt-12">
+            <h3 className="font-bold">Editor Settings</h3>
+            <div className="w-full h-[1px] bg-carbon-400 mt-2" />
+
+            <div className="flex flex-wrap gap-4 mt-8">
+              <FormSelect
+                label="Theme"
+                name="theme"
+                className="w-48"
+                value={preferencesForm.theme}
+                errors={formErrors.theme}
+                handleValue={(e) => handleFormValue(e, "theme")}
+              >
+                {getThemes().map((theme) => (
+                  <option key={theme.name} value={theme.name}>
+                    {theme.name}
+                  </option>
+                ))}
+              </FormSelect>
+              <FormSelect
+                label="Font"
+                name="font"
+                className="w-48"
+                value={preferencesForm.font}
+                errors={formErrors.font}
+                handleValue={(e) => handleFormValue(e, "font")}
+              >
+                <option>Inter</option>
+              </FormSelect>
+              <FormInputNumber
+                label="Font size (px)"
+                name="fontSize"
+                value={preferencesForm.fontSize}
+                errors={formErrors.fontSize}
+                className="w-32"
+                min={10}
+                max={32}
+                handleValue={(e) => handleFormValue(e, "fontSize")}
+              />
+              <FormSelect
+                label="Tab spacing"
+                name="tabSpacing"
+                value={preferencesForm.tabSpacing}
+                errors={formErrors.tabSpacing}
+                handleValue={(e) => handleFormValue(e, "tabSpacing")}
+              >
+                <option>2</option>
+                <option>4</option>
+              </FormSelect>
+            </div>
+          </section>
+        </>
+      )}
 
       <div ref={container} className="mt-8"></div>
     </>
