@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await clientPromise;
 
-    const { method, query } = req;
+    const { query } = req;
     const { snippetId } = query as { snippetId: string };
 
     const data = await UsersData.findOne({
@@ -22,6 +22,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const snippet = data.snippets.find((s) => s._id.toString() === snippetId);
+
+    if (!snippet) {
+      throw new Error(`Could not find a public snippet with id ${snippetId}`);
+    }
+
+    if (snippet.public === false) {
+      throw new Error(`This snippet is not public`);
+    }
 
     return res.json(snippet);
   } catch (err: any) {
