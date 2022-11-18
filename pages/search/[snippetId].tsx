@@ -5,6 +5,7 @@ import Loader from "@/components/shared/Loader";
 import SnippetReader from "@/components/SnippetReadOnly";
 import useEditSnippet from "@/hooks/useEditSnippet";
 import useFavSnippet from "@/hooks/useFavSnippet";
+import usePublicSnippet from "@/hooks/usePublicSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import Head from "next/head";
@@ -31,6 +32,7 @@ const SearchSnippetPage = () => {
   const [mode, setMode] = useState<"read" | "edit">("read");
 
   const { mutate: favSnippet } = useFavSnippet({});
+  const { mutate: publicSnippet } = usePublicSnippet({});
   const { mutate: editSnippet } = useEditSnippet();
 
   const toggleFavorite = () => {
@@ -38,6 +40,15 @@ const SearchSnippetPage = () => {
       favSnippet({
         snippetId: activeSnippet._id.toString(),
         favorite: !activeSnippet.favorite,
+      });
+    }
+  };
+
+  const togglePublic = () => {
+    if (activeSnippet) {
+      publicSnippet({
+        snippetId: activeSnippet._id.toString(),
+        public: !activeSnippet.public,
       });
     }
   };
@@ -118,6 +129,7 @@ const SearchSnippetPage = () => {
             snippet={activeSnippet}
             triggerEditMode={() => setMode("edit")}
             toggleFavorite={toggleFavorite}
+            togglePublic={togglePublic}
           />
         </>
       )}
