@@ -5,7 +5,6 @@ import { UsersData } from "@/models/UserData";
 import { ObjectID, ObjectId } from "bson";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-import * as z from "zod";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -87,18 +86,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({ snippet: deletedSnippet });
   } else if (req.method === "PUT") {
-    const { editData } = req.body as { editData: EditSnippetFields };
+    const { snippetData } = req.body as { snippetData: EditSnippetFields };
     // check if valid body data
-    const editDataIsValid = EditSnippetFields.parse(editData);
+    const editDataIsValid = EditSnippetFields.parse(snippetData);
     if (!editDataIsValid) {
       return res.status(400).json({ error: "Edit data is not valid" });
     }
 
-    const editSnippet = { ...editData } as Partial<Snippet>;
-    // parse ids from string to ObjectID
-    if (editData.listId) {
-      editSnippet.listId = new ObjectID(editData.listId);
-    }
+    const editSnippet: Snippet = {
+      ...snippetData,
+      _id: new ObjectID(snippetData._id),
+      listId: new ObjectID(snippetData.listId),
+    };
+
     // check if valid snippet data
     const editSnippetIsValid = Snippet.partial().parse(editSnippet);
     if (!editSnippetIsValid) {
@@ -125,20 +125,37 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const prevSnippet = prevUserData.snippets[0];
     const mergedSnippet = { ...prevSnippet, ...editSnippet };
 
-    const edited = await UsersData.updateOne(
-      { userId: new ObjectID(user.id) },
-      {
+    // defined update and options
+    let updateObject = {};
+    let optionsObject = {};
+    if (prevSnippet.listId.toString() === mergedSnippet.listId.toString()) {
+      // if listId has not changed, just update the snippet
+      updateObject = {
+        $set: { "snippets.$[editSnippet]": mergedSnippet },
+      };
+      optionsObject = {
+        arrayFilters: [{ "editSnippet._id": new ObjectID(snippetId) }],
+      };
+    } else {
+      // if listId was changed, then also manipulate the lists
+      updateObject = {
         $pull: { "lists.$[prevList].snippetIds": new ObjectID(snippetId) },
         $push: { "lists.$[nextList].snippetIds": new ObjectID(snippetId) },
         $set: { "snippets.$[editSnippet]": mergedSnippet },
-      },
-      {
+      };
+      optionsObject = {
         arrayFilters: [
           { "prevList._id": prevSnippet.listId },
           { "nextList._id": mergedSnippet.listId },
           { "editSnippet._id": new ObjectID(snippetId) },
         ],
-      }
+      };
+    }
+
+    const edited = await UsersData.updateOne(
+      { userId: new ObjectID(user.id) },
+      updateObject,
+      optionsObject
     );
 
     if (!edited) {

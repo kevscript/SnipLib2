@@ -12,12 +12,12 @@ export const useDeleteSnippet = ({
   const queryClient = useQueryClient();
   const useDeleteSnippet = useMutation(
     (snippetToDelete: Snippet) => {
-      return fetch("/api/snippet/delete", {
-        method: "POST",
+      return fetch(`/api/snippet/${snippetToDelete._id.toString()}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(snippetToDelete),
+        body: JSON.stringify({ listId: snippetToDelete.listId.toString() }),
       });
     },
     {

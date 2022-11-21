@@ -4,8 +4,6 @@ import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
 import SnippetReader from "@/components/SnippetReadOnly";
 import useEditSnippet from "@/hooks/useEditSnippet";
-import useFavSnippet from "@/hooks/useFavSnippet";
-import usePublicSnippet from "@/hooks/usePublicSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import Head from "next/head";
@@ -23,31 +21,28 @@ const FavSnippetPage = () => {
 
   const [mode, setMode] = useState<"read" | "edit">("read");
 
-  const { mutate: favSnippet } = useFavSnippet({
+  const { mutate: editSnippet } = useEditSnippet({});
+  const { mutate: favSnippet } = useEditSnippet({
     onQuerySettled: () => router.replace("/favorites"),
   });
-  const { mutate: publicSnippet } = usePublicSnippet({});
-  const { mutate: editSnippet } = useEditSnippet();
 
-  const handleSnippetEdit = (s: Snippet) => {
-    editSnippet(s);
+  const handleSnippetEdit = (snippet: Snippet) => {
+    editSnippet({ snippetData: snippet });
     setMode("read");
   };
 
   const toggleFavorite = () => {
     if (activeSnippet) {
       favSnippet({
-        snippetId: activeSnippet._id.toString(),
-        favorite: !activeSnippet.favorite,
+        snippetData: { ...activeSnippet, favorite: !activeSnippet.favorite },
       });
     }
   };
 
   const togglePublic = () => {
     if (activeSnippet) {
-      publicSnippet({
-        snippetId: activeSnippet._id.toString(),
-        public: !activeSnippet.public,
+      editSnippet({
+        snippetData: { ...activeSnippet, public: !activeSnippet.public },
       });
     }
   };

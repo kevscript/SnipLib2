@@ -5,12 +5,10 @@ import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SnippetReader from "@/components/SnippetReadOnly";
-import useFavSnippet from "@/hooks/useFavSnippet";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import SnippetForm from "@/components/forms/SnippetForm";
 import useEditSnippet from "@/hooks/useEditSnippet";
 import Head from "next/head";
-import usePublicSnippet from "@/hooks/usePublicSnippet";
 
 const ListSnippetPage = () => {
   const router = useRouter();
@@ -23,30 +21,26 @@ const ListSnippetPage = () => {
 
   const [mode, setMode] = useState<"read" | "edit">("read");
 
-  const { mutate: favSnippet } = useFavSnippet({});
-  const { mutate: publicSnippet } = usePublicSnippet({});
-  const { mutate: editSnippet } = useEditSnippet();
+  const { mutate: editSnippet } = useEditSnippet({});
 
   const toggleFavorite = () => {
     if (activeSnippet) {
-      favSnippet({
-        snippetId: activeSnippet._id.toString(),
-        favorite: !activeSnippet.favorite,
+      editSnippet({
+        snippetData: { ...activeSnippet, favorite: !activeSnippet.favorite },
       });
     }
   };
 
   const togglePublic = () => {
     if (activeSnippet) {
-      publicSnippet({
-        snippetId: activeSnippet._id.toString(),
-        public: !activeSnippet.public,
+      editSnippet({
+        snippetData: { ...activeSnippet, public: !activeSnippet.public },
       });
     }
   };
 
-  const handleSnippetEdit = (s: Snippet) => {
-    editSnippet(s);
+  const handleSnippetEdit = (snippet: Snippet) => {
+    editSnippet({ snippetData: snippet });
     setMode("read");
   };
 

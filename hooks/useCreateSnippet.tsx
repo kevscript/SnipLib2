@@ -12,7 +12,7 @@ export const useCreateSnippet = ({
   const queryClient = useQueryClient();
   const useCreateSnippet = useMutation(
     (newSnippet: Snippet) => {
-      return fetch("/api/snippet/create", {
+      return fetch("/api/snippet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
