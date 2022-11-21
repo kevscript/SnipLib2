@@ -41,7 +41,7 @@ export type SnippetErrors = {
 export type SnippetFormProps = {
   snippet?: Snippet;
   activeListId: string;
-  onSubmit: (s: Snippet) => unknown;
+  onSubmit: (snippet: Snippet) => unknown;
   onCancel: () => unknown;
   lists: List[];
 };
