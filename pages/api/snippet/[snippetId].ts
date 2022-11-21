@@ -1,7 +1,6 @@
 import { clientPromise } from "@/lib/mongodb";
-import { UserData, UsersData } from "@/models/UserData";
+import { UsersData } from "@/models/UserData";
 import { ObjectId } from "bson";
-import { FindOptions } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -27,9 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error(`Could not find a public snippet with id ${snippetId}`);
     }
 
-    return res.json(data.snippets[0]);
-  } catch (err: any) {
-    throw res.status(500).json({ error: err.message });
+    res.json(data.snippets[0]);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
 
