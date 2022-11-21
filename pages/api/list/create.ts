@@ -1,4 +1,4 @@
-import { clientPromise } from "@/lib/mongodb";
+import { mongoConnect } from "@/lib/mongodb";
 import List from "@/models/List";
 import { UsersData } from "@/models/UserData";
 import { ObjectID } from "bson";
@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await clientPromise;
+    await mongoConnect;
     const newList = {
       ...req.body,
       _id: new ObjectID(req.body._id),

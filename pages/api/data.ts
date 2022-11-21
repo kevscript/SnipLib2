@@ -1,4 +1,4 @@
-import { clientPromise } from "@/lib/mongodb";
+import { mongoConnect } from "@/lib/mongodb";
 import { ObjectID } from "bson";
 import { UsersData } from "models/UserData";
 
@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    await clientPromise;
+    await mongoConnect;
 
     const userData = await UsersData.findOne({
       userId: new ObjectID(user.id),
