@@ -1,6 +1,7 @@
 import { clientPromise } from "@/lib/mongodb";
-import { UsersData } from "@/models/UserData";
-import { ObjectID } from "bson";
+import { UserData, UsersData } from "@/models/UserData";
+import { ObjectId } from "bson";
+import { FindOptions } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -10,28 +11,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const { query } = req;
     const { snippetId } = query as { snippetId: string };
 
-    const data = await UsersData.findOne({
-      $and: [
-        { "snippets._id": new ObjectID(snippetId) },
-        { "snippets.public": true },
-      ],
-    });
+    const data = await UsersData.findOne(
+      {
+        snippets: {
+          $elemMatch: {
+            _id: new ObjectId(snippetId),
+            public: true,
+          },
+        },
+      },
+      { projection: { "snippets.$": 1 } }
+    );
 
     if (!data) {
       throw new Error(`Could not find a public snippet with id ${snippetId}`);
     }
 
-    const snippet = data.snippets.find((s) => s._id.toString() === snippetId);
-
-    if (!snippet) {
-      throw new Error(`Could not find a public snippet with id ${snippetId}`);
-    }
-
-    if (snippet.public === false) {
-      throw new Error(`This snippet is not public`);
-    }
-
-    return res.json(snippet);
+    return res.json(data.snippets[0]);
   } catch (err: any) {
     throw res.status(500).json({ error: err.message });
   }
