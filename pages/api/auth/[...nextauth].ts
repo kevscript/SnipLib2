@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { clientPromise } from "../../../lib/mongodb";
+import { mongoConnect } from "../../../lib/mongodb";
 import { UserData, UsersData } from "models/UserData";
 import { ObjectID } from "bson";
 
@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
 
     // ...add more providers here
   ],
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(mongoConnect),
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   callbacks: {
@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
         if (isNewUser) {
           try {
             // wait for mongoDB
-            await clientPromise;
+            await mongoConnect;
 
             const initUserData: UserData = {
               _id: new ObjectID(),
