@@ -10,7 +10,7 @@ export const useCreateList = ({ onQuerySettled }: UseCreateListParams) => {
   const queryClient = useQueryClient();
   const useCreateList = useMutation(
     (newList: List) => {
-      return fetch("/api/list/create", {
+      return fetch("/api/list", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

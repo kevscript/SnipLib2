@@ -11,12 +11,11 @@ export const useDeleteList = ({ onQuerySettled }: UseDeleteListParams) => {
   const queryClient = useQueryClient();
   const useDeleteList = useMutation(
     (listToDelete: List) => {
-      return fetch("/api/list/delete", {
-        method: "POST",
+      return fetch(`/api/list/${listToDelete._id.toString()}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(listToDelete),
       });
     },
     {

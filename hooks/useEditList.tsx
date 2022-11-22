@@ -9,17 +9,17 @@ type UseEditListParams = {
 export const useEditList = ({ onQuerySettled }: UseEditListParams) => {
   const queryClient = useQueryClient();
   const useEditList = useMutation(
-    (editList: List) => {
-      return fetch("/api/list/edit", {
-        method: "POST",
+    (listData: List) => {
+      return fetch(`/api/list/${listData._id.toString()}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(editList),
+        body: JSON.stringify({ listData: listData }),
       });
     },
     {
-      onMutate: async (editList) => {
+      onMutate: async (listData) => {
         await queryClient.cancelQueries(["userData"]);
         const previousData: UserData | undefined = queryClient.getQueryData([
           "userData",
@@ -29,11 +29,11 @@ export const useEditList = ({ onQuerySettled }: UseEditListParams) => {
           newData = { ...previousData };
 
           const listToEditIndex = newData.lists.findIndex(
-            (l) => l._id.toString() === editList._id.toString()
+            (l) => l._id.toString() === listData._id.toString()
           );
 
           if (listToEditIndex) {
-            newData.lists[listToEditIndex].label = editList.label;
+            newData.lists[listToEditIndex].label = listData.label;
           }
 
           queryClient.setQueryData(["userData"], newData);
@@ -41,11 +41,11 @@ export const useEditList = ({ onQuerySettled }: UseEditListParams) => {
 
         return { previousData, newData };
       },
-      onError: (error, listToEdit, ctx) => {
+      onError: (error, listData, ctx) => {
         queryClient.setQueryData(["userData"], ctx?.previousData);
         console.log("editList error", error);
       },
-      onSettled: (data, err, listToDelete, ctx) => {
+      onSettled: (data, err, listData, ctx) => {
         queryClient.invalidateQueries(["userData"]);
         onQuerySettled && onQuerySettled();
       },
