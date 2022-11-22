@@ -1,6 +1,4 @@
 import { useEditList } from "@/hooks/useEditList";
-import { UserData } from "@/models/UserData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import List from "models/List";
 import { useEffect, useState } from "react";
 import CrossIcon from "../icons/Cross";

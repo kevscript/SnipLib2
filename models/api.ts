@@ -15,3 +15,12 @@ export const EditSnippetFields = z.object({
 });
 
 export type EditSnippetFields = z.infer<typeof EditSnippetFields>;
+
+export const EditListFields = z.object({
+  _id: z.string().min(1),
+  label: z.string().min(1),
+  original: z.boolean(),
+  snippetIds: z.array(z.string()),
+});
+
+export type EditListFields = z.infer<typeof EditListFields>;
