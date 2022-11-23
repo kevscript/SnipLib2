@@ -43,7 +43,7 @@ const PublicSnippetPage = () => {
 
   useEffect(() => {
     if (data) {
-      setSnippet(data);
+      setSnippet(data.snippet);
     }
   }, [data]);
 
