@@ -32,8 +32,8 @@ const PublicSnippetPage = () => {
   });
 
   const { data, isError } = useQuery(
-    ["publicSnippet"],
-    () => getPublicSnippet({ snippetId: snippetId as string }),
+    ["publicSnippet", snippetId],
+    ({ queryKey }) => getPublicSnippet({ snippetId: queryKey[1] as string }),
     {
       enabled: snippetId ? true : false,
       refetchOnWindowFocus: false,
@@ -41,11 +41,7 @@ const PublicSnippetPage = () => {
     }
   );
 
-  useEffect(() => {
-    if (data) {
-      setSnippet(data.snippet);
-    }
-  }, [data]);
+  useEffect(() => data && setSnippet(data.snippet), [data]);
 
   if (isError) {
     return (
@@ -56,7 +52,7 @@ const PublicSnippetPage = () => {
         </Head>
         <ErrorMessage>
           <span className="text-red-600">
-            Can&apos;t find snippet at this URL.
+            Can&apos;t find a snippet at this URL.
           </span>
         </ErrorMessage>
       </div>
