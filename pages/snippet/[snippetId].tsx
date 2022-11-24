@@ -1,9 +1,9 @@
 import CopyIcon from "@/components/icons/Copy";
-import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Button from "@/components/shared/Button";
 import IconButton from "@/components/shared/IconButton";
 import Loader from "@/components/shared/Loader";
+import Toast from "@/components/Toast";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { usePreferences } from "@/hooks/usePreferences";
 import Snippet from "@/models/Snippet";
@@ -15,7 +15,7 @@ import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const PublicSnippetPage = () => {
   const { status } = useSession();
@@ -23,6 +23,7 @@ const PublicSnippetPage = () => {
   const { snippetId } = router.query;
   const { preferences } = usePreferences();
   const [snippet, setSnippet] = useState<Snippet | null>(null);
+  const toastRef = useRef<any>(null);
 
   const { container } = useCodeMirror({
     readOnly: true,
@@ -73,11 +74,12 @@ const PublicSnippetPage = () => {
 
   return (
     <div className="w-full h-screen overflow-auto">
+      <Toast ref={toastRef} />
       <Head>
         <title>{snippet?.title} - Sniplib</title>
         <meta name="description" content="Public snippet" />
       </Head>
-      <div className="w-[1280px] mx-auto max-w-[90%] py-8">
+      <div className="w-[1440px] mx-auto max-w-[90%] pt-8 pb-16">
         <div className="flex justify-between flex-nowrap">
           <Link href="/">
             <div className="flex items-center cursor-pointer gap-x-2">
@@ -89,6 +91,11 @@ const PublicSnippetPage = () => {
             <IconButton
               onClick={() => {
                 navigator.clipboard.writeText(snippet.content);
+                toastRef.current.showToast({
+                  type: "neutral",
+                  title: "Copied to clipboard",
+                  duration: 1500,
+                });
               }}
               icon={
                 <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:stroke-marine-50" />

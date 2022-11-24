@@ -3,12 +3,13 @@ import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Loader from "@/components/shared/Loader";
 import SnippetReader from "@/components/SnippetReadOnly";
+import Toast from "@/components/Toast";
 import useEditSnippet from "@/hooks/useEditSnippet";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const TagSnippetPage = () => {
   const router = useRouter();
@@ -16,16 +17,72 @@ const TagSnippetPage = () => {
   const { isSuccess, snippets, checkTagSnippet, tags, lists, activeListId } =
     useData();
 
+  const toastRef = useRef<any>(null);
   const [snippetError, setSnippetError] = useState<string | null>(null);
   const [activeSnippet, setActiveSnippet] = useState<Snippet | null>(null);
 
   const [mode, setMode] = useState<"read" | "edit">("read");
 
-  const { mutate: editSnippet } = useEditSnippet({});
+  const { mutate: editSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "success",
+          title: "Snippet was edited",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
+
+  const { mutate: favSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        activeSnippet &&
+        toastRef.current.showToast({
+          type: "success",
+          title: activeSnippet.favorite
+            ? "Favorite was removed"
+            : "New favorite added",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
+
+  const { mutate: publicSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        activeSnippet &&
+        toastRef.current.showToast({
+          type: "success",
+          title: activeSnippet.public
+            ? "Snippet is private"
+            : "Snippet is public",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
 
   const toggleFavorite = () => {
     if (activeSnippet) {
-      editSnippet({
+      favSnippet({
         snippetData: { ...activeSnippet, favorite: !activeSnippet.favorite },
       });
     }
@@ -33,7 +90,7 @@ const TagSnippetPage = () => {
 
   const togglePublic = () => {
     if (activeSnippet) {
-      editSnippet({
+      publicSnippet({
         snippetData: { ...activeSnippet, public: !activeSnippet.public },
       });
     }
@@ -97,6 +154,7 @@ const TagSnippetPage = () => {
 
   return (
     <>
+      <Toast ref={toastRef} />
       {mode === "read" && (
         <>
           <Head>
