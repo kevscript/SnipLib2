@@ -4,10 +4,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseDeleteSnippetParams = {
   onQuerySettled?: (snippetToDelete: Snippet, err: any) => void;
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
 };
 
 export const useDeleteSnippet = ({
   onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
 }: UseDeleteSnippetParams) => {
   const queryClient = useQueryClient();
   const useDeleteSnippet = useMutation(
@@ -56,9 +60,11 @@ export const useDeleteSnippet = ({
         queryClient.setQueryData(["userData"], ctx?.previousData);
         console.log("deleteSnippet error", error);
       },
-      onSettled: (data, error, snippetToDelete, ctx) => {
+      onSettled: (data, err, snippetToDelete, ctx) => {
         queryClient.invalidateQueries(["userData"]);
-        onQuerySettled && onQuerySettled(snippetToDelete, error);
+        onQuerySettled && onQuerySettled(snippetToDelete, err);
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );

@@ -4,10 +4,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ObjectID } from "bson";
 
 type UseEditSnippetParams = {
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
   onQuerySettled?: () => void;
 };
 
-const useEditSnippet = ({ onQuerySettled }: UseEditSnippetParams) => {
+const useEditSnippet = ({
+  onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
+}: UseEditSnippetParams) => {
   const queryClient = useQueryClient();
   const useEditSnippet = useMutation(
     ({ snippetData }: { snippetData: Snippet }) => {
@@ -56,35 +62,6 @@ const useEditSnippet = ({ onQuerySettled }: UseEditSnippetParams) => {
           snippetToEdit = updatedSnippet;
 
           return newData;
-
-          // let snippetToEditIdx = newData.snippets.findIndex(
-          //   (s: any) => s._id.toString() === editedSnippet._id.toString()
-          // );
-
-          // if (snippetToEditIdx < 0) {
-          //   console.log("error snippetToEditIdx is < 0");
-          //   return { previousData };
-          // }
-
-          // if (
-          //   newData.snippets[snippetToEditIdx].listId !== editedSnippet.listId
-          // ) {
-          //   let oldListIdx = newData.lists.findIndex(
-          //     (l: any) => l._id === newData.snippets[snippetToEditIdx].listId
-          //   );
-          //   let newListIdx = newData.lists.findIndex(
-          //     (l: any) => l._id === editedSnippet.listId
-          //   );
-
-          //   if (oldListIdx >= 0 && newListIdx >= 0) {
-          //     newData.lists[oldListIdx].snippets = newData.lists[
-          //       oldListIdx
-          //     ].snippetIds.filter((s: any) => s !== editedSnippet._id);
-          //     newData.lists[newListIdx].snippetIds.push(editedSnippet._id);
-          //   }
-          // }
-
-          // newData.snippets[snippetToEditIdx] = { ...editedSnippet };
         });
 
         return { previousData };
@@ -96,7 +73,10 @@ const useEditSnippet = ({ onQuerySettled }: UseEditSnippetParams) => {
       },
       onSettled: (data, err, {}, ctx) => {
         queryClient.invalidateQueries(["userData"]);
+
         onQuerySettled && onQuerySettled();
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );
