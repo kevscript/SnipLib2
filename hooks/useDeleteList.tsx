@@ -5,9 +5,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseDeleteListParams = {
   onQuerySettled?: (err: any) => void;
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
 };
 
-export const useDeleteList = ({ onQuerySettled }: UseDeleteListParams) => {
+export const useDeleteList = ({
+  onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
+}: UseDeleteListParams) => {
   const queryClient = useQueryClient();
   const useDeleteList = useMutation(
     (listToDelete: List) => {
@@ -52,6 +58,8 @@ export const useDeleteList = ({ onQuerySettled }: UseDeleteListParams) => {
       onSettled: (data, err, listToDelete, ctx) => {
         queryClient.invalidateQueries(["userData"]);
         onQuerySettled && onQuerySettled(err);
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );

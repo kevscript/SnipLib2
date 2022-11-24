@@ -4,9 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseEditListParams = {
   onQuerySettled?: () => void;
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
 };
 
-export const useEditList = ({ onQuerySettled }: UseEditListParams) => {
+export const useEditList = ({
+  onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
+}: UseEditListParams) => {
   const queryClient = useQueryClient();
   const useEditList = useMutation(
     (listData: List) => {
@@ -48,6 +54,8 @@ export const useEditList = ({ onQuerySettled }: UseEditListParams) => {
       onSettled: (data, err, listData, ctx) => {
         queryClient.invalidateQueries(["userData"]);
         onQuerySettled && onQuerySettled();
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );

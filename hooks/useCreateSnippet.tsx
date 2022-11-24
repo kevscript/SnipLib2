@@ -4,10 +4,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseCreateSnippetParams = {
   onQuerySettled?: (newSnippet: Snippet, err: any) => void;
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
 };
 
 export const useCreateSnippet = ({
   onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
 }: UseCreateSnippetParams) => {
   const queryClient = useQueryClient();
   const useCreateSnippet = useMutation(
@@ -50,10 +54,12 @@ export const useCreateSnippet = ({
         queryClient.setQueryData(["userData"], ctx?.previousData);
         console.log("error", error);
       },
-      onSettled: (data, error, newSnippet, ctx) => {
+      onSettled: (data, err, newSnippet, ctx) => {
         queryClient.invalidateQueries(["userData"]);
 
-        onQuerySettled && onQuerySettled(newSnippet, error);
+        onQuerySettled && onQuerySettled(newSnippet, err);
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );

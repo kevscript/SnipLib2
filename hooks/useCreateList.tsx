@@ -4,9 +4,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type UseCreateListParams = {
   onQuerySettled?: (newList: List, err: any) => void;
+  onQueryError?: () => void;
+  onQuerySuccess?: () => void;
 };
 
-export const useCreateList = ({ onQuerySettled }: UseCreateListParams) => {
+export const useCreateList = ({
+  onQuerySettled,
+  onQueryError,
+  onQuerySuccess,
+}: UseCreateListParams) => {
   const queryClient = useQueryClient();
   const useCreateList = useMutation(
     (newList: List) => {
@@ -37,9 +43,11 @@ export const useCreateList = ({ onQuerySettled }: UseCreateListParams) => {
         queryClient.setQueryData(["userData"], ctx?.previousData);
         console.error("error", error);
       },
-      onSettled: (data, error, newList, ctx) => {
+      onSettled: (data, err, newList, ctx) => {
         queryClient.invalidateQueries(["userData"]);
-        onQuerySettled && onQuerySettled(newList, error);
+        onQuerySettled && onQuerySettled(newList, err);
+        data && onQuerySuccess && onQuerySuccess();
+        err && onQueryError && onQueryError();
       },
     }
   );
