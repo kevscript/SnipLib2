@@ -16,6 +16,7 @@ type ToastType = "success" | "fail" | "neutral";
 type ShowToastParams = {
   type: ToastType;
   title: string;
+  duration?: number;
 };
 
 const Toast = forwardRef((props, ref) => {
@@ -30,11 +31,11 @@ const Toast = forwardRef((props, ref) => {
   };
 
   useImperativeHandle(ref, () => ({
-    showToast: ({ type, title }: ShowToastParams) => {
+    showToast: ({ type, title, duration }: ShowToastParams) => {
       setToast({ show: true, title, type });
       setTimeout(
         () => setToast({ show: false, title: "", type: "neutral" }),
-        3000
+        duration || 3000
       );
     },
   }));
