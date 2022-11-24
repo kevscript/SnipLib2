@@ -56,4 +56,33 @@ describe("Toast", () => {
       cy.get('[data-cy="toast"]').should("not.exist");
     });
   });
+
+  it("closes the toast after correct default setTimeout duration", () => {
+    const ref = React.createRef<any>();
+    cy.mount(<Toast ref={ref} />).then(() => {
+      ref.current.showToast({
+        type: "fail",
+        title: "Error happened",
+      });
+      cy.get('[data-cy="toast"]').should("exist");
+      cy.wait(3000);
+      cy.get('[data-cy="toast"]').should("not.exist");
+    });
+  });
+
+  it("closes the toast after correct manual setTimeout duration", () => {
+    const ref = React.createRef<any>();
+    cy.mount(<Toast ref={ref} />).then(() => {
+      ref.current.showToast({
+        type: "fail",
+        title: "Error happened",
+        duration: 7000,
+      });
+      cy.get('[data-cy="toast"]').should("exist");
+      cy.wait(3000);
+      cy.get('[data-cy="toast"]').should("exist");
+      cy.wait(4000);
+      cy.get('[data-cy="toast"]').should("not.exist");
+    });
+  });
 });
