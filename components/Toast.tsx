@@ -45,6 +45,7 @@ const Toast = forwardRef((props, ref) => {
       <AnimatePresence>
         {toast.show && (
           <motion.div
+            data-cy="toast"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -72,12 +73,12 @@ const Toast = forwardRef((props, ref) => {
               }`}
             >
               <p className="py-4 pl-2 pr-4">{toast.title}</p>
-              <div
+              <button
                 className="flex items-center justify-center w-6 h-6 cursor-pointer group"
                 onClick={closeToast}
               >
                 <CrossIcon className="w-4 h-4 group-hover:stroke-white stroke-gray-300" />
-              </div>
+              </button>
             </div>
           </motion.div>
         )}
