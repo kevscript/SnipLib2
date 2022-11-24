@@ -3,15 +3,17 @@ import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import Snippet from "@/models/Snippet";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SnippetReader from "@/components/SnippetReadOnly";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import SnippetForm from "@/components/forms/SnippetForm";
 import useEditSnippet from "@/hooks/useEditSnippet";
 import Head from "next/head";
+import Toast from "@/components/Toast";
 
 const ListSnippetPage = () => {
   const router = useRouter();
+  const toastRef = useRef<any>(null);
   const { listId, snippetId } = router.query;
   const { isSuccess, checkListSnippet, snippets, lists, activeListId } =
     useData();
@@ -21,11 +23,66 @@ const ListSnippetPage = () => {
 
   const [mode, setMode] = useState<"read" | "edit">("read");
 
-  const { mutate: editSnippet } = useEditSnippet({});
+  const { mutate: editSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "success",
+          title: "Snippet was edited",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
+
+  const { mutate: favSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        activeSnippet &&
+        toastRef.current.showToast({
+          type: "success",
+          title: activeSnippet.favorite
+            ? "Favorite was removed"
+            : "New favorite added",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
+
+  const { mutate: publicSnippet } = useEditSnippet({
+    onQuerySuccess: () => {
+      toastRef.current &&
+        activeSnippet &&
+        toastRef.current.showToast({
+          type: "success",
+          title: activeSnippet.public
+            ? "Snippet is private"
+            : "Snippet is public",
+        });
+    },
+    onQueryError: () => {
+      toastRef.current &&
+        toastRef.current.showToast({
+          type: "fail",
+          title: "Something went wrong",
+        });
+    },
+  });
 
   const toggleFavorite = () => {
     if (activeSnippet) {
-      editSnippet({
+      favSnippet({
         snippetData: { ...activeSnippet, favorite: !activeSnippet.favorite },
       });
     }
@@ -33,7 +90,7 @@ const ListSnippetPage = () => {
 
   const togglePublic = () => {
     if (activeSnippet) {
-      editSnippet({
+      publicSnippet({
         snippetData: { ...activeSnippet, public: !activeSnippet.public },
       });
     }
@@ -102,6 +159,7 @@ const ListSnippetPage = () => {
 
   return (
     <>
+      <Toast ref={toastRef} />
       {mode === "read" && (
         <>
           <Head>
