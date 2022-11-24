@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
-import DangerIcon from "../icons/Danger";
+import WarningIcon from "../icons/Warning";
 import Button from "../shared/Button";
 
 type ErrorMessageProps = {
@@ -18,7 +18,7 @@ const ErrorMessage = ({ children }: ErrorMessageProps) => {
           className="p-8 w-[480px] max-w-full border rounded border-red-900/50 bg-gradient-to-r from-red-600/10 to-carbon-700 drop-shadow"
         >
           <div className="flex items-center w-full overflow-hidden gap-x-8">
-            <DangerIcon className="w-8 h-8 fill-transparent stroke-red-600" />
+            <WarningIcon className="w-8 h-8 fill-transparent stroke-red-600" />
             <div className="flex flex-col flex-1 gap-y-2">{children}</div>
           </div>
         </motion.div>
