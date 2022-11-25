@@ -2,7 +2,6 @@ import { BarMode, Tag } from "@/hooks/useUserData";
 import { UserData } from "models/UserData";
 import FolderIcon from "@/components/icons/Folder";
 import TagIcon from "@/components/icons/Tag";
-import Switcher from "@/components/shared/Switcher";
 import CreateListWidget from "@/components/widgets/CreateListWidget";
 import Authbox from "./Authbox";
 import Searchbox from "./Searchbox";
