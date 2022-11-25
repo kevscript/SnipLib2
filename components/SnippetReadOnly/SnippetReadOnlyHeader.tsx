@@ -25,8 +25,6 @@ const SnippetReadOnlyHeader = ({
     <div className="flex justify-between w-full">
       <div className="flex text-xs font-bold gap-x-2">
         <span className="uppercase text-carbon-300">snippet</span>
-        <span>/</span>
-        <span>{snippet.title}</span>
       </div>
       <div className="flex flex-nowrap gap-x-4">
         <IconButton
