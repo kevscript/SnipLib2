@@ -1,7 +1,6 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import Button from "@/components/shared/Button";
-import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import List from "@/models/List";
 import Head from "next/head";
@@ -81,16 +80,6 @@ const ListPage = () => {
       </div>
     );
   }
-
-  return (
-    <div className="flex items-center justify-center w-full h-full">
-      <Head>
-        <title>List {activeList?.label || ""} - Sniplib</title>
-        <meta name="description" content="Snippets by list." />
-      </Head>
-      <Loader />
-    </div>
-  );
 };
 
 ListPage.authRequired = true;

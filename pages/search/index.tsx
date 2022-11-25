@@ -1,6 +1,5 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import InfoMessage from "@/components/messages/InfoMessage";
-import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -59,16 +58,6 @@ const SearchPage = () => {
       </>
     );
   }
-
-  return (
-    <div className="flex items-center justify-center w-full h-full">
-      <Head>
-        <title>Search: {activeSearchValue} - Sniplib</title>
-        <meta name="description" content="Snippet by search value." />
-      </Head>
-      <Loader />
-    </div>
-  );
 };
 
 SearchPage.authRequired = true;
