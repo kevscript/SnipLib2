@@ -1,7 +1,6 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import InfoMessage from "@/components/messages/InfoMessage";
-import Loader from "@/components/shared/Loader";
 import { Tag, useData } from "@/hooks/useUserData";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -75,16 +74,6 @@ const TagPage = () => {
       </>
     );
   }
-
-  return (
-    <div className="flex items-center justify-center w-full h-full">
-      <Head>
-        <title>Tag: {tagLabel} - Sniplib</title>
-        <meta name="description" content="Search snippets by current tag" />
-      </Head>
-      <Loader />
-    </div>
-  );
 };
 
 TagPage.authRequired = true;

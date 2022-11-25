@@ -1,5 +1,4 @@
 import BarsWrapper from "@/components/layouts/BarsWrapper";
-import Loader from "@/components/shared/Loader";
 import { useData } from "@/hooks/useUserData";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -37,14 +36,6 @@ const FavoritesPage = () => {
       </div>
     );
   }
-
-  <div className="flex items-center justify-center w-full h-full">
-    <Head>
-      <title>Favorites - SnipLib</title>
-      <meta name="description" content="Favorite snippets" />
-    </Head>
-    <Loader />
-  </div>;
 };
 
 FavoritesPage.authRequired = true;
