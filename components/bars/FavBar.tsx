@@ -1,7 +1,6 @@
 import Snippet from "@/models/Snippet";
 import { langList } from "@/utils/langList";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import BarHeaderWrapper from "./BarHeaderWrapper";
 import SnipItem from "./SnipItem";
 
@@ -31,7 +30,7 @@ const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
               key={snippet._id.toString()}
               snippet={snippet}
               isActive={activeSnippetId === snippet._id.toString()}
-              path={`/search/${snippet._id.toString()}`}
+              path={`/favorites/${snippet._id.toString()}`}
               color={langList.find((l) => l.id === snippet.language)?.color}
             />
           ))}
