@@ -3,6 +3,7 @@ import ErrorMessage from "@/components/messages/ErrorMessage";
 import Button from "@/components/shared/Button";
 import IconButton from "@/components/shared/IconButton";
 import Loader from "@/components/shared/Loader";
+import SnipLogo from "@/components/shared/SnipLogo";
 import Toast from "@/components/Toast";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { usePreferences } from "@/hooks/usePreferences";
