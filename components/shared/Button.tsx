@@ -26,7 +26,7 @@ const Button = ({
     <button
       {...restProps}
       onClick={onClick}
-      className={`px-3 h-8 rounded-sm min-w-[64px] transition-all ${customStyles} ${className}`}
+      className={`flex items-center justify-center px-3 h-8 rounded-sm min-w-[64px] transition-all ${customStyles} ${className}`}
     >
       {label}
     </button>
