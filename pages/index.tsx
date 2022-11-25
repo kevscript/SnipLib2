@@ -1,5 +1,6 @@
 import GithubIcon from "@/components/icons/Github";
 import Loader from "@/components/shared/Loader";
+import SnipLogo from "@/components/shared/SnipLogo";
 import { useData } from "@/hooks/useUserData";
 import { useScroll } from "framer-motion";
 import type { NextPage } from "next";
@@ -50,10 +51,7 @@ const Home: NextPage = () => {
           <div
             className={`flex justify-between items-center h-full w-[1492px] max-w-[90%] mx-auto`}
           >
-            <div className="flex items-center flex-nowrap gap-x-3">
-              <div className="w-8 h-8 rounded bg-marine-500"></div>
-              <span className="text-xl font-black">SnipLib</span>
-            </div>
+            <SnipLogo stage={2} />
             <ul>
               <button onClick={() => signIn("github")}>Sign In</button>
             </ul>

@@ -8,6 +8,8 @@ import Authbox from "./Authbox";
 import Searchbox from "./Searchbox";
 import FavLink from "./FavLink";
 import ListItem from "./ListItem";
+import SnipLogo from "@/components/shared/SnipLogo";
+import Link from "next/link";
 
 export type MainBarProps = {
   activeBarMode: BarMode;
@@ -32,8 +34,11 @@ const MainBar = ({
     <div className="flex flex-col h-full">
       <div className="flex flex-col flex-1 px-8 pt-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
         <div className="flex items-center justify-between flex-nowrap">
-          <h1 className="text-2xl font-bold uppercase">Sniplib</h1>
-          {/* <Switcher /> */}
+          <Link href="/">
+            <div>
+              <SnipLogo stage={2} />
+            </div>
+          </Link>
         </div>
 
         <Searchbox updateSearchValue={updateSearchValue} />
