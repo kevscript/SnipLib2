@@ -10,10 +10,10 @@ type LoaderProps = {
 };
 
 const Loader = ({
-  color = "#175BCD",
-  height = 10,
-  margin = -5,
-  width = 5,
+  color = "#72767E",
+  height = 7,
+  margin = -9,
+  width = 3,
   speedMultiplier = 1,
   className = "",
 }: LoaderProps) => {
