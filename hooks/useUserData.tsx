@@ -342,6 +342,8 @@ export const useDataProvider = () => {
         if (matchingSnippet) {
           setActiveSnippetId(matchingSnippet._id.toString());
           return { valid: true };
+        } else {
+          return { valid: false };
         }
       } else {
         setActiveSnippetId("");

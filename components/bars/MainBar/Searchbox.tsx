@@ -16,9 +16,7 @@ const Searchbox = ({ updateSearchValue }: SearchboxProps) => {
   const handleSearch = () => {
     if (searchValue.trim()) {
       updateSearchValue(searchValue);
-      if (!router.pathname.includes("/search")) {
-        router.push("/search");
-      }
+      router.push("/search");
     }
   };
 
