@@ -217,7 +217,7 @@ const SnippetForm = ({
   };
 
   return (
-    <div className="min-w-[480px]">
+    <div className="min-w-[480px] py-8">
       {snippet ? (
         <SnippetFormEditHeader
           snippet={snippet}
