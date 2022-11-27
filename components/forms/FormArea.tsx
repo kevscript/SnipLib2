@@ -27,7 +27,7 @@ const FormArea = ({
         value={value}
         name={name}
         onChange={(e) => handleValue(e, name)}
-        className={`min-h-[40px] h-24 p-2 mt-2 outline-none rounded-sm border  bg-carbon-400 ${
+        className={`min-h-[40px] h-24 p-2 mt-2 outline-none rounded-sm border bg-carbon-400 ${
           errors && errors.length > 0
             ? "border-red-500 focus:border-red-500"
             : "border-transparent focus:border-marine-500"

@@ -22,7 +22,7 @@ const SnippetReadOnlyHeader = ({
   togglePublic,
 }: SnippetReadOnlyHeaderProps) => {
   return (
-    <div className="flex justify-between w-full">
+    <div className="sticky top-0 z-10 flex justify-between w-full py-8 bg-carbon-700">
       <div className="flex text-xs font-bold gap-x-2">
         <span className="uppercase text-carbon-300">snippet</span>
       </div>

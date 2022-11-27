@@ -28,7 +28,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
 
   return (
     <div className="flex">
-      <div className="flex flex-shrink-0 h-screen flex-nowrap">
+      <div className="fixed z-50 flex flex-shrink-0 h-screen flex-nowrap">
         <MainBar
           lists={lists}
           snippets={snippets}
@@ -74,10 +74,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
         </div>
       </div>
 
-      <div className="page">{children}</div>
-      {/* <div className="w-full h-screen overflow-y-hidden">
-        {children}
-      </div> */}
+      <div className="page ml-[704px]">{children}</div>
     </div>
   );
 };

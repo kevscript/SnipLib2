@@ -33,7 +33,7 @@ const SnippetReader = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="w-full min-w-[640px] flex flex-col h-full"
+      className="w-full min-w-[640px] h-full relative"
     >
       <SnippetReadOnlyHeader
         snippet={snippet}
@@ -41,7 +41,7 @@ const SnippetReader = ({
         toggleFavorite={toggleFavorite}
         togglePublic={togglePublic}
       />
-      <div className="flex flex-col flex-1 w-full my-8 min-h-[480px] flex-shrink-0">
+      <div className="flex flex-col flex-1 flex-shrink-0 w-full my-8">
         <h3 className="text-2xl font-bold">{snippet.title}</h3>
         <p className="mt-4">{snippet.description}</p>
 
