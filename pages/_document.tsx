@@ -4,7 +4,9 @@ export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="fr-FR">
-        <Head></Head>
+        <Head>
+          <link rel="icon" href="/sniplogo.svg" />
+        </Head>
         <body>
           <Main />
           <div id="modal-root" />
