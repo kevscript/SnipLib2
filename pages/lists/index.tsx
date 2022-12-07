@@ -19,7 +19,7 @@ const ListsPage = () => {
   }, [initOriginalList, router, status, isSuccess]);
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div className="flex items-center justify-center w-full h-screen">
       <Head>
         <title>Lists - Sniplib</title>
         <meta name="description" content="Snippets by list" />

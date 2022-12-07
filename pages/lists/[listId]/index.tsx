@@ -43,7 +43,7 @@ const ListPage = () => {
 
   if (listError) {
     return (
-      <>
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>List: {activeList?.label || ""} - Sniplib</title>
           <meta name="description" content="Snippets by list." />
@@ -51,13 +51,13 @@ const ListPage = () => {
         <ErrorMessage>
           <span className="text-red-600">{listError}</span>
         </ErrorMessage>
-      </>
+      </div>
     );
   }
 
   if (listIsEmpty) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>List: {activeList?.label || ""} - Sniplib</title>
           <meta name="description" content="Snippets by list." />
