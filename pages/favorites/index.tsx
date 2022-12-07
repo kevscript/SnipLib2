@@ -25,7 +25,7 @@ const FavoritesPage = () => {
 
   if (favIsEmpty) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Favorites - SnipLib</title>
           <meta name="description" content="Favorite snippets" />

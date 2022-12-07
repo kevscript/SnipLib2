@@ -124,7 +124,7 @@ const TagSnippetPage = () => {
 
   if (snippetError) {
     return (
-      <>
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Tag: {tagLabel} - Sniplib</title>
           <meta
@@ -136,13 +136,13 @@ const TagSnippetPage = () => {
           <span className="text-red-600">Something went wrong</span>
           <span>Couldn&apos;t find a snippet at this url</span>
         </ErrorMessage>
-      </>
+      </div>
     );
   }
 
   if (!activeSnippet) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Tag: {tagLabel} - Sniplib</title>
           <meta name="description" content="Loading current active snippet." />

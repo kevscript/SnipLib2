@@ -33,7 +33,7 @@ const TagsPage = () => {
   ]);
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
+    <div className="flex items-center justify-center w-full h-screen">
       <Head>
         <title>Tags - Sniplib</title>
         <meta name="description" content="Search snippets by tags" />

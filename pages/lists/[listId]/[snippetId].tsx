@@ -123,7 +123,7 @@ const ListSnippetPage = () => {
 
   if (snippetError) {
     return (
-      <>
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>
             List: {lists?.find((l) => activeListId === l._id.toString())?.label}{" "}
@@ -138,13 +138,13 @@ const ListSnippetPage = () => {
           <span className="text-red-600">Something went wrong</span>
           <span>Couldn&apos;t find a snippet at this url</span>
         </ErrorMessage>
-      </>
+      </div>
     );
   }
 
   if (!activeSnippet) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>
             List: {lists?.find((l) => activeListId === l._id.toString())?.label}{" "}

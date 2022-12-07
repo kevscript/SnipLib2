@@ -42,7 +42,7 @@ const TagPage = () => {
 
   if (tagError) {
     return (
-      <>
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Tag: {tagLabel} - Sniplib</title>
           <meta name="description" content="Current tag does not exist." />
@@ -53,13 +53,13 @@ const TagPage = () => {
           </span>
           <span>`{tagLabel}`</span>
         </ErrorMessage>
-      </>
+      </div>
     );
   }
 
   if (tagIsEmpty) {
     return (
-      <>
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Tag: {tagLabel} - Sniplib</title>
           <meta
@@ -71,7 +71,7 @@ const TagPage = () => {
           <span className="text-marine-100">No snippet with the tag:</span>
           <span>`{activeTag?.label}`</span>
         </InfoMessage>
-      </>
+      </div>
     );
   }
 };

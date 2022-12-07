@@ -143,7 +143,7 @@ const SearchSnippetPage = () => {
   ]);
 
   if (snippetError) {
-    <>
+    <div className="flex items-center justify-center w-full h-screen">
       <Head>
         <title>Search: {activeSearchValue} - Sniplib</title>
         <meta name="description" content="Snippets by search value." />
@@ -153,12 +153,12 @@ const SearchSnippetPage = () => {
         <span>Couldn&apos;t find a snippet at this url</span>
       </ErrorMessage>
       ;
-    </>;
+    </div>;
   }
 
   if (!activeSnippet) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
+      <div className="flex items-center justify-center w-full h-screen">
         <Head>
           <title>Search: {activeSearchValue} - Sniplib</title>
           <meta name="description" content="Snippets by search value." />
