@@ -7,6 +7,8 @@ import AuthGuard from "@/components/AuthGuard";
 import { ReactElement, ReactNode } from "react";
 import { DataProvider } from "@/hooks/useUserData";
 import { PreferencesProvider } from "@/hooks/usePreferences";
+import { ToastsProvider } from "@/hooks/useToasts";
+import ToastLand from "@/components/toasts/ToastLand";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export type NextCustomPage<P = {}, IP = P> = NextPage<P, IP> & {
@@ -27,11 +29,14 @@ function MyApp({ pageProps: { session, ...pageProps }, ...props }: AppProps) {
         <QueryClientProvider client={queryClient}>
           {/* <ReactQueryDevtools initialIsOpen={true} /> */}
           <DataProvider>
-            {Component.authRequired ? (
-              <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
-            ) : (
-              <>{getLayout(<Component {...pageProps} />)}</>
-            )}
+            <ToastsProvider>
+              <ToastLand />
+              {Component.authRequired ? (
+                <AuthGuard>{getLayout(<Component {...pageProps} />)}</AuthGuard>
+              ) : (
+                <>{getLayout(<Component {...pageProps} />)}</>
+              )}
+            </ToastsProvider>
           </DataProvider>
         </QueryClientProvider>
       </PreferencesProvider>

@@ -4,9 +4,9 @@ import Button from "@/components/shared/Button";
 import IconButton from "@/components/shared/IconButton";
 import Loader from "@/components/shared/Loader";
 import SnipLogo from "@/components/shared/SnipLogo";
-import Toast from "@/components/Toast";
 import { useCodeMirror } from "@/hooks/useCodeMirror";
 import { usePreferences } from "@/hooks/usePreferences";
+import { useToasts } from "@/hooks/useToasts";
 import Snippet from "@/models/Snippet";
 import { getPublicSnippet } from "@/utils/getPublicSnippet";
 import { langList, LanguageIds } from "@/utils/langList";
@@ -17,7 +17,7 @@ import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const PublicSnippetPage = () => {
   const { status } = useSession();
@@ -25,7 +25,7 @@ const PublicSnippetPage = () => {
   const { snippetId } = router.query;
   const { preferences } = usePreferences();
   const [snippet, setSnippet] = useState<Snippet | null>(null);
-  const toastRef = useRef<any>(null);
+  const { addToast } = useToasts();
 
   const { container } = useCodeMirror({
     readOnly: true,
@@ -73,7 +73,6 @@ const PublicSnippetPage = () => {
         <title>{snippet && `${snippet.title} - SnipLib`}</title>
         <meta name="description" content="Public snippet" />
       </Head>
-      <Toast ref={toastRef} />
       <div className="w-[1440px] mx-auto max-w-[90%] pt-8 pb-16">
         <div className="flex justify-between flex-nowrap">
           <Link href="/">
@@ -86,10 +85,10 @@ const PublicSnippetPage = () => {
               <IconButton
                 onClick={() => {
                   navigator.clipboard.writeText(snippet.content);
-                  toastRef.current.showToast({
+                  addToast({
+                    id: Date.now(),
                     type: "neutral",
                     title: "Copied to clipboard",
-                    duration: 1500,
                   });
                 }}
                 icon={
