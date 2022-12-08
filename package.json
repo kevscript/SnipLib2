@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "jest",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run"
+    "cypress:headless": "cypress run",
+    "cypress:component": "cypress run --component"
   },
   "dependencies": {
     "@codemirror/highlight": "^0.19.8",
