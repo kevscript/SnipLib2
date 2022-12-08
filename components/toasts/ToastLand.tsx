@@ -19,6 +19,7 @@ const ToastLand = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 1, ease: "easeInOut" }}
+            layout
           >
             <div className="flex items-center justify-center pl-4 pr-2 ">
               {toast.type === "success" && (
