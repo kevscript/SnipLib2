@@ -1,88 +1,21 @@
-import Toast from "@/components/Toast";
-import React from "react";
+import Toast from "@/components/toasts/Toast";
+import { mockToasts } from "./mocks/mockToast";
 
 describe("Toast", () => {
-  it("displays correctly success message", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "success",
-        title: "Hello World",
-        duration: 10000,
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.get("p").should("contain.text", "Hello World");
-    });
+  it("displays toast correctly", () => {
+    cy.mount(<Toast toast={mockToasts[0]} handleRemove={() => {}} />);
+    // check title
+    cy.get("li").should("contain.text", "Toast 1");
+    // check type
+    const toastType = `toast-${mockToasts[0].type}`;
+    cy.get(`[data-cy="${toastType}"]`).should("exist");
   });
 
-  it("displays correctly fail message", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "fail",
-        title: "Error happened",
-        duration: 10000,
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.get("p").should("contain.text", "Error happened");
-    });
-  });
-
-  it("displays correctly neutral message", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "neutral",
-        title: "This is fine",
-        duration: 10000,
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.get("p").should("contain.text", "This is fine");
-    });
-  });
-
-  it("closes early when clicking the close button", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "neutral",
-        title: "This is fine",
-        duration: 10000,
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.get("p").should("contain.text", "This is fine");
-
-      cy.get("button").click();
-      cy.get('[data-cy="toast"]').should("not.exist");
-    });
-  });
-
-  it("closes the toast after correct default setTimeout duration", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "fail",
-        title: "Error happened",
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.wait(3000);
-      cy.get('[data-cy="toast"]').should("not.exist");
-    });
-  });
-
-  it("closes the toast after correct manual setTimeout duration", () => {
-    const ref = React.createRef<any>();
-    cy.mount(<Toast ref={ref} />).then(() => {
-      ref.current.showToast({
-        type: "fail",
-        title: "Error happened",
-        duration: 7000,
-      });
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.wait(3000);
-      cy.get('[data-cy="toast"]').should("exist");
-      cy.wait(4000);
-      cy.get('[data-cy="toast"]').should("not.exist");
-    });
+  it("triggers the remove handler on btn click", () => {
+    cy.mount(
+      <Toast toast={mockToasts[0]} handleRemove={cy.spy().as("onRemove")} />
+    );
+    cy.get("button").should("exist").click();
+    cy.get("@onRemove").should("have.been.called");
   });
 });
