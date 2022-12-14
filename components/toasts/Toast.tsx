@@ -34,7 +34,7 @@ const Toast = ({ toast, handleRemove }: ToastProps) => {
         )}
       </div>
       <div
-        className={`flex flex-nowrap items-center justify-between text-sm min-w-[228px] max-w-[80%] pr-2 ${
+        className={`flex flex-nowrap items-center justify-between text-sm min-w-[228px] pr-2 ${
           toast.type === "success"
             ? "text-emerald-300"
             : toast.type === "fail"
