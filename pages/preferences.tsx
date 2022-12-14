@@ -69,7 +69,7 @@ const PreferencesPage = () => {
   };
 
   return (
-    <>
+    <div className="mt-8">
       <Head>
         <title>User Preferences - Sniplib</title>
         <meta name="description" content="Change your editor & app settings" />
@@ -175,7 +175,7 @@ const PreferencesPage = () => {
       )}
 
       <div ref={container} className="mt-8"></div>
-    </>
+    </div>
   );
 };
 

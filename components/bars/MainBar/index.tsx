@@ -9,6 +9,8 @@ import FavLink from "./FavLink";
 import ListItem from "./ListItem";
 import SnipLogo from "@/components/shared/SnipLogo";
 import Link from "next/link";
+import SettingsIcon from "@/components/icons/Settings";
+import IconButton from "@/components/shared/IconButton";
 
 export type MainBarProps = {
   activeBarMode: BarMode;
@@ -33,14 +35,23 @@ const MainBar = ({
     <div className="flex flex-col h-full">
       <div className="flex flex-col flex-1 px-8 pt-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
         <div className="flex items-center justify-between flex-nowrap">
-          <Link href="/">
-            <div>
-              <SnipLogo stage={2} />
-            </div>
+          <SnipLogo />
+          <Link href="/preferences">
+            <IconButton
+              icon={
+                <SettingsIcon
+                  className={`w-3.5 h-3.5 transition-all ease-out`}
+                />
+              }
+              tooltipId="preferences"
+              tooltipText="Preferences"
+              className="!bg-carbon-400 hover:!bg-marine w-6 h-6"
+            />
           </Link>
         </div>
-
-        <Searchbox updateSearchValue={updateSearchValue} />
+        <div className="mt-8">
+          <Searchbox updateSearchValue={updateSearchValue} />
+        </div>
 
         <div className="flex-1 mt-8">
           <FavLink
