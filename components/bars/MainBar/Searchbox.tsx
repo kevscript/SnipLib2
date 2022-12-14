@@ -25,7 +25,7 @@ const Searchbox = ({ updateSearchValue }: SearchboxProps) => {
   };
 
   return (
-    <label htmlFor="searchbox" className="relative mt-8">
+    <label htmlFor="searchbox" className="relative">
       <input
         type="text"
         value={searchValue}
