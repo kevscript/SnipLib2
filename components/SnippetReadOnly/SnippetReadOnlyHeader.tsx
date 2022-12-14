@@ -6,7 +6,8 @@ import FavoriteIcon from "../icons/Favorite";
 import DeleteSnippetWidget from "../widgets/DeleteSnippetWidget";
 import IconButton from "../shared/IconButton";
 import EyeIcon from "../icons/Eye";
-import { useState } from "react";
+import LinkIcon from "../icons/Link";
+import { useToasts } from "@/hooks/useToasts";
 
 type SnippetReadOnlyHeaderProps = {
   snippet: Snippet;
@@ -21,6 +22,8 @@ const SnippetReadOnlyHeader = ({
   toggleFavorite,
   togglePublic,
 }: SnippetReadOnlyHeaderProps) => {
+  const { addToast } = useToasts();
+
   return (
     <div className="sticky top-0 z-10 flex justify-between w-full py-8 bg-carbon-700">
       <div className="flex text-xs font-bold gap-x-2">
@@ -58,9 +61,37 @@ const SnippetReadOnlyHeader = ({
           tooltipId="public"
           tooltipText={snippet.public ? "Make private" : "Make public"}
         />
+        {snippet.public && (
+          <IconButton
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${
+                  window && window.location.origin
+                    ? `${window.location.origin}/snippet/${snippet._id}`
+                    : `No url Found`
+                }`
+              );
+              addToast({
+                id: Date.now(),
+                title: "Public link copied to clipboard",
+                type: "success",
+              });
+            }}
+            icon={
+              <LinkIcon className="w-4 h-4 transition-all ease-out group-hover:stroke-marine-50" />
+            }
+            tooltipId="public-link"
+            tooltipText="Public Url"
+          />
+        )}
         <IconButton
           onClick={() => {
             navigator.clipboard.writeText(snippet.content);
+            addToast({
+              id: Date.now(),
+              title: "Snippet copied to clipboard",
+              type: "success",
+            });
           }}
           icon={
             <CopyIcon className="w-4 h-4 transition-all ease-out group-hover:stroke-marine-50" />
