@@ -68,14 +68,14 @@ const SnippetReadOnlyHeader = ({
           tooltipId="copy"
           tooltipText="Copy snippet"
         />
-        <IconButton
+        {/* <IconButton
           onClick={() => console.log("snap it")}
           icon={
             <CameraIcon className="w-4 h-4 transition-all ease-out group-hover:stroke-marine-50" />
           }
           tooltipId="snapit"
           tooltipText="Take snapshot"
-        />
+        /> */}
 
         <IconButton
           onClick={triggerEditMode}
