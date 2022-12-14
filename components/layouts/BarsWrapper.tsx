@@ -74,7 +74,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
         </div>
       </div>
 
-      <div className="page ml-[704px]">{children}</div>
+      <div className={mode ? "page ml-[704px]" : "page ml-80"}>{children}</div>
     </div>
   );
 };
