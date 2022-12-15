@@ -37,16 +37,18 @@ const MainBar = ({
         <div className="flex items-center justify-between flex-nowrap">
           <SnipLogo />
           <Link href="/preferences">
-            <IconButton
-              icon={
-                <SettingsIcon
-                  className={`w-3.5 h-3.5 transition-all ease-out`}
-                />
-              }
-              tooltipId="preferences"
-              tooltipText="Preferences"
-              className="!bg-carbon-400 hover:!bg-marine w-6 h-6"
-            />
+            <>
+              <IconButton
+                icon={
+                  <SettingsIcon
+                    className={`w-3.5 h-3.5 transition-all ease-out`}
+                  />
+                }
+                tooltipId="preferences"
+                tooltipText="Preferences"
+                className="!bg-carbon-400 hover:!bg-marine w-6 h-6"
+              />
+            </>
           </Link>
         </div>
         <div className="mt-8">
