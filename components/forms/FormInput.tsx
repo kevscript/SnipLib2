@@ -10,6 +10,7 @@ type FormInputProps = {
   handleValue: (e: ChangeEvent<HTMLInputElement>, name: string) => void;
   autoFocus?: boolean;
   className?: string;
+  placeholder?: string;
 };
 
 const FormInput = ({
@@ -21,11 +22,13 @@ const FormInput = ({
   handleValue,
   autoFocus = false,
   className = "",
+  placeholder,
 }: FormInputProps) => {
   return (
     <label htmlFor={name} className="flex flex-col flex-1">
       <span className="ml-2 text-sm font-bold">{label}</span>
       <input
+        placeholder={placeholder}
         name={name}
         type={type}
         value={value}
