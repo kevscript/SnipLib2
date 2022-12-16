@@ -1,3 +1,4 @@
+import { db } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import * as z from "zod";
 
@@ -12,6 +13,8 @@ const Account = z.object({
   scope: z.string(),
 });
 
-type Account = z.infer<typeof Account>;
+export type UserAccount = z.infer<typeof Account>;
+
+export const UsersAccounts = db.collection<UserAccount>("accounts");
 
 export default Account;

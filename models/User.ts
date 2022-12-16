@@ -1,3 +1,4 @@
+import { db } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import * as z from "zod";
 
@@ -9,6 +10,8 @@ const User = z.object({
   emailVerified: z.any(),
 });
 
-type User = z.infer<typeof User>;
+export type User = z.infer<typeof User>;
+
+export const Users = db.collection<User>("users");
 
 export default User;
