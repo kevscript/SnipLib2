@@ -28,7 +28,7 @@ function HelloMessage({ name }) {
 const root = createRoot(document.getElementById('container'));
 root.render(<HelloMessage name="${name}" />);`;
 
-const PreferencesPage = () => {
+const SettingsPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { preferences, updateLocalPreferences } = usePreferences();
@@ -77,12 +77,12 @@ const PreferencesPage = () => {
   return (
     <div className="mt-8 mb-16">
       <Head>
-        <title>User Preferences - Sniplib</title>
+        <title>User Settings - Sniplib</title>
         <meta name="description" content="Change your editor & app settings" />
       </Head>
       <div className="flex items-center justify-between flex-1">
         <div className="flex text-xs font-bold gap-x-2">
-          <span className="uppercase text-carbon-300">Preferences</span>
+          <span className="uppercase text-carbon-300">Settings</span>
         </div>
         <div className="flex flex-nowrap gap-x-4">
           <Button
@@ -202,9 +202,9 @@ const PreferencesPage = () => {
   );
 };
 
-PreferencesPage.authRequired = true;
-PreferencesPage.getLayout = (page: React.ReactElement) => {
+SettingsPage.authRequired = true;
+SettingsPage.getLayout = (page: React.ReactElement) => {
   return <BarsWrapper>{page}</BarsWrapper>;
 };
 
-export default PreferencesPage;
+export default SettingsPage;
