@@ -30,7 +30,7 @@ const Home: NextPage = () => {
     return scrollY.onChange((y) => {
       triggerBlur(y);
     });
-  }, [isBlured]);
+  }, [isBlured, scrollY]);
 
   useEffect(() => {
     if (isSuccess && status === "authenticated" && router.isReady) {
