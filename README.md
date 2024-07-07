@@ -1,5 +1,7 @@
 # SnipLib
 
+[Live App](https://sniplib.vercel.app/)
+
 ### What is SnipLib ?
 
 SnipLib is your simple snippet library on the cloud. 
