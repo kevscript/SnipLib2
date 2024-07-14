@@ -64,7 +64,7 @@ export type UserDataProviderReturnValue = {
   initDefaultFavorite: () => { path: string; isEmpty: boolean };
   isSuccess: boolean;
   checkList: (listId: string) => CheckListReturnValue;
-  checktTag: (tagLabel: string) => CheckTagReturnValue;
+  checkTag: (tagLabel: string) => CheckTagReturnValue;
   checkSearch: (searchValue: string) => CheckSearchReturnValue;
   checkListSnippet: (p: CheckListSnippetParams) => { valid: boolean };
   checkTagSnippet: (p: CheckTagSnippetParams) => { valid: boolean };
@@ -273,7 +273,7 @@ export const useDataProvider = () => {
     }
   };
 
-  const checktTag = (tagLabel: string) => {
+  const checkTag = (tagLabel: string) => {
     if (isSuccess && tags) {
       setActiveBarMode("tag");
       if (tagLabel !== activeTagLabel) {
@@ -441,7 +441,7 @@ export const useDataProvider = () => {
     isSuccess,
     checkList,
     checkListSnippet,
-    checktTag,
+    checkTag,
     checkTagSnippet,
     checkSearch,
     checkSearchSnippet,

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const TagPage = () => {
   const router = useRouter();
   const { tagLabel } = router.query;
-  const { checktTag, isSuccess, tags } = useData();
+  const { checkTag, isSuccess, tags } = useData();
 
   const [routerWasCalled, setRouterWasCalled] = useState(false);
   const [activeTag, setActiveTag] = useState<Tag | null>(null);
@@ -18,7 +18,7 @@ const TagPage = () => {
 
   useEffect(() => {
     if (isSuccess && router.isReady && !routerWasCalled && tags) {
-      const { valid, isEmpty, path } = checktTag(tagLabel as string);
+      const { valid, isEmpty, path } = checkTag(tagLabel as string);
 
       if (!valid) {
         setTagError("This tag does not exist");
@@ -38,7 +38,7 @@ const TagPage = () => {
         setTagIsEmpty(true);
       }
     }
-  }, [checktTag, isSuccess, router, routerWasCalled, tagLabel, tags]);
+  }, [checkTag, isSuccess, router, routerWasCalled, tagLabel, tags]);
 
   if (tagError) {
     return (
