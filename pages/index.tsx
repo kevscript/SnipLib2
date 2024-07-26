@@ -89,7 +89,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className="w-[1280px] max-w-[90%] bg-carbon-700 mt-32 aspect-video shadow-black/50 shadow-lg">
-            <video autoPlay loop muted poster="/poster.jpg">
+            <video autoPlay loop muted controls poster="/poster.jpg">
               <source src="/welcome.mp4" type="video/mp4" />
             </video>
           </div>
