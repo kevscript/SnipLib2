@@ -37,7 +37,7 @@ const FavBar = ({ favSnippets, activeSnippetId }: FavBarProps) => {
         </ul>
       )}
       {favSnippets && favSnippets.length === 0 && (
-        <div className="w-full p-8 text-sm bg-carbon-400">
+        <div className="w-full p-4 text-sm xl:p-8 bg-carbon-400">
           <span>No favorite snippets yet.</span>
         </div>
       )}

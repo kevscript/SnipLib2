@@ -12,7 +12,7 @@ const BarHeaderWrapper = ({
   label,
 }: BarHeaderWrapperProps) => {
   return (
-    <div className="flex flex-col p-8 border-b-2 border-carbon-600">
+    <div className="flex flex-col p-4 border-b-2 xl:p-8 border-carbon-600">
       <h6 className="text-xs font-bold uppercase text-carbon-300">{title}</h6>
       <div className="flex justify-between mt-2 flex-nowrap">
         <span className="font-bold">{label}</span>

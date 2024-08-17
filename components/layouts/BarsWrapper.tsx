@@ -41,7 +41,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           updateSearchValue={updateSearchValue}
         />
 
-        <div className={`${mode && "bg-carbon-500"}`}>
+        <div className={`bg-carbon-500`}>
           <AnimatePresence>
             {mode === "list" && (
               <ListBar
