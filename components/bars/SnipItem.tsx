@@ -19,7 +19,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
         </Link>
       )}
     >
-      <li
+      <a
         className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-4 xl:px-8 py-6 border-b-2 border-carbon-600 group hover:bg-carbon-400 ${
           isActive ? "bg-carbon-400" : "bg-carbon-500 cursor-pointer"
         }`}
@@ -29,6 +29,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
           <span
             className={`text-xs capitalize`}
             style={{ color: color || "#fff" }}
+            data-cy="snip-item-lang"
           >
             {snippet.language}
           </span>
@@ -43,7 +44,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
             </ul>
           )}
         </div>
-      </li>
+      </a>
     </ConditionalWrapper>
   );
 };

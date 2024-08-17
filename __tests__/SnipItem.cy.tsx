@@ -47,7 +47,11 @@ describe("SnipItem", () => {
       />
     );
 
-    cy.contains("javascript", { matchCase: false })
+    cy.contains("javascript", { matchCase: false });
+    // .should("have.css", "color")
+    // .and("match", badassColor);
+
+    cy.get("[data-cy='snip-item-lang'")
       .should("have.css", "color")
       .and("match", badassColor);
   });

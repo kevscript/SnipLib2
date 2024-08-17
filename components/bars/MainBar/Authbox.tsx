@@ -26,12 +26,12 @@ const Authbox = () => {
 
   if (data && data.user && status === "authenticated") {
     return (
-      <div
-        className="flex items-center justify-between w-full p-4 mt-auto cursor-pointer xl:p-8 bg-carbon-600 flex-nowrap group hover:bg-carbon-700"
-        onClick={() => setMenuIsOpen((x) => !x)}
-        ref={clickContainerRef}
-      >
-        <div className="flex flex-nowrap">
+      <div className="flex items-center justify-between w-full p-4 mt-auto cursor-pointer xl:p-8 bg-carbon-600 flex-nowrap group hover:bg-carbon-700">
+        <button
+          className="flex items-center flex-nowrap"
+          onClick={() => setMenuIsOpen((x) => !x)}
+          ref={clickContainerRef}
+        >
           <div className="relative w-10 h-10 overflow-hidden rounded-lg bg-marine">
             <Image src={data.user.image!} layout="fill" alt="user avatar" />
           </div>
@@ -39,19 +39,19 @@ const Authbox = () => {
             <span className="font-bold">{data.user.name}</span>
             <span className="text-xs text-carbon-300">{data.user.email}</span>
           </div>
-        </div>
-        <div className="flex items-center justify-center w-6 h-full cursor-pointer">
-          <MoreIcon
-            className={`w-4 ${
-              menuIsOpen ? "stroke-white" : "stroke-carbon-300"
-            } group-hover:stroke-white `}
-          />
-        </div>
+          <div className="flex items-center justify-center w-6 h-full cursor-pointer">
+            <MoreIcon
+              className={`w-4 ${
+                menuIsOpen ? "stroke-white" : "stroke-carbon-300"
+              } group-hover:stroke-white `}
+            />
+          </div>
+        </button>
         {menuIsOpen && (
           <div className="absolute w-40 overflow-hidden rounded drop-shadow-[0_1px_4px_#0e0e0e] bottom-8 left-[16rem] xl:left-[20rem] bg-carbon-700 border border-carbon-400">
             <ul className="flex flex-col w-full text-sm">
-              <Link href="/settings">
-                <li
+              <Link href="/settings" passHref>
+                <a
                   className="flex items-center w-full h-10 px-4 transition-all border-b cursor-pointer hover:bg-carbon-600 gap-x-2 border-carbon-400"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -60,15 +60,15 @@ const Authbox = () => {
                 >
                   <SettingsIcon className="w-3.5 h-3.5" />
                   <span>Settings</span>
-                </li>
+                </a>
               </Link>
-              <li
+              <button
                 className="flex items-center justify-between w-full h-10 px-4 transition-all cursor-pointer hover:bg-carbon-600"
                 onClick={() => signOut()}
               >
                 <span>Sign out</span>
                 <LogoutIcon className="w-3.5 h-3.5" />
-              </li>
+              </button>
             </ul>
           </div>
         )}

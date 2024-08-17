@@ -20,7 +20,7 @@ describe("TagBar", () => {
     );
 
     // check if all snippets with current active tag label are rendered
-    cy.get('[data-cy="active-list"] > li').then((items) => {
+    cy.get('[data-cy="active-list"] > a').then((items) => {
       Array.from(items).forEach((item, i) => {
         expect(item).to.contain.text(mockSnippets[i].title);
       });
