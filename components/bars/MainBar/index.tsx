@@ -33,7 +33,7 @@ const MainBar = ({
 }: MainBarProps) => {
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col flex-1 px-8 pt-8 overflow-x-hidden overflow-y-auto w-80 bg-carbon-600">
+      <div className="flex flex-col flex-1 w-64 px-8 pt-8 overflow-x-hidden overflow-y-auto xl:w-80 bg-carbon-600">
         <div className="flex items-center justify-between flex-nowrap">
           <Link href="/lists">
             <div className="cursor-pointer">

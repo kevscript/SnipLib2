@@ -25,7 +25,7 @@ const SnippetReadOnlyHeader = ({
   const { addToast } = useToasts();
 
   return (
-    <div className="sticky top-0 z-10 flex justify-between w-full py-8 bg-carbon-700">
+    <div className="sticky top-0 z-10 flex flex-wrap justify-between w-full gap-2 py-8 bg-carbon-700">
       <div className="flex text-xs font-bold gap-x-2">
         <span className="uppercase text-carbon-300">snippet</span>
       </div>
