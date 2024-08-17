@@ -89,7 +89,8 @@ export const useCodeMirror = ({
         editor.current.destroy();
         const newView = new EditorView({
           state: EditorState.create({
-            doc: readOnly ? doc : preservedDoc,
+            // doc: readOnly ? doc : preservedDoc, <- before, dont remember why used preservedDoc so I keep it for now
+            doc: doc,
             extensions: customExtensions,
           }),
           parent: container.current,

@@ -5,7 +5,7 @@ import List from "@/models/List";
 import Snippet from "@/models/Snippet";
 import { langList, LanguageIds } from "@/utils/langList";
 import { ObjectID } from "bson";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CrossIcon from "../icons/Cross";
 import SnippetFormCreateHeader from "./SnippetFormCreateHeader";
 import SnippetFormEditHeader from "./SnippetFormEditHeader";
@@ -78,19 +78,23 @@ const SnippetForm = ({
   onCancel,
   lists,
 }: SnippetFormProps) => {
-  const [form, setForm] = useState<SnippetFormState>(() =>
-    snippet
-      ? {
-          listId: snippet.listId.toString(),
-          content: snippet.content,
-          description: snippet.description,
-          language: snippet.language as LanguageIds,
-          tag: "",
-          tags: snippet.tags,
-          title: snippet.title,
-        }
-      : { ...initSnippetForm, listId: activeListId }
-  );
+  const [form, setForm] = useState<SnippetFormState>(initSnippetForm);
+
+  useEffect(() => {
+    if (snippet) {
+      setForm({
+        listId: snippet.listId.toString(),
+        content: snippet.content,
+        description: snippet.description,
+        language: snippet.language as LanguageIds,
+        tag: "",
+        tags: snippet.tags,
+        title: snippet.title,
+      });
+    } else {
+      setForm({ ...initSnippetForm, listId: activeListId });
+    }
+  }, [snippet, activeListId]);
 
   const [errors, setErrors] = useState<SnippetErrors>(initSnippetErrors);
 
@@ -282,26 +286,26 @@ const SnippetForm = ({
               }`}
             >
               <ul className="flex flex-wrap items-center h-full">
-                  {form.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      className="flex items-center justify-center h-8 px-1.5 ml-1 rounded-sm bg-marine-500 flex-nowrap gap-x-2 cursor-pointer"
-                      onClick={() => handleTagRemove(tag)}
-                    >
-                      <span className="text-sm text-white">{tag}</span>
-                      <CrossIcon className="w-4 h-4 stroke-white" />
-                    </li>
-                  ))}
+                {form.tags.map((tag) => (
+                  <li
+                    key={tag}
+                    className="flex items-center justify-center h-8 px-1.5 ml-1 rounded-sm bg-marine-500 flex-nowrap gap-x-2 cursor-pointer"
+                    onClick={() => handleTagRemove(tag)}
+                  >
+                    <span className="text-sm text-white">{tag}</span>
+                    <CrossIcon className="w-4 h-4 stroke-white" />
+                  </li>
+                ))}
                 {form.tags.length < 5 && (
-              <input
-                name="tag"
-                type="text"
-                value={form.tag}
-                onChange={handleTagValueChange}
-                onKeyDown={(e) => handleTagAdd(e)}
+                  <input
+                    name="tag"
+                    type="text"
+                    value={form.tag}
+                    onChange={handleTagValueChange}
+                    onKeyDown={(e) => handleTagAdd(e)}
                     className="flex-1 h-10 min-w-0 px-2 bg-transparent border-none outline-none"
-                disabled={form.tags.length >= 5}
-              />
+                    disabled={form.tags.length >= 5}
+                  />
                 )}
               </ul>
             </div>

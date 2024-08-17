@@ -21,6 +21,8 @@ const DeleteSnippetWidget = ({ snippet }: DeleteSnippetWidgetProps) => {
 
   const onSnippetDeletion = (snippetToDelete: Snippet, err: any) => {
     setIsOpen(false);
+
+    // this part need fixing, we're not always on /list when deleting, so its causing unwanted behaviour
     if (!err) {
       router.replace(`/lists/${snippetToDelete.listId.toString()}`);
     }
