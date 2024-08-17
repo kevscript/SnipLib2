@@ -1,4 +1,5 @@
 import GithubIcon from "@/components/icons/Github";
+import Button from "@/components/shared/Button";
 import Loader from "@/components/shared/Loader";
 import SnipLogo from "@/components/shared/SnipLogo";
 import { useData } from "@/hooks/useUserData";
@@ -20,10 +21,10 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const triggerBlur = (y: number) => {
-      if (y >= 100 && !isBlured) {
+      if (y >= 32 && !isBlured) {
         setIsBlured(true);
       }
-      if (y < 100 && isBlured) {
+      if (y < 32 && isBlured) {
         setIsBlured(false);
       }
     };
@@ -47,7 +48,7 @@ const Home: NextPage = () => {
           <meta name="description" content="Welcome to SnipLib." />
         </Head>
         <div
-          className={`sticky top-0 left-0 right-0  py-8 border-b-[1px] transition-all ${
+          className={`sticky top-0 left-0 right-0  py-8 border-b-[1px] transition-all z-50 ${
             isBlured
               ? "bg-carbon-500 bg-opacity-50 backdrop-blur border-carbon-400"
               : "bg-transparent border-transparent"
@@ -57,13 +58,11 @@ const Home: NextPage = () => {
             className={`flex justify-between items-center w-[1492px] max-w-[90%] mx-auto`}
           >
             <SnipLogo stage={2} />
-            <ul>
-              <button onClick={() => signIn("github")}>Sign In</button>
-            </ul>
+            <Button label="Sign In" onClick={() => signIn("github")} />
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-[90%] mx-auto py-48">
+        <div className="flex flex-col items-center max-w-[90%] mx-auto py-16 md:py-24 lg:py-48">
           <div className="flex flex-col items-center w-full text-center">
             <h1 className="text-3xl font-black lg:text-6xl">
               Your snippet library on the cloud.
@@ -88,8 +87,8 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="w-[1280px] max-w-[90%] bg-carbon-700 mt-32 aspect-video shadow-black/50 shadow-lg">
-            <video autoPlay loop muted poster="/poster.jpg">
+          <div className="w-[1280px] max-w-full lg:max-w-[90%] bg-carbon-700 mt-16 md:mt-24 lg:mt-32 aspect-video shadow-black/50 shadow-lg rounded overflow-hidden">
+            <video autoPlay loop muted controls poster="/poster.jpg">
               <source src="/welcome.mp4" type="video/mp4" />
             </video>
           </div>

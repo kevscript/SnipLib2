@@ -27,7 +27,7 @@ const Authbox = () => {
   if (data && data.user && status === "authenticated") {
     return (
       <div
-        className="flex items-center justify-between flex-shrink-0 w-full p-8 mt-auto cursor-pointer bg-carbon-600 flex-nowrap group hover:bg-carbon-700"
+        className="flex items-center justify-between w-full p-4 mt-auto cursor-pointer xl:p-8 bg-carbon-600 flex-nowrap group hover:bg-carbon-700"
         onClick={() => setMenuIsOpen((x) => !x)}
         ref={clickContainerRef}
       >
@@ -48,7 +48,7 @@ const Authbox = () => {
           />
         </div>
         {menuIsOpen && (
-          <div className="absolute w-40 overflow-hidden rounded drop-shadow-[0_1px_4px_#0e0e0e] bottom-8 left-[300px] bg-carbon-700 border border-carbon-400">
+          <div className="absolute w-40 overflow-hidden rounded drop-shadow-[0_1px_4px_#0e0e0e] bottom-8 left-[16rem] xl:left-[20rem] bg-carbon-700 border border-carbon-400">
             <ul className="flex flex-col w-full text-sm">
               <Link href="/settings">
                 <li

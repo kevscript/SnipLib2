@@ -27,8 +27,10 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
   } = useData();
 
   return (
-    <div className="flex">
-      <div className="fixed z-50 flex flex-shrink-0 h-screen flex-nowrap">
+    <div className="flex h-screen overflow-x-auto">
+      <div
+        className={`sticky top-0 z-50 flex-shrink-0 h-screen flex-nowrap flex`}
+      >
         <MainBar
           lists={lists}
           snippets={snippets}
@@ -39,7 +41,7 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
           updateSearchValue={updateSearchValue}
         />
 
-        <div className={`${mode && "bg-carbon-500 w-96"}`}>
+        <div className={`${mode && "bg-carbon-500"}`}>
           <AnimatePresence>
             {mode === "list" && (
               <ListBar
@@ -74,7 +76,8 @@ const BarsWrapper = ({ children, mode }: BarsWrapperProps) => {
         </div>
       </div>
 
-      <div className={mode ? "page ml-[44rem]" : "page ml-80"}>{children}</div>
+      {/* <div className={mode ? "page ml-[44rem]" : "page ml-80"}>{children}</div> */}
+      <div className={mode ? "page" : "page"}>{children}</div>
     </div>
   );
 };

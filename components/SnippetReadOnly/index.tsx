@@ -33,7 +33,7 @@ const SnippetReader = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25 }}
-      className="w-full min-w-[640px] h-full relative"
+      className="relative w-full h-full "
     >
       <SnippetReadOnlyHeader
         snippet={snippet}
@@ -77,7 +77,7 @@ const SnippetReader = ({
           <div ref={container} className="w-full h-full"></div>
         </div>
 
-        <div className="flex justify-between mt-2 text-xs text-carbon-300">
+        <div className="flex justify-between my-2 text-xs text-carbon-300">
           <span>created {timeSince(new Date(snippet.createdAt))}</span>
           {snippet.updatedAt !== snippet.createdAt && (
             <span>edited {timeSince(new Date(snippet.updatedAt))}</span>

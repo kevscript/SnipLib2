@@ -9,7 +9,7 @@ const SnippetFormCreateHeader = ({
   onCancel,
 }: SnippetFormCreateHeaderProps) => {
   return (
-    <div className="flex items-center justify-between flex-1">
+    <div className="flex flex-wrap items-center justify-between flex-1 gap-2 gap-y-4">
       <div className="flex text-xs font-bold gap-x-2">
         <span className="uppercase text-carbon-300">Create</span>
         <span>/</span>

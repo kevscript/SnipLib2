@@ -35,7 +35,7 @@ const SearchBar = ({
 
   return (
     <motion.div
-      className="flex flex-col flex-shrink-0 h-screen overflow-hidden w-96 bg-carbon-500"
+      className="flex flex-col flex-shrink-0 w-64 h-screen overflow-hidden xl:w-96 bg-carbon-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
