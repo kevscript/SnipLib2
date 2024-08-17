@@ -217,7 +217,7 @@ const SnippetForm = ({
   };
 
   return (
-    <div className="min-w-[480px] py-8">
+    <div className="relative w-full h-full py-8 min-w-screen md:min-w-[30rem]">
       {snippet ? (
         <SnippetFormEditHeader
           snippet={snippet}
@@ -232,7 +232,7 @@ const SnippetForm = ({
         />
       )}
       <form className="flex flex-col pb-16 mt-12 gap-y-4">
-        <div className="flex gap-x-4">
+        <div className="flex flex-col flex-wrap gap-4 lg:flex-row">
           <FormInput
             label="Title"
             name="title"
@@ -271,18 +271,17 @@ const SnippetForm = ({
             }
           />
         </div>
-        <div className="flex mt-4 gap-x-4">
+        <div className="flex flex-col flex-wrap gap-4 mt-4 lg:flex-row">
           <label className="flex flex-col flex-1" htmlFor="tag">
             <span className="ml-2 text-sm font-bold">Tags</span>
             <div
-              className={`flex flex-nowrap gap-x-2 mt-2 outline-none overflow-hidden rounded-sm border bg-carbon-400 ${
+              className={`flex flex-nowrap gap-x-2 mt-2 min-h-[2.5rem] outline-none overflow-hidden rounded-sm border bg-carbon-400 ${
                 errors["tags"]?.length > 0
                   ? "border-red-500 focus-within:border-red-500"
                   : "border-transparent focus-within:border-marine-500"
               }`}
             >
-              {form.tags.length > 0 && (
-                <ul className="flex items-center">
+              <ul className="flex flex-wrap items-center h-full">
                   {form.tags.map((tag) => (
                     <li
                       key={tag}
@@ -293,18 +292,18 @@ const SnippetForm = ({
                       <CrossIcon className="w-4 h-4 stroke-white" />
                     </li>
                   ))}
-                </ul>
-              )}
-
+                {form.tags.length < 5 && (
               <input
                 name="tag"
                 type="text"
                 value={form.tag}
                 onChange={handleTagValueChange}
                 onKeyDown={(e) => handleTagAdd(e)}
-                className="w-full h-10 px-2 bg-transparent border-none outline-none"
+                    className="flex-1 h-10 min-w-0 px-2 bg-transparent border-none outline-none"
                 disabled={form.tags.length >= 5}
               />
+                )}
+              </ul>
             </div>
             {errors["tag"]?.length > 0 && (
               <div className="flex flex-col mt-2 text-sm text-red-500">
