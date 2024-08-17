@@ -115,21 +115,21 @@ export const useDataProvider = () => {
         .filter((s) => s.favorite === true)
         .sort((a, b) => (a.title > b.title ? 1 : -1));
 
-      if (favoriteSnippets.length > 0) {
-        const defaultSnippet = favoriteSnippets[0];
-        setActiveSnippetId(defaultSnippet._id.toString());
-
-        return {
-          path: `/favorites/${defaultSnippet._id.toString()}`,
-          isEmpty: false,
-        };
-      } else {
+      if (favoriteSnippets.length <= 0) {
         setActiveSnippetId("");
         return {
           path: "",
           isEmpty: true,
         };
       }
+
+      const defaultSnippet = favoriteSnippets[0];
+      setActiveSnippetId(defaultSnippet._id.toString());
+
+      return {
+        path: `/favorites/${defaultSnippet._id.toString()}`,
+        isEmpty: false,
+      };
     }
   };
 
@@ -140,6 +140,7 @@ export const useDataProvider = () => {
         ...tags.sort((a, b) => (a.amount > b.amount ? -1 : 1)),
       ];
       const defaultTag = sortedTags[0];
+
       if (defaultTag) {
         setActiveTagLabel(defaultTag.label);
         const sortedTagSnippets = [...data.snippets]
