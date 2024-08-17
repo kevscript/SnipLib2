@@ -1,5 +1,6 @@
 import Snippet from "@/models/Snippet";
 import Link from "next/link";
+import ConditionalWrapper from "../layouts/ConditionalWrapper";
 
 export type SnipItemProps = {
   snippet: Snippet;
@@ -9,41 +10,18 @@ export type SnipItemProps = {
 };
 
 const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
-  if (isActive) {
-    return (
-      <li
-        className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
-          isActive ? "bg-carbon-400" : "bg-carbon-500"
-        }`}
-      >
-        <p className="font-semibold">{snippet.title}</p>
-        <div className="flex w-full mt-3 flex-nowrap">
-          <span
-            className={`text-xs capitalize`}
-            style={{ color: color || "#fff" }}
-          >
-            {snippet.language}
-          </span>
-          {snippet.tags && snippet.tags.length > 0 && (
-            <ul className="flex ml-4 truncate flex-nowrap gap-x-2">
-              {snippet.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="text-xs text-carbon-300"
-                >{`#${tag}`}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </li>
-    );
-  }
-
   return (
-    <Link href={path} passHref>
-      <li
-        className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-8 py-6 border-b-2 cursor-pointer border-carbon-600 group hover:bg-carbon-400 ${
-          isActive ? "bg-carbon-400" : "bg-carbon-500"
+    <ConditionalWrapper
+      condition={!isActive}
+      wrapper={(children) => (
+        <Link href={path} passHref>
+          {children}
+        </Link>
+      )}
+    >
+      <a
+        className={`flex flex-shrink-0 overflow-hidden flex-col w-full px-4 xl:px-8 py-6 border-b-2 border-carbon-600 group hover:bg-carbon-400 ${
+          isActive ? "bg-carbon-400" : "bg-carbon-500 cursor-pointer"
         }`}
       >
         <span className="font-semibold">{snippet.title}</span>
@@ -51,6 +29,7 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
           <span
             className={`text-xs capitalize`}
             style={{ color: color || "#fff" }}
+            data-cy="snip-item-lang"
           >
             {snippet.language}
           </span>
@@ -65,8 +44,8 @@ const SnipItem = ({ snippet, isActive, path, color }: SnipItemProps) => {
             </ul>
           )}
         </div>
-      </li>
-    </Link>
+      </a>
+    </ConditionalWrapper>
   );
 };
 

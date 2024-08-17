@@ -18,8 +18,8 @@ const ListItem = ({
 }: ListItemProps) => {
   if (!active) {
     return (
-      <Link href={`${path}`}>
-        <li className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
+      <Link href={`${path}`} passHref>
+        <a className="relative flex justify-between flex-shrink-0 h-10 text-sm cursor-pointer flex-nowrap group">
           <div className="flex flex-nowrap">
             <Branch short={first} active={active} />
             <span
@@ -39,7 +39,7 @@ const ListItem = ({
               {amount}
             </span>
           </div>
-        </li>
+        </a>
       </Link>
     );
   }

@@ -20,7 +20,7 @@ describe("ListBar", () => {
     );
 
     // check if all snippets of active list are rendered
-    cy.get('[data-cy="active-list"] > li').then((items) => {
+    cy.get('[data-cy="active-list"] > a').then((items) => {
       Array.from(items).forEach((item, i) => {
         expect(item).to.contain.text(mockSnippets[i].title);
       });

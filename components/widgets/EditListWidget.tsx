@@ -71,12 +71,12 @@ const EditListWidget = ({ list }: EditListWidgetProps) => {
           <div className="w-full p-8">
             <div className="flex items-center justify-between w-full">
               <h3 className="font-bold">Editing List</h3>
-              <div
+              <button
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-center p-1 cursor-pointer group"
               >
                 <CrossIcon className="w-5 h-5 stroke-gray-200 group-hover:stroke-white" />
-              </div>
+              </button>
             </div>
             <div className="mt-8">
               <label className="flex flex-col">

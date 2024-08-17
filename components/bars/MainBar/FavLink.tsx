@@ -8,8 +8,8 @@ type FavLinkProps = {
 
 const FavLink = ({ isActive, snippetsAmount }: FavLinkProps) => {
   return (
-    <Link href="/favorites">
-      <div className="flex items-center justify-between cursor-pointer flex-nowrap group">
+    <Link href="/favorites" passHref>
+      <a className="flex items-center justify-between cursor-pointer flex-nowrap group">
         <div className="flex items-center flex-nowrap">
           <FavoriteIcon className="w-4 h-4 stroke-marine fill-transparent" />
           <span
@@ -29,7 +29,7 @@ const FavLink = ({ isActive, snippetsAmount }: FavLinkProps) => {
             {snippetsAmount}
           </span>
         </div>
-      </div>
+      </a>
     </Link>
   );
 };
