@@ -11,16 +11,16 @@ import { useToasts } from "@/hooks/useToasts";
 
 type SnippetReadOnlyHeaderProps = {
   snippet: Snippet;
-  triggerEditMode: () => void;
-  toggleFavorite: () => void;
-  togglePublic: () => void;
+  onEditToggle: () => void;
+  onFavoriteToggle: () => void;
+  onPublicToggle: () => void;
 };
 
 const SnippetReadOnlyHeader = ({
   snippet,
-  triggerEditMode,
-  toggleFavorite,
-  togglePublic,
+  onEditToggle,
+  onFavoriteToggle,
+  onPublicToggle,
 }: SnippetReadOnlyHeaderProps) => {
   const { addToast } = useToasts();
 
@@ -31,7 +31,7 @@ const SnippetReadOnlyHeader = ({
       </div>
       <div className="flex flex-nowrap gap-x-4">
         <IconButton
-          onClick={toggleFavorite}
+          onClick={onFavoriteToggle}
           icon={
             <FavoriteIcon
               className={`w-4 h-4 transition-all ease-out ${
@@ -47,7 +47,7 @@ const SnippetReadOnlyHeader = ({
           }
         />
         <IconButton
-          onClick={togglePublic}
+          onClick={onPublicToggle}
           icon={
             <EyeIcon
               className={`w-3.5 h-3.5 transition-all ease-out ${
@@ -109,7 +109,7 @@ const SnippetReadOnlyHeader = ({
         /> */}
 
         <IconButton
-          onClick={triggerEditMode}
+          onClick={onEditToggle}
           icon={
             <EditIcon className="w-4 h-4 transition-all ease-out group-hover:stroke-marine-50" />
           }
