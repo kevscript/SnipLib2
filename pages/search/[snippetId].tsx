@@ -88,7 +88,7 @@ const SearchSnippetPage = () => {
     },
   });
 
-  const toggleFavorite = () => {
+  const onFavoriteToggle = () => {
     if (activeSnippet) {
       favSnippet({
         snippetData: { ...activeSnippet, favorite: !activeSnippet.favorite },
@@ -96,7 +96,7 @@ const SearchSnippetPage = () => {
     }
   };
 
-  const togglePublic = () => {
+  const onPublicToggle = () => {
     if (activeSnippet) {
       publicSnippet({
         snippetData: { ...activeSnippet, public: !activeSnippet.public },
@@ -178,9 +178,9 @@ const SearchSnippetPage = () => {
           </Head>
           <SnippetReader
             snippet={activeSnippet}
-            triggerEditMode={() => setMode("edit")}
-            toggleFavorite={toggleFavorite}
-            togglePublic={togglePublic}
+            onEditToggle={() => setMode("edit")}
+            onFavoriteToggle={onFavoriteToggle}
+            onPublicToggle={onPublicToggle}
           />
         </>
       )}

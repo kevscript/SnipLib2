@@ -9,16 +9,16 @@ import SnippetReadOnlyHeader from "./SnippetReadOnlyHeader";
 
 type SnippetReaderProps = {
   snippet: Snippet;
-  triggerEditMode: () => void;
-  toggleFavorite: () => void;
-  togglePublic: () => void;
+  onEditToggle: () => void;
+  onFavoriteToggle: () => void;
+  onPublicToggle: () => void;
 };
 
 const SnippetReader = ({
   snippet,
-  triggerEditMode,
-  toggleFavorite,
-  togglePublic,
+  onEditToggle,
+  onFavoriteToggle,
+  onPublicToggle,
 }: SnippetReaderProps) => {
   const { preferences } = usePreferences();
   const { container } = useCodeMirror({
@@ -37,9 +37,9 @@ const SnippetReader = ({
     >
       <SnippetReadOnlyHeader
         snippet={snippet}
-        triggerEditMode={triggerEditMode}
-        toggleFavorite={toggleFavorite}
-        togglePublic={togglePublic}
+        onEditToggle={onEditToggle}
+        onFavoriteToggle={onFavoriteToggle}
+        onPublicToggle={onPublicToggle}
       />
       <div className="flex flex-col flex-1 flex-shrink-0 w-full my-8">
         <h3 className="text-2xl font-bold">{snippet.title}</h3>
